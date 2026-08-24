@@ -21,8 +21,11 @@ import {
   Clock
 } from 'lucide-react';
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
+import SongEditorModal from './SongEditorModal';
+import ArtistEditorModal from './ArtistEditorModal';
 
 export default function DataEditorView({
+
   songs,
   onUpdateSongs,
   artists,
