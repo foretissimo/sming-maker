@@ -1,10 +1,13 @@
 /**
  * Utility to fetch and synchronize ALL artist tracks across ALL pages from Melon, Genie, and Bugs.
  *
+ * Supports duplicate-named songs across different albums/releases (e.g. THE LEGACY vs Original/Single releases)
+ * by uniquely tracking by Platform Song IDs and Album names.
+ *
  * Data Source Priority:
  *   - Release Date (발매일): Melon 1st → Genie 2nd
  *   - Duration (곡 길이):    Genie 1st → Bugs 2nd
- *   - Song ID 매칭:          normalized title fuzzy match
+ *   - Uniqueness:            Platform Song ID (Melon ID) + Album disambiguation
  *
  * Sync Modes:
  *   - 'smart' (기본): 사용자가 직접 수정한 곡(userEdited: true)의 곡명, 재생시간, 발매일, 앨범 등 핵심 정보를 보호하고 건너뜀
@@ -13,34 +16,43 @@
 
 // Helper to get HTML content with fallback proxy support
 async function fetchHtml(targetUrl, proxyPrefix) {
-  // 1. Try local dev proxy if available
-  try {
-    const urlObj = new URL(targetUrl);
-    const localProxyUrl = `${proxyPrefix}${urlObj.pathname}${urlObj.search}`;
-    const res = await fetch(localProxyUrl);
-    if (res.ok) {
-      return await res.text();
+  const isBrowser = typeof window !== 'undefined';
+
+  // 1. If in browser and dev proxy prefix provided, try local dev proxy first
+  if (isBrowser && proxyPrefix) {
+    try {
+      const urlObj = new URL(targetUrl);
+      const localProxyUrl = `${proxyPrefix}${urlObj.pathname}${urlObj.search}`;
+      const res = await fetch(localProxyUrl);
+      if (res.ok) {
+        return await res.text();
+      }
+    } catch (e) {
+      // Ignore and try CORS proxy
     }
-  } catch (e) {
-    // Ignore and try fallback
+
+    // 2. Try AllOrigins CORS Proxy in browser
+    try {
+      const corsUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+      const res = await fetch(corsUrl);
+      if (res.ok) {
+        return await res.text();
+      }
+    } catch (e) {
+      // Ignore and try direct
+    }
   }
 
-  // 2. Try AllOrigins CORS Proxy
-  try {
-    const corsUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-    const res = await fetch(corsUrl);
-    if (res.ok) {
-      return await res.text();
+  // 3. Direct fetch (fast in Node or unrestricted environments)
+  const directRes = await fetch(targetUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
     }
-  } catch (e) {
-    // Ignore and try direct
-  }
-
-  // 3. Try direct fetch
-  const directRes = await fetch(targetUrl);
+  });
   if (!directRes.ok) throw new Error(`HTTP Error: ${directRes.status}`);
   return await directRes.text();
 }
+
 
 /**
  * Fetch Album Release Dates dictionary from Melon for an artist
@@ -78,6 +90,37 @@ async function fetchMelonAlbumDates(melonArtistId) {
 }
 
 /**
+ * Clean text strings from Melon/Genie/Bugs HTML
+ */
+function cleanText(str) {
+  if (!str) return '';
+  return str
+    .replace(/<[^>]+>/g, '')
+    .replace(/곡정보\s*-\s*페이지\s*이동/gi, '')
+    .replace(/앨범정보\s*-\s*페이지\s*이동/gi, '')
+    .replace(/-\s*페이지\s*이동/gi, '')
+    .replace(/&#x27;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/\u00a0/g, ' ')
+    .replace(/^TITLE/i, '')
+    .trim();
+}
+
+/**
+ * Normalize strings for fuzzy matching
+ */
+function normalize(t) {
+  return cleanText(t)
+    .toLowerCase()
+    .replace(/[\(\)\[\]\-_,\.\s\x27\"&]/g, '')
+    .replace(/inst\.?/g, '')
+    .replace(/instrumental/g, '');
+}
+
+/**
  * Fetch ALL tracks from Melon for an artist across all pagination pages with exact release dates
  */
 export async function fetchMelonTracks(melonArtistId) {
@@ -105,21 +148,8 @@ export async function fetchMelonTracks(melonArtistId) {
         const albumTitle = tr.match(/goAlbumDetail\(\x27\d+\x27\);"[^>]*title="([^"]+)"/);
 
         if (songId && titleMatch) {
-          const title = titleMatch[1]
-            .replace(/곡정보\s*-\s*페이지\s*이동/i, '')
-            .replace(/&#x27;/g, "'")
-            .replace(/&amp;/g, '&')
-            .replace(/\u00a0/g, ' ')
-            .trim();
-          const album = albumTitle
-            ? albumTitle[1]
-                .replace(/앨범정보\s*-\s*페이지\s*이동/i, '')
-                .replace(/&#x27;/g, "'")
-                .replace(/&amp;/g, '&')
-                .replace(/\u00a0/g, ' ')
-                .trim()
-            : '';
-
+          const title = cleanText(titleMatch[1]);
+          const album = albumTitle ? cleanText(albumTitle[1]) : '';
           const releaseDate = albumMap[albumId] || '';
 
           if (title && !tracks.some(t => t.id === songId)) {
@@ -128,6 +158,7 @@ export async function fetchMelonTracks(melonArtistId) {
               id: songId,
               title,
               album,
+              albumId,
               releaseDate
             });
             pageRowCount++;
@@ -169,12 +200,8 @@ export async function fetchGenieTracks(genieArtistId) {
         const titleMatch = tr.match(/class="title ellipsis"[^>]*>([\s\S]*?)<\/a>/);
         const albumMatch = tr.match(/class="albumtitle ellipsis"[^>]*>([\s\S]*?)<\/a>/);
 
-        let title = titleMatch
-          ? titleMatch[1].replace(/<[^>]+>/g, '').replace(/^TITLE/i, '').trim()
-          : '';
-        let album = albumMatch
-          ? albumMatch[1].replace(/<[^>]+>/g, '').trim()
-          : '';
+        const title = titleMatch ? cleanText(titleMatch[1]) : '';
+        const album = albumMatch ? cleanText(albumMatch[1]) : '';
 
         if (songId && title && !tracks.some(t => t.id === songId)) {
           tracks.push({
@@ -258,8 +285,8 @@ export async function fetchBugsTracks(bugsArtistId) {
 
         if (trackIdMatch && titleMatch) {
           const trackId = trackIdMatch[1];
-          const rawTitle = titleMatch[1].replace(/&#x27;/g, "'").replace(/&amp;/g, '&').trim();
-          const album = albumMatch ? albumMatch[1].replace(/&#x27;/g, "'").trim() : '';
+          const rawTitle = cleanText(titleMatch[1]);
+          const album = albumMatch ? cleanText(albumMatch[1]) : '';
 
           if (trackId && rawTitle && !tracks.some(t => t.id === trackId)) {
             tracks.push({
@@ -284,25 +311,15 @@ export async function fetchBugsTracks(bugsArtistId) {
   return tracks;
 }
 
-// Normalize song titles for fuzzy comparison
-function normalizeTitle(t) {
-  return (t || '')
-    .toLowerCase()
-    .replace(/\s+/g, '')
-    .replace(/[\(\)\[\]\-_,\.]/g, '')
-    .replace(/inst\.?/g, '')
-    .replace(/instrumental/g, '');
-}
-
 /**
  * Synchronize all tracks for a single artist
+ *
+ * Supports duplicate-named songs across different albums/releases
  *
  * @param {Object} artist - The artist object
  * @param {Array} currentSongs - Current song list
  * @param {Function} progressCallback - Callback for progress messages
  * @param {Object} options - Sync options: { mode: 'smart' | 'overwrite' }
- *        - 'smart' (default): Skip/protect fields for songs marked as userEdited: true
- *        - 'overwrite': Overwrite all songs with platform data and reset userEdited
  */
 export async function syncArtistTracks(artist, currentSongs, progressCallback, options = { mode: 'smart' }) {
   const isSmart = options?.mode !== 'overwrite';
@@ -311,7 +328,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
   const bugsId = artist.platformArtistIds?.bugs;
 
   if (progressCallback) {
-    progressCallback(`[${artist.name}] 멜론/지니/벅스 곡 목록 조회 중... (${isSmart ? '사용자 수정 보호' : '전체 덮어쓰기'})`);
+    progressCallback(`[${artist.name}] 멜론/지니/벅스 전체 앨범 및 곡 목록 조회 중... (${isSmart ? '수정 보호' : '전체 갱신'})`);
   }
 
   const [melonTracks, genieTracks, bugsTracks] = await Promise.all([
@@ -325,27 +342,37 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
   let protectedCount = 0;
   const updatedSongs = [...currentSongs];
 
-  // 1. Update or Add Melon tracks (Melon Release Date is 1st Priority)
+  // 1. Process Melon Tracks (Each unique Melon track ID is a distinct song)
   melonTracks.forEach(mt => {
-    const norm = normalizeTitle(mt.title);
-    const existing = updatedSongs.find(
-      s => s.artistType === artist.id && (normalizeTitle(s.title) === norm || s.title.includes(mt.title) || mt.title.includes(s.title))
+    const normTitle = normalize(mt.title);
+    const normAlbum = normalize(mt.album);
+
+    // Exact Melon ID match first
+    let existing = updatedSongs.find(
+      s => s.artistType === artist.id && s.platformIds?.melon === mt.id
     );
 
+    // If not matched by Melon ID, check for a song without Melon ID that matches Title AND Album
+    if (!existing) {
+      existing = updatedSongs.find(
+        s => s.artistType === artist.id &&
+             !s.platformIds?.melon &&
+             normalize(s.title) === normTitle &&
+             (normalize(s.album) === normAlbum || !s.album || s.album === `${artist.name} 앨범`)
+      );
+    }
+
     if (existing) {
-      // If smart mode and user edited, preserve user's data (title, duration, releaseDate, album)
+      // If smart mode and user edited, preserve user's data
       if (isSmart && existing.userEdited) {
         protectedCount++;
-        // Still safely link missing platform ID if empty
         if (!existing.platformIds) existing.platformIds = {};
-        if (!existing.platformIds.melon) {
-          existing.platformIds.melon = mt.id;
-        }
+        if (!existing.platformIds.melon) existing.platformIds.melon = mt.id;
         return;
       }
 
       if (!isSmart) {
-        existing.userEdited = false; // Reset edit flag on full overwrite
+        existing.userEdited = false;
       }
 
       if (!existing.platformIds) existing.platformIds = {};
@@ -353,17 +380,15 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
         existing.platformIds.melon = mt.id;
         updatedCount++;
       }
-      // Update release date from Melon
       if (mt.releaseDate && existing.releaseDate !== mt.releaseDate) {
         existing.releaseDate = mt.releaseDate;
         updatedCount++;
       }
-      // Update album title from Melon if missing or overwriting
       if (mt.album && (!existing.album || existing.album === `${artist.name} 앨범` || !isSmart)) {
         existing.album = mt.album;
       }
     } else {
-      // Add newly discovered track from Melon
+      // Newly discovered track (e.g. from THE LEGACY or other albums with same title) -> ADD AS DISTINCT SONG!
       const newSong = {
         id: `auto-${artist.id}-${mt.id}`,
         title: mt.title,
@@ -386,47 +411,73 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
     }
   });
 
-  // 2. Link Genie tracks (match by title)
+  // 2. Link Genie tracks (Priority 1: Title + Album match, Priority 2: Title match on unlinked songs)
   genieTracks.forEach(gt => {
-    const norm = normalizeTitle(gt.title);
-    const existing = updatedSongs.find(
-      s => s.artistType === artist.id && (normalizeTitle(s.title) === norm || s.title.includes(gt.title) || gt.title.includes(s.title))
+    const normTitle = normalize(gt.title);
+    const normAlbum = normalize(gt.album);
+
+    // Priority 1: Title + Album match
+    let target = updatedSongs.find(
+      s => s.artistType === artist.id &&
+           !s.platformIds?.genie &&
+           normalize(s.title) === normTitle &&
+           normalize(s.album) === normAlbum
     );
-    if (existing) {
-      if (!existing.platformIds) existing.platformIds = {};
-      if (existing.platformIds.genie !== gt.id) {
-        existing.platformIds.genie = gt.id;
-        if (!isSmart || !existing.userEdited) {
-          updatedCount++;
-        }
+
+    // Priority 2: Title match on unlinked song
+    if (!target) {
+      target = updatedSongs.find(
+        s => s.artistType === artist.id &&
+             !s.platformIds?.genie &&
+             (normalize(s.title) === normTitle || s.title.includes(gt.title) || gt.title.includes(s.title))
+      );
+    }
+
+    if (target) {
+      if (!target.platformIds) target.platformIds = {};
+      target.platformIds.genie = gt.id;
+      if (!isSmart || !target.userEdited) {
+        updatedCount++;
       }
     }
   });
 
-  // 3. Link Bugs tracks (match by title)
+  // 3. Link Bugs tracks (Priority 1: Title + Album match, Priority 2: Title match on unlinked songs)
   bugsTracks.forEach(bt => {
-    const norm = normalizeTitle(bt.title);
-    const existing = updatedSongs.find(
-      s => s.artistType === artist.id && (normalizeTitle(s.title) === norm || s.title.includes(bt.title) || bt.title.includes(s.title))
+    const normTitle = normalize(bt.title);
+    const normAlbum = normalize(bt.album);
+
+    // Priority 1: Title + Album match
+    let target = updatedSongs.find(
+      s => s.artistType === artist.id &&
+           !s.platformIds?.bugs &&
+           normalize(s.title) === normTitle &&
+           normalize(s.album) === normAlbum
     );
-    if (existing) {
-      if (!existing.platformIds) existing.platformIds = {};
-      if (existing.platformIds.bugs !== bt.id) {
-        existing.platformIds.bugs = bt.id;
-        if (!isSmart || !existing.userEdited) {
-          updatedCount++;
-        }
+
+    // Priority 2: Title match on unlinked song
+    if (!target) {
+      target = updatedSongs.find(
+        s => s.artistType === artist.id &&
+             !s.platformIds?.bugs &&
+             (normalize(s.title) === normTitle || s.title.includes(bt.title) || bt.title.includes(s.title))
+      );
+    }
+
+    if (target) {
+      if (!target.platformIds) target.platformIds = {};
+      target.platformIds.bugs = bt.id;
+      if (!isSmart || !target.userEdited) {
+        updatedCount++;
       }
     }
   });
 
-  // 4. Batch-fetch durations from Genie for songs that need it
-  //    In smart mode: skip songs that have userEdited: true
-  //    In overwrite mode: fetch for all songs with genie ID
+  // 4. Batch-fetch durations from Genie
   const songsNeedingDuration = updatedSongs.filter(s => {
     if (s.artistType !== artist.id || !s.platformIds?.genie) return false;
-    if (isSmart && s.userEdited) return false; // Protected from overwrite
-    if (!isSmart) return true; // Overwrite mode fetches fresh durations
+    if (isSmart && s.userEdited) return false;
+    if (!isSmart) return true;
     return !s.duration || s.duration === 0 || s.duration === 225;
   });
 
@@ -447,10 +498,10 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
     });
   }
 
-  // 5. For any remaining songs with duration=0 that still have no duration, set fallback default
+  // 5. Fallback duration default (3:45)
   updatedSongs.forEach(s => {
     if (s.artistType === artist.id && (!s.duration || s.duration === 0)) {
-      s.duration = 225; // fallback default: 3:45
+      s.duration = 225;
     }
   });
 
