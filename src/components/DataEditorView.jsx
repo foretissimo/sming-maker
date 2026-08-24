@@ -25,7 +25,10 @@ import {
   Zap,
   Loader2,
   ArrowUpDown,
-  ListFilter
+  ListFilter,
+  ShieldCheck,
+  AlertTriangle,
+  RotateCw
 } from 'lucide-react';
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
 import SongEditorModal from './SongEditorModal';
@@ -136,13 +139,17 @@ export default function DataEditorView({
 
   // Handle Song CRUD
   const handleSaveSong = (savedSong) => {
-    const exists = songs.some(s => s.id === savedSong.id);
+    const songWithFlag = {
+      ...savedSong,
+      userEdited: true // mark as manually edited
+    };
+    const exists = songs.some(s => s.id === songWithFlag.id);
     if (exists) {
-      onUpdateSongs(songs.map(s => s.id === savedSong.id ? savedSong : s));
-      onShowToast(`'${savedSong.title}' 곡 정보가 수정되었습니다.`);
+      onUpdateSongs(songs.map(s => s.id === songWithFlag.id ? songWithFlag : s));
+      onShowToast(`'${songWithFlag.title}' 곡 정보가 수정되었습니다. (사용자 수정 보호 활성화)`);
     } else {
-      onUpdateSongs([savedSong, ...songs]);
-      onShowToast(`새 곡 '${savedSong.title}'이(가) 등록되었습니다.`);
+      onUpdateSongs([songWithFlag, ...songs]);
+      onShowToast(`새 곡 '${songWithFlag.title}'이(가) 등록되었습니다. (사용자 수정 보호 활성화)`);
     }
   };
 
@@ -157,10 +164,23 @@ export default function DataEditorView({
     const duplicated = {
       ...song,
       id: `song-${Date.now()}`,
-      title: `${song.title} (사본)`
+      title: `${song.title} (사본)`,
+      userEdited: true
     };
     onUpdateSongs([duplicated, ...songs]);
     onShowToast(`'${song.title}' 곡이 복제되었습니다.`);
+  };
+
+  // Toggle userEdited flag
+  const handleToggleUserEdited = (songId) => {
+    onUpdateSongs(songs.map(s => {
+      if (s.id === songId) {
+        const nextState = !s.userEdited;
+        onShowToast(`'${s.title}' 곡의 사용자 수정 보호가 ${nextState ? '설정' : '해제'}되었습니다.`);
+        return { ...s, userEdited: nextState };
+      }
+      return s;
+    }));
   };
 
   // Handle Artist CRUD
@@ -189,15 +209,34 @@ export default function DataEditorView({
     }
   };
 
-  // 1-Click Platform Sync for a Single Artist
-  const handleSyncSingleArtist = async (artist) => {
+  // Platform Sync for a Single Artist (Supports 'smart' or 'overwrite')
+  const handleSyncSingleArtist = async (artist, mode = 'smart') => {
+    if (mode === 'overwrite') {
+      const ok = window.confirm(
+        `[${artist.name}] 아티스트의 모든 곡을 음원 사이트 최신 원본 데이터로 전체 덮어쓰시겠습니까?\n(직접 수정한 곡 정보가 모두 원본으로 초기화됩니다)`
+      );
+      if (!ok) return;
+    }
+
     setSyncingArtistId(artist.id);
     try {
-      const { updatedSongs, stats } = await syncArtistTracks(artist, songs, (msg) => setSyncProgressText(msg));
-      onUpdateSongs(updatedSongs);
-      onShowToast(
-        `[${artist.name}] 멜론(${stats.melonTracksCount}곡), 지니(${stats.genieTracksCount}곡), 벅스(${stats.bugsTracksCount}곡) 동기화 완료! (+${stats.addedCount}곡 추가, ${stats.updatedCount}곡 업데이트, ${stats.durationsFetched || 0}곡 재생시간 갱신)`
+      const { updatedSongs, stats } = await syncArtistTracks(
+        artist,
+        songs,
+        (msg) => setSyncProgressText(msg),
+        { mode }
       );
+      onUpdateSongs(updatedSongs);
+
+      if (mode === 'smart') {
+        onShowToast(
+          `[${artist.name}] 스마트 동기화 완료! (+${stats.addedCount}곡 추가, ${stats.updatedCount}곡 갱신${stats.protectedCount ? `, ${stats.protectedCount}곡 수정본 보호됨 🛡️` : ''})`
+        );
+      } else {
+        onShowToast(
+          `[${artist.name}] 전체 원본 덮어쓰기 완료! (+${stats.addedCount}곡 추가, ${stats.updatedCount}곡 갱신) ✨`
+        );
+      }
     } catch (err) {
       alert(`[${artist.name}] 동기화 중 오류가 발생했습니다: ${err.message}`);
     } finally {
@@ -206,24 +245,48 @@ export default function DataEditorView({
     }
   };
 
-  // 1-Click Platform Sync for ALL Artists
-  const handleSyncAllArtists = async () => {
+  // Platform Sync for ALL Artists (Supports 'smart' or 'overwrite')
+  const handleSyncAllArtists = async (mode = 'smart') => {
     if (isSyncingAll) return;
+
+    if (mode === 'overwrite') {
+      const ok = window.confirm(
+        '등록된 모든 아티스트의 음원 데이터를 플랫폼 원본으로 전체 덮어쓰시겠습니까?\n(사용자가 직접 수정한 곡 정보가 모두 원본 데이터로 초기화됩니다)'
+      );
+      if (!ok) return;
+    }
+
     setIsSyncingAll(true);
     let current = [...songs];
     let totalAdded = 0;
     let totalUpdated = 0;
+    let totalProtected = 0;
 
     try {
       for (let i = 0; i < artists.length; i++) {
         const a = artists[i];
-        const { updatedSongs, stats } = await syncArtistTracks(a, current, (msg) => setSyncProgressText(`[${i + 1}/${artists.length}] ${msg}`));
+        const { updatedSongs, stats } = await syncArtistTracks(
+          a,
+          current,
+          (msg) => setSyncProgressText(`[${i + 1}/${artists.length}] ${msg}`),
+          { mode }
+        );
         current = updatedSongs;
         totalAdded += stats.addedCount;
         totalUpdated += stats.updatedCount;
+        totalProtected += (stats.protectedCount || 0);
       }
       onUpdateSongs(current);
-      onShowToast(`전체 ${artists.length}명 아티스트 음원 동기화 완료! (+${totalAdded}곡 추가, ${totalUpdated}곡 업데이트) ✨`);
+
+      if (mode === 'smart') {
+        onShowToast(
+          `전체 아티스트 스마트 동기화 완료! (+${totalAdded}곡 추가, ${totalUpdated}곡 갱신${totalProtected ? `, ${totalProtected}곡 수정본 보호됨 🛡️` : ''})`
+        );
+      } else {
+        onShowToast(
+          `전체 아티스트 원본 덮어쓰기 완료! (+${totalAdded}곡 추가, ${totalUpdated}곡 갱신) ✨`
+        );
+      }
     } catch (err) {
       alert(`전체 동기화 중 오류가 발생했습니다: ${err.message}`);
     } finally {
@@ -333,6 +396,11 @@ export default function DataEditorView({
     e.target.value = '';
   };
 
+  // Count user-edited songs
+  const userEditedCount = useMemo(() => {
+    return songs.filter(s => s.userEdited).length;
+  }, [songs]);
+
   return (
     <div className="space-y-6">
       {/* Sub Tabs Navigation */}
@@ -360,6 +428,11 @@ export default function DataEditorView({
           >
             <Music className="w-4 h-4" />
             <span>전체 음원 목록 ({songs.length}곡)</span>
+            {userEditedCount > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                수정 {userEditedCount}
+              </span>
+            )}
           </button>
 
           <button
@@ -387,16 +460,28 @@ export default function DataEditorView({
           </button>
         </div>
 
-        {/* Global Action on Tab Header */}
-        <div className="flex items-center gap-2">
+        {/* Global Dual Sync Buttons */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {/* Mode 1: Smart Sync (Protects User Edits) */}
           <button
-            onClick={handleSyncAllArtists}
+            onClick={() => handleSyncAllArtists('smart')}
             disabled={isSyncingAll}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 text-xs font-bold cursor-pointer shadow-md disabled:opacity-50 transition-all"
-            title="등록된 모든 가수의 곡을 멜론/지니/벅스에서 일괄 조회 및 동기화합니다."
+            title="사용자가 직접 수정한 곡 정보를 보존하면서, 신곡 추가 및 미수정 곡의 발매일/길이를 동기화합니다."
           >
-            {isSyncingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" /> : <Zap className="w-3.5 h-3.5 fill-current text-slate-950" />}
-            <span className="hidden sm:inline">{isSyncingAll ? '동기화 중...' : '⚡ 전체 아티스트 자동 동기화'}</span>
+            {isSyncingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" /> : <ShieldCheck className="w-3.5 h-3.5 text-slate-950" />}
+            <span>{isSyncingAll ? '동기화 중...' : '⚡ 스마트 동기화 (수정본 보호)'}</span>
+          </button>
+
+          {/* Mode 2: Overwrite All (Full Platform Reset) */}
+          <button
+            onClick={() => handleSyncAllArtists('overwrite')}
+            disabled={isSyncingAll}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-950 hover:bg-rose-950/60 border border-slate-700 hover:border-rose-500/50 text-slate-400 hover:text-rose-300 text-xs font-semibold cursor-pointer disabled:opacity-50 transition-all"
+            title="사용자 수정 내역을 무시하고 음원 사이트 원본 데이터로 전체 덮어씁니다."
+          >
+            <AlertTriangle className="w-3 h-3 text-rose-400" />
+            <span className="hidden sm:inline">전체 원본 덮어쓰기</span>
           </button>
         </div>
       </div>
@@ -408,6 +493,7 @@ export default function DataEditorView({
           <span>{syncProgressText}</span>
         </div>
       )}
+
       {/* TAB 1: ARTIST-CENTRIC SONG VIEW & EDITING */}
       {activeTab === 'artist_songs' && currentArtistObj && (
         <div className="space-y-5">
@@ -432,6 +518,7 @@ export default function DataEditorView({
               {artists.map((artist) => {
                 const isSelected = artist.id === selectedArtistId;
                 const count = songs.filter(s => s.artistType === artist.id).length;
+                const editedCount = songs.filter(s => s.artistType === artist.id && s.userEdited).length;
                 return (
                   <button
                     key={artist.id}
@@ -446,13 +533,16 @@ export default function DataEditorView({
                     <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900/80 text-slate-300 border border-slate-700/60 font-mono">
                       {count}곡
                     </span>
+                    {editedCount > 0 && (
+                      <span className="w-2 h-2 rounded-full bg-violet-400" title={`수정된 곡 ${editedCount}개 포함`} />
+                    )}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Selected Artist Detailed Card & Quick Sync */}
+          {/* Selected Artist Detailed Card & Dual Sync Actions */}
           <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 space-y-4 shadow-xl">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-800">
               <div className="flex items-center gap-3">
@@ -465,19 +555,37 @@ export default function DataEditorView({
                   </h3>
                   <p className="text-xs text-slate-400">
                     {currentArtistObj.category === 'group' ? '그룹(완전체)' : '솔로(개인)'} • 등록된 곡 총 <strong className="text-emerald-300">{artistSongs.length}곡</strong>
+                    {artistSongs.filter(s => s.userEdited).length > 0 && (
+                      <span className="ml-1.5 text-violet-300 font-medium">
+                        (직접 수정됨 {artistSongs.filter(s => s.userEdited).length}곡)
+                      </span>
+                    )}
                   </p>
                 </div>
               </div>
 
               {/* Action Buttons for this Artist */}
               <div className="flex items-center gap-2 flex-wrap">
+                {/* 1. Smart Sync (Protects Edits) */}
                 <button
-                  onClick={() => handleSyncSingleArtist(currentArtistObj)}
+                  onClick={() => handleSyncSingleArtist(currentArtistObj, 'smart')}
                   disabled={syncingArtistId === currentArtistObj.id || isSyncingAll}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 text-xs font-bold cursor-pointer disabled:opacity-50 transition-all shadow-sm"
+                  title="직접 수정한 곡은 건너뛰고 나머지 곡만 최신 데이터로 동기화합니다."
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${syncingArtistId === currentArtistObj.id ? 'animate-spin' : ''}`} />
-                  <span>{syncingArtistId === currentArtistObj.id ? '조회 및 동기화 중...' : `🔄 [${currentArtistObj.name}] 음원 자동 동기화`}</span>
+                  <ShieldCheck className={`w-3.5 h-3.5 text-emerald-400 ${syncingArtistId === currentArtistObj.id ? 'animate-spin' : ''}`} />
+                  <span>{syncingArtistId === currentArtistObj.id ? '동기화 중...' : '🔄 스마트 동기화'}</span>
+                </button>
+
+                {/* 2. Overwrite Sync */}
+                <button
+                  onClick={() => handleSyncSingleArtist(currentArtistObj, 'overwrite')}
+                  disabled={syncingArtistId === currentArtistObj.id || isSyncingAll}
+                  className="flex items-center gap-1 px-2.5 py-2 rounded-xl bg-slate-950 hover:bg-rose-950/60 border border-slate-800 hover:border-rose-500/40 text-slate-400 hover:text-rose-300 text-xs font-medium cursor-pointer disabled:opacity-50 transition-all"
+                  title="사용자 수정을 무시하고 이 아티스트의 모든 곡을 원본으로 덮어씁니다."
+                >
+                  <AlertTriangle className="w-3 h-3 text-rose-400" />
+                  <span>원본 덮어쓰기</span>
                 </button>
 
                 <button
@@ -488,9 +596,10 @@ export default function DataEditorView({
                       artist: currentArtistObj.name,
                       artistType: currentArtistObj.id,
                       album: '',
-                      releaseDate: new Date().toISOString().split('T')[0],
+                      releaseDate: '',
                       duration: 225,
                       isTitle: false,
+                      userEdited: true,
                       platformIds: { melon: '', genie: '', bugs: '' },
                       tags: []
                     });
@@ -604,7 +713,7 @@ export default function DataEditorView({
             </div>
           </div>
 
-          {/* Songs Table for this Artist with Prominent Release Date */}
+          {/* Songs Table for this Artist */}
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
@@ -643,13 +752,22 @@ export default function DataEditorView({
                                   ⭐ 타이틀
                                 </span>
                               )}
+                              {song.userEdited && (
+                                <button
+                                  onClick={() => handleToggleUserEdited(song.id)}
+                                  className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center gap-0.5 cursor-pointer hover:bg-violet-500/30"
+                                  title="사용자가 직접 수정한 곡입니다. 스마트 동기화 시 데이터가 보호됩니다. 클릭하면 보호 해제/설정 가능"
+                                >
+                                  <span>✍️ 수정됨</span>
+                                </button>
+                              )}
                             </div>
                             <div className="text-[11px] text-slate-400 mt-0.5 truncate">
                               <span className="text-slate-400">{song.album}</span>
                             </div>
                           </td>
 
-                          {/* Release Date (Prominent) */}
+                          {/* Release Date */}
                           <td className="py-3 px-3 text-center whitespace-nowrap">
                             {song.releaseDate && song.releaseDate.trim() ? (
                               <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 font-mono text-[11px] text-slate-200">
@@ -660,7 +778,6 @@ export default function DataEditorView({
                               <span className="text-slate-600 font-mono text-xs">-</span>
                             )}
                           </td>
-
 
                           {/* Duration */}
                           <td className="py-3 px-3 text-center font-mono text-slate-300 whitespace-nowrap">
@@ -829,6 +946,15 @@ export default function DataEditorView({
                                   ⭐ 타이틀
                                 </span>
                               )}
+                              {song.userEdited && (
+                                <button
+                                  onClick={() => handleToggleUserEdited(song.id)}
+                                  className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center gap-0.5 cursor-pointer hover:bg-violet-500/30"
+                                  title="사용자가 직접 수정한 곡입니다. 스마트 동기화 시 데이터가 보호됩니다."
+                                >
+                                  <span>✍️ 수정됨</span>
+                                </button>
+                              )}
                             </div>
                             <div className="text-[11px] text-slate-500 mt-0.5 truncate">
                               {song.album}
@@ -842,7 +968,7 @@ export default function DataEditorView({
                             </span>
                           </td>
                           <td className="py-3 px-3 text-center whitespace-nowrap font-mono text-[11px] text-slate-300">
-                            {song.releaseDate ? formatDate(song.releaseDate) : '-'}
+                            {song.releaseDate && song.releaseDate.trim() ? formatDate(song.releaseDate) : <span className="text-slate-600 font-mono text-xs">-</span>}
                           </td>
                           <td className="py-3 px-3 text-center font-mono text-slate-300 whitespace-nowrap">
                             {formatSecondsToTime(song.duration)}

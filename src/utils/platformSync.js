@@ -5,6 +5,10 @@
  *   - Release Date (발매일): Melon 1st → Genie 2nd
  *   - Duration (곡 길이):    Genie 1st → Bugs 2nd
  *   - Song ID 매칭:          normalized title fuzzy match
+ *
+ * Sync Modes:
+ *   - 'smart' (기본): 사용자가 직접 수정한 곡(userEdited: true)의 곡명, 재생시간, 발매일, 앨범 등 핵심 정보를 보호하고 건너뜀
+ *   - 'overwrite' (전체 덮어쓰기): 사용자의 수정 여부와 무관하게 음원 사이트 최신 원본 데이터로 전체 갱신
  */
 
 // Helper to get HTML content with fallback proxy support
@@ -293,17 +297,22 @@ function normalizeTitle(t) {
 /**
  * Synchronize all tracks for a single artist
  *
- * Data Source Priority:
- *   - Release Date: Melon (albumPaging → songPaging cross-map) → empty ''
- *   - Duration:     Genie (songInfo detail page, batch fetch) → existing → default 225s
- *   - Song IDs:     Melon, Genie, Bugs (normalized title matching)
+ * @param {Object} artist - The artist object
+ * @param {Array} currentSongs - Current song list
+ * @param {Function} progressCallback - Callback for progress messages
+ * @param {Object} options - Sync options: { mode: 'smart' | 'overwrite' }
+ *        - 'smart' (default): Skip/protect fields for songs marked as userEdited: true
+ *        - 'overwrite': Overwrite all songs with platform data and reset userEdited
  */
-export async function syncArtistTracks(artist, currentSongs, progressCallback) {
+export async function syncArtistTracks(artist, currentSongs, progressCallback, options = { mode: 'smart' }) {
+  const isSmart = options?.mode !== 'overwrite';
   const melonId = artist.platformArtistIds?.melon;
   const genieId = artist.platformArtistIds?.genie;
   const bugsId = artist.platformArtistIds?.bugs;
 
-  if (progressCallback) progressCallback(`[${artist.name}] 멜론/지니/벅스 곡 목록 조회 중...`);
+  if (progressCallback) {
+    progressCallback(`[${artist.name}] 멜론/지니/벅스 곡 목록 조회 중... (${isSmart ? '사용자 수정 보호' : '전체 덮어쓰기'})`);
+  }
 
   const [melonTracks, genieTracks, bugsTracks] = await Promise.all([
     fetchMelonTracks(melonId),
@@ -313,6 +322,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
 
   let updatedCount = 0;
   let addedCount = 0;
+  let protectedCount = 0;
   const updatedSongs = [...currentSongs];
 
   // 1. Update or Add Melon tracks (Melon Release Date is 1st Priority)
@@ -323,6 +333,21 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
     );
 
     if (existing) {
+      // If smart mode and user edited, preserve user's data (title, duration, releaseDate, album)
+      if (isSmart && existing.userEdited) {
+        protectedCount++;
+        // Still safely link missing platform ID if empty
+        if (!existing.platformIds) existing.platformIds = {};
+        if (!existing.platformIds.melon) {
+          existing.platformIds.melon = mt.id;
+        }
+        return;
+      }
+
+      if (!isSmart) {
+        existing.userEdited = false; // Reset edit flag on full overwrite
+      }
+
       if (!existing.platformIds) existing.platformIds = {};
       if (existing.platformIds.melon !== mt.id) {
         existing.platformIds.melon = mt.id;
@@ -333,8 +358,8 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
         existing.releaseDate = mt.releaseDate;
         updatedCount++;
       }
-      // Update album title from Melon if missing
-      if (mt.album && (!existing.album || existing.album === `${artist.name} 앨범`)) {
+      // Update album title from Melon if missing or overwriting
+      if (mt.album && (!existing.album || existing.album === `${artist.name} 앨범` || !isSmart)) {
         existing.album = mt.album;
       }
     } else {
@@ -348,6 +373,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
         releaseDate: mt.releaseDate || '',
         duration: 0, // will be filled by Genie duration fetch
         isTitle: false,
+        userEdited: false,
         platformIds: {
           melon: mt.id,
           genie: '',
@@ -370,7 +396,9 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
       if (!existing.platformIds) existing.platformIds = {};
       if (existing.platformIds.genie !== gt.id) {
         existing.platformIds.genie = gt.id;
-        updatedCount++;
+        if (!isSmart || !existing.userEdited) {
+          updatedCount++;
+        }
       }
     }
   });
@@ -385,22 +413,27 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
       if (!existing.platformIds) existing.platformIds = {};
       if (existing.platformIds.bugs !== bt.id) {
         existing.platformIds.bugs = bt.id;
-        updatedCount++;
+        if (!isSmart || !existing.userEdited) {
+          updatedCount++;
+        }
       }
     }
   });
 
   // 4. Batch-fetch durations from Genie for songs that need it
-  //    Target: songs belonging to this artist that have a genie songId AND
-  //            either have no duration, default duration (225), or duration=0
-  const songsNeedingDuration = updatedSongs.filter(
-    s => s.artistType === artist.id &&
-         s.platformIds?.genie &&
-         (!s.duration || s.duration === 0 || s.duration === 225)
-  );
+  //    In smart mode: skip songs that have userEdited: true
+  //    In overwrite mode: fetch for all songs with genie ID
+  const songsNeedingDuration = updatedSongs.filter(s => {
+    if (s.artistType !== artist.id || !s.platformIds?.genie) return false;
+    if (isSmart && s.userEdited) return false; // Protected from overwrite
+    if (!isSmart) return true; // Overwrite mode fetches fresh durations
+    return !s.duration || s.duration === 0 || s.duration === 225;
+  });
 
   if (songsNeedingDuration.length > 0) {
-    if (progressCallback) progressCallback(`[${artist.name}] 지니에서 ${songsNeedingDuration.length}곡 재생시간 조회 중...`);
+    if (progressCallback) {
+      progressCallback(`[${artist.name}] 지니에서 ${songsNeedingDuration.length}곡 재생시간 조회 중...`);
+    }
 
     const genieIds = songsNeedingDuration.map(s => s.platformIds.genie);
     const durationMap = await batchFetchGenieDurations(genieIds, 5);
@@ -414,7 +447,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
     });
   }
 
-  // 5. For any remaining songs with duration=0 that still have no duration, set a sensible default
+  // 5. For any remaining songs with duration=0 that still have no duration, set fallback default
   updatedSongs.forEach(s => {
     if (s.artistType === artist.id && (!s.duration || s.duration === 0)) {
       s.duration = 225; // fallback default: 3:45
@@ -425,6 +458,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
     updatedSongs,
     stats: {
       artistName: artist.name,
+      mode: isSmart ? 'smart' : 'overwrite',
       melonTracksCount: melonTracks.length,
       genieTracksCount: genieTracks.length,
       bugsTracksCount: bugsTracks.length,
@@ -434,6 +468,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback) {
           return acc;
         }, {})
       ).length,
+      protectedCount,
       updatedCount,
       addedCount
     }

@@ -121,7 +121,8 @@ export default function SongEditorModal({
 
     const updatedSong = {
       ...formData,
-      duration: Math.max(1, totalSeconds)
+      duration: Math.max(1, totalSeconds),
+      userEdited: true  // mark as manually edited by user
     };
 
     delete updatedSong.durationMinutes;
