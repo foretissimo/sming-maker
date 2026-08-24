@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Music, 
   Users, 
@@ -18,14 +18,16 @@ import {
   Sparkles,
   FileJson,
   Calendar,
-  Clock
+  Clock,
+  Code2,
+  Save,
+  FileCode
 } from 'lucide-react';
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
 import SongEditorModal from './SongEditorModal';
 import ArtistEditorModal from './ArtistEditorModal';
 
 export default function DataEditorView({
-
   songs,
   onUpdateSongs,
   artists,
@@ -33,11 +35,26 @@ export default function DataEditorView({
   onResetToDefault,
   onShowToast
 }) {
-  const [activeTab, setActiveTab] = useState('songs'); // 'songs' | 'artists' | 'sync'
+  const [activeTab, setActiveTab] = useState('songs'); // 'songs' | 'artists' | 'raw_json' | 'sync'
   const [searchQuery, setSearchQuery] = useState('');
   const [filterArtist, setFilterArtist] = useState('all');
   const [copiedType, setCopiedType] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
+
+  // Raw JSON Editor State
+  const [rawTarget, setRawTarget] = useState('songs'); // 'songs' | 'artists'
+  const [rawText, setRawText] = useState('');
+  const [jsonError, setJsonError] = useState(null);
+
+  // Sync raw text when switching to raw_json tab or when songs/artists update
+  useEffect(() => {
+    if (rawTarget === 'songs') {
+      setRawText(JSON.stringify(songs, null, 2));
+    } else {
+      setRawText(JSON.stringify(artists, null, 2));
+    }
+    setJsonError(null);
+  }, [rawTarget, activeTab]);
 
   // Modals
   const [editingSong, setEditingSong] = useState(null);
@@ -110,6 +127,40 @@ export default function DataEditorView({
     if (window.confirm(`'${name}' 아티스트를 삭제하시겠습니까? 관련 곡들도 유지되거나 삭제될 수 있습니다.`)) {
       onUpdateArtists(artists.filter(a => a.id !== artistId));
       onShowToast(`아티스트 '${name}'이(가) 삭제되었습니다.`);
+    }
+  };
+
+  // Raw JSON Save
+  const handleSaveRawJson = () => {
+    try {
+      const parsed = JSON.parse(rawText);
+      if (!Array.isArray(parsed)) {
+        setJsonError('최상위 구조는 배열([]) 형태여야 합니다.');
+        return;
+      }
+
+      if (rawTarget === 'songs') {
+        onUpdateSongs(parsed);
+        onShowToast(`음원 목록(${parsed.length}곡)이 직접 수정되어 적용되었습니다! ✨`);
+      } else {
+        onUpdateArtists(parsed);
+        onShowToast(`아티스트 목록(${parsed.length}명)이 직접 수정되어 적용되었습니다! ✨`);
+      }
+      setJsonError(null);
+    } catch (e) {
+      setJsonError(`JSON 문법 오류: ${e.message}`);
+    }
+  };
+
+  // Format JSON
+  const handlePrettifyRawJson = () => {
+    try {
+      const parsed = JSON.parse(rawText);
+      setRawText(JSON.stringify(parsed, null, 2));
+      setJsonError(null);
+      onShowToast('JSON 서식이 깔끔하게 정렬되었습니다.');
+    } catch (e) {
+      setJsonError(`서식 정렬 불가: ${e.message}`);
     }
   };
 
@@ -187,38 +238,50 @@ export default function DataEditorView({
         <div className="flex gap-1.5 overflow-x-auto">
           <button
             onClick={() => setActiveTab('songs')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'songs'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
             <Music className="w-4 h-4" />
-            <span>음원 목록 관리 & 교차검증 ({songs.length}곡)</span>
+            <span>음원 목록 ({songs.length}곡)</span>
           </button>
 
           <button
             onClick={() => setActiveTab('artists')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'artists'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
             <Users className="w-4 h-4" />
-            <span>아티스트 관리 & 공식 ID ({artists.length}명)</span>
+            <span>아티스트 ID ({artists.length}명)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('raw_json')}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'raw_json'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+            }`}
+          >
+            <Code2 className="w-4 h-4 text-emerald-400" />
+            <span>JSON 텍스트 직접 편집 (자유 수정)</span>
           </button>
 
           <button
             onClick={() => setActiveTab('sync')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'sync'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
             <RefreshCw className="w-4 h-4" />
-            <span>데이터 동기화 & 백업/내보내기</span>
+            <span>백업 / 내보내기</span>
           </button>
         </div>
 
@@ -544,7 +607,116 @@ export default function DataEditorView({
         </div>
       )}
 
-      {/* TAB 3: DATA SYNC, EXPORT & BACKUP */}
+      {/* TAB 3: RAW JSON CODE EDITOR (DIRECT FREEDOM TO EDIT) */}
+      {activeTab === 'raw_json' && (
+        <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-xl">
+          {/* Header & Mode Switcher */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+            <div>
+              <div className="flex items-center gap-2">
+                <Code2 className="w-5 h-5 text-emerald-400" />
+                <h4 className="text-base font-bold text-slate-100">JSON 텍스트 직접 편집기</h4>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                아래 텍스트 창에서 곡 또는 아티스트 데이터를 직접 JSON으로 수정하고 <strong>[변경사항 적용]</strong>을 누르세요.
+              </p>
+            </div>
+
+            {/* Target Switcher */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setRawTarget('songs')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                  rawTarget === 'songs'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:bg-slate-800'
+                }`}
+              >
+                songs.json ({songs.length}곡)
+              </button>
+              <button
+                onClick={() => setRawTarget('artists')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                  rawTarget === 'artists'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:bg-slate-800'
+                }`}
+              >
+                artists.json ({artists.length}명)
+              </button>
+            </div>
+          </div>
+
+          {/* Local File Path Guide */}
+          <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2 min-w-0">
+              <FileCode className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <span className="text-slate-400">로컬 소스 파일 경로:</span>
+              <code className="text-emerald-300 font-mono text-[11px] truncate bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                {rawTarget === 'songs' ? 'src/data/songs.json' : 'src/data/artists.json'}
+              </code>
+            </div>
+            <button
+              onClick={() => handleCopyJson(rawTarget === 'songs' ? songs : artists, 'raw_target')}
+              className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-medium flex items-center gap-1 cursor-pointer flex-shrink-0"
+            >
+              {copiedType === 'raw_target' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+              <span>전체 복사</span>
+            </button>
+          </div>
+
+          {/* Error Banner */}
+          {jsonError && (
+            <div className="p-3 rounded-xl bg-rose-950/50 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{jsonError}</span>
+            </div>
+          )}
+
+          {/* Large Code Textarea */}
+          <div className="relative">
+            <textarea
+              value={rawText}
+              onChange={(e) => { setRawText(e.target.value); setJsonError(null); }}
+              rows={22}
+              spellCheck={false}
+              className="w-full p-4 bg-slate-950 border border-slate-800 rounded-xl font-mono text-xs text-emerald-400 leading-relaxed focus:outline-none focus:border-emerald-500 transition-colors selection:bg-emerald-600 selection:text-slate-950"
+            />
+          </div>
+
+          {/* Bottom Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div className="flex gap-2">
+              <button
+                onClick={handlePrettifyRawJson}
+                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors cursor-pointer"
+              >
+                JSON 서식 정리 (Prettify)
+              </button>
+              <button
+                onClick={() => {
+                  if (rawTarget === 'songs') setRawText(JSON.stringify(songs, null, 2));
+                  else setRawText(JSON.stringify(artists, null, 2));
+                  setJsonError(null);
+                }}
+                className="px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs transition-colors cursor-pointer border border-slate-800"
+              >
+                되돌리기
+              </button>
+            </div>
+
+            <button
+              onClick={handleSaveRawJson}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-950/60 cursor-pointer"
+            >
+              <Save className="w-4 h-4 fill-current" />
+              <span>변경사항 즉시 적용하기</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 4: DATA SYNC, EXPORT & BACKUP */}
       {activeTab === 'sync' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Remote Sync Panel */}
