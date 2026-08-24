@@ -134,11 +134,16 @@ export default function PlaylistView({
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-400 truncate">
+                    <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-400 truncate flex-wrap">
                       <span className={`px-1.5 py-0.2 rounded text-[10px] border ${badgeClass}`}>
                         {song.artist}
                       </span>
-                      <span className="text-slate-500 truncate hidden xs:inline">{song.album}</span>
+                      <span className="text-slate-400 truncate">{song.album}</span>
+                      {song.releaseDate && song.releaseDate.trim() && (
+                        <span className="text-slate-500 font-mono text-[10px] hidden sm:inline">
+                          ({formatDate(song.releaseDate)})
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
