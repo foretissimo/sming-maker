@@ -23,7 +23,9 @@ import {
   Save,
   FileCode,
   Zap,
-  Loader2
+  Loader2,
+  ArrowUpDown,
+  ListFilter
 } from 'lucide-react';
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
 import SongEditorModal from './SongEditorModal';
@@ -38,7 +40,14 @@ export default function DataEditorView({
   onResetToDefault,
   onShowToast
 }) {
-  const [activeTab, setActiveTab] = useState('songs'); // 'songs' | 'artists' | 'raw_json' | 'sync'
+  const [activeTab, setActiveTab] = useState('artist_songs'); // 'artist_songs' | 'all_songs' | 'raw_json' | 'sync'
+  
+  // Selected artist in artist-centric view
+  const [selectedArtistId, setSelectedArtistId] = useState(() => artists[0]?.id || 'group');
+  const [artistSongSearch, setArtistSongSearch] = useState('');
+  const [sortBy, setSortBy] = useState('date_desc'); // 'date_desc' | 'date_asc' | 'title' | 'duration'
+
+  // Global search for all_songs tab
   const [searchQuery, setSearchQuery] = useState('');
   const [filterArtist, setFilterArtist] = useState('all');
   const [copiedType, setCopiedType] = useState(null);
@@ -62,7 +71,7 @@ export default function DataEditorView({
       setRawText(JSON.stringify(artists, null, 2));
     }
     setJsonError(null);
-  }, [rawTarget, activeTab]);
+  }, [rawTarget, activeTab, songs, artists]);
 
   // Modals
   const [editingSong, setEditingSong] = useState(null);
@@ -70,8 +79,46 @@ export default function DataEditorView({
   const [editingArtist, setEditingArtist] = useState(null);
   const [isArtistModalOpen, setIsArtistModalOpen] = useState(false);
 
-  // Filtered songs
-  const filteredSongs = useMemo(() => {
+  // Active artist object in artist-centric view
+  const currentArtistObj = useMemo(() => {
+    return artists.find(a => a.id === selectedArtistId) || artists[0];
+  }, [artists, selectedArtistId]);
+
+  // Songs filtered and sorted for the selected artist
+  const artistSongs = useMemo(() => {
+    if (!currentArtistObj) return [];
+    let list = songs.filter(s => s.artistType === currentArtistObj.id);
+
+    // Search filter
+    if (artistSongSearch.trim()) {
+      const q = artistSongSearch.toLowerCase();
+      list = list.filter(s => 
+        s.title?.toLowerCase().includes(q) ||
+        s.album?.toLowerCase().includes(q) ||
+        s.releaseDate?.includes(q) ||
+        s.platformIds?.melon?.includes(q) ||
+        s.platformIds?.genie?.includes(q) ||
+        s.platformIds?.bugs?.includes(q)
+      );
+    }
+
+    // Sort
+    return list.sort((a, b) => {
+      if (sortBy === 'date_desc') {
+        return (b.releaseDate || '').localeCompare(a.releaseDate || '');
+      } else if (sortBy === 'date_asc') {
+        return (a.releaseDate || '').localeCompare(b.releaseDate || '');
+      } else if (sortBy === 'title') {
+        return (a.title || '').localeCompare(b.title || '');
+      } else if (sortBy === 'duration') {
+        return (b.duration || 0) - (a.duration || 0);
+      }
+      return 0;
+    });
+  }, [songs, currentArtistObj, artistSongSearch, sortBy]);
+
+  // Filtered songs for all_songs tab
+  const filteredAllSongs = useMemo(() => {
     return songs.filter(song => {
       if (filterArtist !== 'all' && song.artistType !== filterArtist) return false;
       if (searchQuery.trim()) {
@@ -79,8 +126,9 @@ export default function DataEditorView({
         const matchesTitle = song.title?.toLowerCase().includes(q);
         const matchesArtist = song.artist?.toLowerCase().includes(q);
         const matchesAlbum = song.album?.toLowerCase().includes(q);
+        const matchesDate = song.releaseDate?.includes(q);
         const matchesId = song.platformIds?.melon?.includes(q) || song.platformIds?.genie?.includes(q) || song.platformIds?.bugs?.includes(q);
-        if (!matchesTitle && !matchesArtist && !matchesAlbum && !matchesId) return false;
+        if (!matchesTitle && !matchesArtist && !matchesAlbum && !matchesDate && !matchesId) return false;
       }
       return true;
     });
@@ -123,6 +171,7 @@ export default function DataEditorView({
       onShowToast(`아티스트 '${savedArtist.name}' 정보가 수정되었습니다.`);
     } else {
       onUpdateArtists([...artists, savedArtist]);
+      setSelectedArtistId(savedArtist.id);
       onShowToast(`새 아티스트 '${savedArtist.name}'이(가) 추가되었습니다.`);
     }
   };
@@ -132,8 +181,10 @@ export default function DataEditorView({
       alert('최소 1명의 아티스트는 유지되어야 합니다.');
       return;
     }
-    if (window.confirm(`'${name}' 아티스트를 삭제하시겠습니까? 관련 곡들도 유지되거나 삭제될 수 있습니다.`)) {
-      onUpdateArtists(artists.filter(a => a.id !== artistId));
+    if (window.confirm(`'${name}' 아티스트를 삭제하시겠습니까?`)) {
+      const nextArtists = artists.filter(a => a.id !== artistId);
+      onUpdateArtists(nextArtists);
+      setSelectedArtistId(nextArtists[0]?.id || 'group');
       onShowToast(`아티스트 '${name}'이(가) 삭제되었습니다.`);
     }
   };
@@ -284,31 +335,31 @@ export default function DataEditorView({
 
   return (
     <div className="space-y-6">
-      {/* Sub Tabs Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-2 bg-slate-900/90 border border-slate-800 rounded-2xl">
+      {/* Sub Tabs Navigation */}
+      <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-lg">
         <div className="flex gap-1.5 overflow-x-auto">
           <button
-            onClick={() => setActiveTab('songs')}
+            onClick={() => setActiveTab('artist_songs')}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'songs'
+              activeTab === 'artist_songs'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+            }`}
+          >
+            <Users className="w-4 h-4 text-emerald-400" />
+            <span>아티스트별 곡 관리 & 편집</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('all_songs')}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'all_songs'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
             <Music className="w-4 h-4" />
-            <span>음원 목록 ({songs.length}곡)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('artists')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'artists'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            <span>아티스트 관리 & 동기화 ({artists.length}명)</span>
+            <span>전체 음원 목록 ({songs.length}곡)</span>
           </button>
 
           <button
@@ -319,7 +370,7 @@ export default function DataEditorView({
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
-            <Code2 className="w-4 h-4 text-emerald-400" />
+            <Code2 className="w-4 h-4 text-teal-400" />
             <span>JSON 텍스트 직접 편집</span>
           </button>
 
@@ -336,20 +387,371 @@ export default function DataEditorView({
           </button>
         </div>
 
-        {/* Quick Action in Header (Only in songs tab) */}
-        {activeTab === 'songs' && (
+        {/* Global Action on Tab Header */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => { setEditingSong(null); setIsSongModalOpen(true); }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md cursor-pointer ml-auto"
+            onClick={handleSyncAllArtists}
+            disabled={isSyncingAll}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 text-xs font-bold cursor-pointer shadow-md disabled:opacity-50 transition-all"
+            title="등록된 모든 가수의 곡을 멜론/지니/벅스에서 일괄 조회 및 동기화합니다."
           >
-            <Plus className="w-4 h-4" />
-            <span>새 음원 등록</span>
+            {isSyncingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" /> : <Zap className="w-3.5 h-3.5 fill-current text-slate-950" />}
+            <span className="hidden sm:inline">{isSyncingAll ? '동기화 중...' : '⚡ 전체 아티스트 자동 동기화'}</span>
           </button>
-        )}
+        </div>
       </div>
 
-      {/* TAB 1: SONGS MANAGEMENT */}
-      {activeTab === 'songs' && (
+      {/* TAB 1: ARTIST-CENTRIC SONG VIEW & EDITING */}
+      {activeTab === 'artist_songs' && currentArtistObj && (
+        <div className="space-y-5">
+          {/* Artist Selector Pills Bar */}
+          <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5 uppercase tracking-wider">
+                <Users className="w-3.5 h-3.5 text-emerald-400" />
+                조회 및 편집할 아티스트 선택
+              </span>
+              <button
+                onClick={() => { setEditingArtist(null); setIsArtistModalOpen(true); }}
+                className="text-xs text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1 cursor-pointer font-medium"
+              >
+                <Plus className="w-3 h-3" />
+                <span>새 아티스트 등록</span>
+              </button>
+            </div>
+
+            {/* Artist Pills */}
+            <div className="flex flex-wrap gap-2">
+              {artists.map((artist) => {
+                const isSelected = artist.id === selectedArtistId;
+                const count = songs.filter(s => s.artistType === artist.id).length;
+                return (
+                  <button
+                    key={artist.id}
+                    onClick={() => { setSelectedArtistId(artist.id); setArtistSongSearch(''); }}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer border flex items-center gap-2 ${
+                      isSelected
+                        ? `${artist.badgeColor} shadow-md shadow-emerald-950/40 ring-1 ring-emerald-400/40 scale-105`
+                        : 'bg-slate-950/60 text-slate-400 border-slate-800 hover:bg-slate-800 hover:text-slate-200'
+                    }`}
+                  >
+                    <span>{artist.name}</span>
+                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900/80 text-slate-300 border border-slate-700/60 font-mono">
+                      {count}곡
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Selected Artist Detailed Card & Quick Sync */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 space-y-4 shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <span className={`px-3 py-1.5 rounded-xl text-sm font-bold border ${currentArtistObj.badgeColor}`}>
+                  {currentArtistObj.name}
+                </span>
+                <div>
+                  <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                    {currentArtistObj.name} 음원 관리
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    {currentArtistObj.category === 'group' ? '그룹(완전체)' : '솔로(개인)'} • 등록된 곡 총 <strong className="text-emerald-300">{artistSongs.length}곡</strong>
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons for this Artist */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  onClick={() => handleSyncSingleArtist(currentArtistObj)}
+                  disabled={syncingArtistId === currentArtistObj.id || isSyncingAll}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 text-xs font-bold cursor-pointer disabled:opacity-50 transition-all shadow-sm"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${syncingArtistId === currentArtistObj.id ? 'animate-spin' : ''}`} />
+                  <span>{syncingArtistId === currentArtistObj.id ? '조회 및 동기화 중...' : `🔄 [${currentArtistObj.name}] 음원 자동 동기화`}</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setEditingSong({
+                      id: `song-${Date.now()}`,
+                      title: '',
+                      artist: currentArtistObj.name,
+                      artistType: currentArtistObj.id,
+                      album: '',
+                      releaseDate: new Date().toISOString().split('T')[0],
+                      duration: 225,
+                      isTitle: false,
+                      platformIds: { melon: '', genie: '', bugs: '' },
+                      tags: []
+                    });
+                    setIsSongModalOpen(true);
+                  }}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer shadow-md transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>새 곡 등록</span>
+                </button>
+
+                <button
+                  onClick={() => { setEditingArtist(currentArtistObj); setIsArtistModalOpen(true); }}
+                  className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer transition-colors border border-slate-700"
+                  title="아티스트 ID 수정"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Platform Cross-Verification Links Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+              {/* Melon */}
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-[#00cd3c] text-slate-950 flex items-center justify-center font-black text-[10px]">M</span>
+                  <span className="text-slate-400">멜론 ID:</span>
+                  <span className="font-mono text-emerald-400 font-bold">{currentArtistObj.platformArtistIds?.melon || '미설정'}</span>
+                </div>
+                {currentArtistObj.platformArtistIds?.melon && (
+                  <a
+                    href={`https://www.melon.com/artist/timeline.htm?artistId=${currentArtistObj.platformArtistIds.melon}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-emerald-400 hover:underline flex items-center gap-1 text-[11px] font-medium"
+                  >
+                    공식 곡 목록 <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+
+              {/* Genie */}
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-[#0092fa] text-white flex items-center justify-center font-black text-[10px]">G</span>
+                  <span className="text-slate-400">지니 ID:</span>
+                  <span className="font-mono text-sky-400 font-bold">{currentArtistObj.platformArtistIds?.genie || '미설정'}</span>
+                </div>
+                {currentArtistObj.platformArtistIds?.genie && (
+                  <a
+                    href={`https://www.genie.co.kr/detail/artistInfo?xxnm=${currentArtistObj.platformArtistIds.genie}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sky-400 hover:underline flex items-center gap-1 text-[11px] font-medium"
+                  >
+                    공식 곡 목록 <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+
+              {/* Bugs */}
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-[#f9423a] text-white flex items-center justify-center font-black text-[10px]">B</span>
+                  <span className="text-slate-400">벅스 ID:</span>
+                  <span className="font-mono text-rose-400 font-bold">{currentArtistObj.platformArtistIds?.bugs || '미설정'}</span>
+                </div>
+                {currentArtistObj.platformArtistIds?.bugs && (
+                  <a
+                    href={`https://music.bugs.co.kr/artist/${currentArtistObj.platformArtistIds.bugs}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-rose-400 hover:underline flex items-center gap-1 text-[11px] font-medium"
+                  >
+                    공식 곡 목록 <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Search, Sort & Filter Bar for this Artist */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={artistSongSearch}
+                onChange={(e) => setArtistSongSearch(e.target.value)}
+                placeholder={`[${currentArtistObj.name}] 곡명, 앨범명, 발매일, SongID 검색...`}
+                className="w-full pl-9 pr-4 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400 flex items-center gap-1">
+                <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
+                정렬:
+              </span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              >
+                <option value="date_desc">📅 발매일 최신순 (최근곡 우선)</option>
+                <option value="date_asc">📅 발매일 오래된순 (과거순)</option>
+                <option value="title">🔤 곡명 가나다순</option>
+                <option value="duration">⏱️ 재생시간 긴 순</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Songs Table for this Artist with Prominent Release Date */}
+          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-950/90 border-b border-slate-800 text-slate-400 font-semibold">
+                    <th className="py-3 px-3 w-12 text-center">#</th>
+                    <th className="py-3 px-4">곡명 & 앨범</th>
+                    <th className="py-3 px-3 text-center whitespace-nowrap">📅 발매일 / 등록일</th>
+                    <th className="py-3 px-3 text-center whitespace-nowrap">⏱️ 재생시간</th>
+                    <th className="py-3 px-3">음원 사이트 곡 ID (교차검증 🔗)</th>
+                    <th className="py-3 px-3 text-right">관리</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {artistSongs.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" className="py-12 text-center text-slate-500">
+                        {artistSongSearch ? '검색 조건에 맞는 곡이 없습니다.' : `등록된 '${currentArtistObj.name}' 곡이 없습니다. [새 곡 등록] 또는 [음원 자동 동기화]를 실행해 보세요.`}
+                      </td>
+                    </tr>
+                  ) : (
+                    artistSongs.map((song, idx) => {
+                      return (
+                        <tr key={song.id} className="hover:bg-slate-950/40 transition-colors">
+                          {/* Index */}
+                          <td className="py-3 px-3 text-center font-mono text-slate-500">
+                            {idx + 1}
+                          </td>
+
+                          {/* Title & Album */}
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-bold text-slate-100 text-xs sm:text-sm">{song.title}</span>
+                              {song.isTitle && (
+                                <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                  ⭐ 타이틀
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] text-slate-400 mt-0.5 truncate">
+                              <span className="text-slate-400">{song.album}</span>
+                            </div>
+                          </td>
+
+                          {/* Release Date (Prominent) */}
+                          <td className="py-3 px-3 text-center whitespace-nowrap">
+                            {song.releaseDate ? (
+                              <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 font-mono text-[11px] text-slate-200">
+                                <Calendar className="w-3 h-3 text-emerald-400" />
+                                <span>{formatDate(song.releaseDate)}</span>
+                              </div>
+                            ) : (
+                              <span className="text-slate-600 text-[11px]">미등록</span>
+                            )}
+                          </td>
+
+                          {/* Duration */}
+                          <td className="py-3 px-3 text-center font-mono text-slate-300 whitespace-nowrap">
+                            <span className="font-semibold">{formatSecondsToTime(song.duration)}</span>
+                            <span className="block text-[10px] text-slate-500">({song.duration}초)</span>
+                          </td>
+
+                          {/* Platform Song IDs */}
+                          <td className="py-3 px-3">
+                            <div className="flex flex-wrap items-center gap-1.5 font-mono text-[11px]">
+                              {/* Melon */}
+                              {song.platformIds?.melon ? (
+                                <a
+                                  href={`https://www.melon.com/song/detail.htm?songId=${song.platformIds.melon}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2 py-0.5 rounded bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-700/40 text-emerald-300 flex items-center gap-1 transition-colors"
+                                  title="멜론 곡 상세 페이지에서 일치 여부 확인"
+                                >
+                                  <span>M: {song.platformIds.melon}</span>
+                                  <ExternalLink className="w-2.5 h-2.5" />
+                                </a>
+                              ) : (
+                                <span className="px-1.5 py-0.5 text-slate-600 rounded bg-slate-950/60">M: -</span>
+                              )}
+
+                              {/* Genie */}
+                              {song.platformIds?.genie ? (
+                                <a
+                                  href={`https://www.genie.co.kr/detail/songInfo?xgnm=${song.platformIds.genie}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2 py-0.5 rounded bg-sky-950/60 hover:bg-sky-900 border border-sky-700/40 text-sky-300 flex items-center gap-1 transition-colors"
+                                  title="지니 곡 상세 페이지에서 일치 여부 확인"
+                                >
+                                  <span>G: {song.platformIds.genie}</span>
+                                  <ExternalLink className="w-2.5 h-2.5" />
+                                </a>
+                              ) : (
+                                <span className="px-1.5 py-0.5 text-slate-600 rounded bg-slate-950/60">G: -</span>
+                              )}
+
+                              {/* Bugs */}
+                              {song.platformIds?.bugs ? (
+                                <a
+                                  href={`https://music.bugs.co.kr/track/${song.platformIds.bugs}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2 py-0.5 rounded bg-rose-950/60 hover:bg-rose-900 border border-rose-700/40 text-rose-300 flex items-center gap-1 transition-colors"
+                                  title="벅스 곡 상세 페이지에서 일치 여부 확인"
+                                >
+                                  <span>B: {song.platformIds.bugs}</span>
+                                  <ExternalLink className="w-2.5 h-2.5" />
+                                </a>
+                              ) : (
+                                <span className="px-1.5 py-0.5 text-slate-600 rounded bg-slate-950/60">B: -</span>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Actions */}
+                          <td className="py-3 px-3 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <button
+                                onClick={() => { setEditingSong(song); setIsSongModalOpen(true); }}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-300 hover:bg-slate-800 cursor-pointer"
+                                title="곡 정보 수정"
+                              >
+                                <Edit3 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDuplicateSong(song)}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-sky-300 hover:bg-slate-800 cursor-pointer"
+                                title="복제"
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteSong(song.id, song.title)}
+                                className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 cursor-pointer"
+                                title="삭제"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: ALL SONGS MANAGEMENT */}
+      {activeTab === 'all_songs' && (
         <div className="space-y-4">
           {/* Filter & Search Bar */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
@@ -359,7 +761,7 @@ export default function DataEditorView({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="곡명, 앨범명, 가수, 또는 SongID 검색..."
+                placeholder="곡명, 앨범명, 가수, 발매일, 또는 SongID 검색..."
                 className="w-full pl-9 pr-4 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
               />
             </div>
@@ -381,7 +783,7 @@ export default function DataEditorView({
             </div>
           </div>
 
-          {/* Songs Table */}
+          {/* All Songs Table */}
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
@@ -390,20 +792,21 @@ export default function DataEditorView({
                     <th className="py-3 px-3 w-12 text-center">#</th>
                     <th className="py-3 px-4">곡명 & 앨범</th>
                     <th className="py-3 px-3">가수</th>
-                    <th className="py-3 px-3 text-center">시간</th>
+                    <th className="py-3 px-3 text-center whitespace-nowrap">📅 발매일</th>
+                    <th className="py-3 px-3 text-center whitespace-nowrap">⏱️ 시간</th>
                     <th className="py-3 px-3">플랫폼별 곡 ID (교차검증 🔗)</th>
                     <th className="py-3 px-3 text-right">관리</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
-                  {filteredSongs.length === 0 ? (
+                  {filteredAllSongs.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="py-12 text-center text-slate-500">
+                      <td colSpan="7" className="py-12 text-center text-slate-500">
                         검색 조건에 맞는 음원이 없습니다.
                       </td>
                     </tr>
                   ) : (
-                    filteredSongs.map((song, idx) => {
+                    filteredAllSongs.map((song, idx) => {
                       const artistObj = artists.find(a => a.id === song.artistType);
                       return (
                         <tr key={song.id} className="hover:bg-slate-950/40 transition-colors">
@@ -419,75 +822,66 @@ export default function DataEditorView({
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-0.5">
-                              <span className="text-slate-500">{song.album}</span>
-                              {song.releaseDate && (
-                                <>
-                                  <span className="text-slate-700">•</span>
-                                  <span className="text-slate-500">{formatDate(song.releaseDate)}</span>
-                                </>
-                              )}
+                            <div className="text-[11px] text-slate-500 mt-0.5 truncate">
+                              {song.album}
                             </div>
                           </td>
-                          <td className="py-3 px-3">
+                          <td className="py-3 px-3 whitespace-nowrap">
                             <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${
                               artistObj ? artistObj.badgeColor : 'bg-slate-800 text-slate-300 border-slate-700'
                             }`}>
                               {song.artist}
                             </span>
                           </td>
-                          <td className="py-3 px-3 text-center font-mono text-slate-300">
+                          <td className="py-3 px-3 text-center whitespace-nowrap font-mono text-[11px] text-slate-300">
+                            {song.releaseDate ? formatDate(song.releaseDate) : '-'}
+                          </td>
+                          <td className="py-3 px-3 text-center font-mono text-slate-300 whitespace-nowrap">
                             {formatSecondsToTime(song.duration)}
                             <span className="block text-[10px] text-slate-500">({song.duration}s)</span>
                           </td>
                           <td className="py-3 px-3">
-                            <div className="flex flex-wrap items-center gap-2 font-mono text-[11px]">
-                              {/* Melon */}
+                            <div className="flex flex-wrap items-center gap-1.5 font-mono text-[11px]">
                               {song.platformIds?.melon ? (
                                 <a
                                   href={`https://www.melon.com/song/detail.htm?songId=${song.platformIds.melon}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="px-2 py-0.5 rounded bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-700/40 text-emerald-300 flex items-center gap-1 transition-colors"
-                                  title="멜론 곡 상세 페이지에서 일치 여부 확인"
                                 >
                                   <span>M: {song.platformIds.melon}</span>
                                   <ExternalLink className="w-2.5 h-2.5" />
                                 </a>
                               ) : (
-                                <span className="text-slate-600">M: 미등록</span>
+                                <span className="text-slate-600">M: -</span>
                               )}
 
-                              {/* Genie */}
                               {song.platformIds?.genie ? (
                                 <a
                                   href={`https://www.genie.co.kr/detail/songInfo?xgnm=${song.platformIds.genie}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="px-2 py-0.5 rounded bg-sky-950/60 hover:bg-sky-900 border border-sky-700/40 text-sky-300 flex items-center gap-1 transition-colors"
-                                  title="지니 곡 상세 페이지에서 일치 여부 확인"
                                 >
                                   <span>G: {song.platformIds.genie}</span>
                                   <ExternalLink className="w-2.5 h-2.5" />
                                 </a>
                               ) : (
-                                <span className="text-slate-600">G: 미등록</span>
+                                <span className="text-slate-600">G: -</span>
                               )}
 
-                              {/* Bugs */}
                               {song.platformIds?.bugs ? (
                                 <a
                                   href={`https://music.bugs.co.kr/track/${song.platformIds.bugs}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="px-2 py-0.5 rounded bg-rose-950/60 hover:bg-rose-900 border border-rose-700/40 text-rose-300 flex items-center gap-1 transition-colors"
-                                  title="벅스 곡 상세 페이지에서 일치 여부 확인"
                                 >
                                   <span>B: {song.platformIds.bugs}</span>
                                   <ExternalLink className="w-2.5 h-2.5" />
                                 </a>
                               ) : (
-                                <span className="text-slate-600">B: 미등록</span>
+                                <span className="text-slate-600">B: -</span>
                               )}
                             </div>
                           </td>
@@ -523,173 +917,6 @@ export default function DataEditorView({
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: ARTISTS MANAGEMENT & PLATFORM ID LOOKUP & SYNC */}
-      {activeTab === 'artists' && (
-        <div className="space-y-4">
-          {/* Top Master Header with Global Sync & Add Artist */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/50 via-slate-900/80 to-teal-950/50 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-emerald-400" />
-                <h4 className="text-sm sm:text-base font-bold text-slate-100">
-                  아티스트 ID 관리 & 음원 사이트 자동 데이터 동기화
-                </h4>
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                등록된 아티스트 ID를 기반으로 멜론, 지니, 벅스의 최신 곡 목록을 자동으로 조회하여 데이터베이스에 일괄 동기화합니다.
-              </p>
-              {syncProgressText && (
-                <p className="text-xs text-emerald-300 font-semibold flex items-center gap-1.5 animate-pulse pt-1">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>{syncProgressText}</span>
-                </p>
-              )}
-            </div>
-
-            {/* Top Action Buttons: Sync All & Add Artist */}
-            <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
-              <button
-                onClick={handleSyncAllArtists}
-                disabled={isSyncingAll}
-                className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 text-xs font-bold shadow-lg shadow-emerald-950/60 cursor-pointer disabled:opacity-50 transition-all"
-                title="등록된 전체 아티스트의 곡을 멜론/지니/벅스에서 자동 조회 및 동기화합니다."
-              >
-                {isSyncingAll ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                ) : (
-                  <Zap className="w-4 h-4 fill-current text-slate-950" />
-                )}
-                <span>{isSyncingAll ? '전체 동기화 진행 중...' : '⚡ 전체 아티스트 음원 자동 동기화'}</span>
-              </button>
-
-              <button
-                onClick={() => { setEditingArtist(null); setIsArtistModalOpen(true); }}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold cursor-pointer transition-colors"
-              >
-                <Plus className="w-4 h-4 text-emerald-400" />
-                <span>새 아티스트 등록</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Artist Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {artists.map((artist) => {
-              const songCount = songs.filter(s => s.artistType === artist.id).length;
-              const isSyncingThis = syncingArtistId === artist.id || isSyncingAll;
-
-              return (
-                <div
-                  key={artist.id}
-                  className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 shadow-xl space-y-3.5"
-                >
-                  {/* Card Header */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`px-2.5 py-1 rounded-xl text-xs font-bold border ${artist.badgeColor}`}>
-                        {artist.name}
-                      </span>
-                      <span className="text-xs text-slate-400">
-                        {artist.category === 'group' ? '그룹(완전체)' : '솔로(개인)'} • <strong className="text-slate-200">{songCount}곡</strong> 등록됨
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => { setEditingArtist(artist); setIsArtistModalOpen(true); }}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-300 hover:bg-slate-800 cursor-pointer"
-                        title="아티스트 ID 수정"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteArtist(artist.id, artist.name)}
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 cursor-pointer"
-                        title="아티스트 삭제"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Individual Artist Sync Action Button */}
-                  <div className="pt-1">
-                    <button
-                      onClick={() => handleSyncSingleArtist(artist)}
-                      disabled={isSyncingThis}
-                      className="w-full py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-emerald-500/30 hover:border-emerald-500/60 text-emerald-300 hover:text-emerald-200 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 transition-all shadow-sm"
-                    >
-                      <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${isSyncingThis ? 'animate-spin' : ''}`} />
-                      <span>{isSyncingThis ? '음원 사이트 조회 및 동기화 중...' : `🔄 [${artist.name}] 음원 자동 조회 & 동기화`}</span>
-                    </button>
-                  </div>
-
-                  {/* Platform IDs & direct verification links */}
-                  <div className="space-y-2 pt-2 border-t border-slate-800/60 text-xs">
-                    {/* Melon */}
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded bg-[#00cd3c] text-slate-950 flex items-center justify-center font-black text-[10px]">M</span>
-                        <span className="text-slate-300 font-semibold">멜론:</span>
-                        <span className="font-mono text-emerald-400 font-bold">{artist.platformArtistIds?.melon || '미설정'}</span>
-                      </div>
-                      {artist.platformArtistIds?.melon && (
-                        <a
-                          href={`https://www.melon.com/artist/timeline.htm?artistId=${artist.platformArtistIds.melon}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-emerald-400 hover:underline flex items-center gap-1 text-[11px] font-medium"
-                        >
-                          곡 전체 조회 <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
-                    </div>
-
-                    {/* Genie */}
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded bg-[#0092fa] text-white flex items-center justify-center font-black text-[10px]">G</span>
-                        <span className="text-slate-300 font-semibold">지니:</span>
-                        <span className="font-mono text-sky-400 font-bold">{artist.platformArtistIds?.genie || '미설정'}</span>
-                      </div>
-                      {artist.platformArtistIds?.genie && (
-                        <a
-                          href={`https://www.genie.co.kr/detail/artistInfo?xxnm=${artist.platformArtistIds.genie}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sky-400 hover:underline flex items-center gap-1 text-[11px] font-medium"
-                        >
-                          곡 전체 조회 <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
-                    </div>
-
-                    {/* Bugs */}
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded bg-[#f9423a] text-white flex items-center justify-center font-black text-[10px]">B</span>
-                        <span className="text-slate-300 font-semibold">벅스:</span>
-                        <span className="font-mono text-rose-400 font-bold">{artist.platformArtistIds?.bugs || '미설정'}</span>
-                      </div>
-                      {artist.platformArtistIds?.bugs && (
-                        <a
-                          href={`https://music.bugs.co.kr/artist/${artist.platformArtistIds.bugs}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-rose-400 hover:underline flex items-center gap-1 text-[11px] font-medium"
-                        >
-                          곡 전체 조회 <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       )}
