@@ -11,7 +11,8 @@ import {
   AlertCircle,
   PlusCircle
 } from 'lucide-react';
-import { formatSecondsToTime, formatTotalDuration } from '../utils/formatters';
+import { formatSecondsToTime, formatTotalDuration, formatDate } from '../utils/formatters';
+
 
 
 export default function PlaylistView({
