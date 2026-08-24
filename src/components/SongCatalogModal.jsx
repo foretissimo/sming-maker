@@ -1,14 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { Search, X, Plus, Check, Music, Calendar } from 'lucide-react';
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
-import { ARTISTS } from './FilterSection';
+
 
 export default function SongCatalogModal({
   isOpen,
   onClose,
   allSongs,
   onAddSong,
-  currentPlaylist
+  currentPlaylist,
+  artists = []
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArtist, setSelectedArtist] = useState('all');
@@ -103,7 +104,7 @@ export default function SongCatalogModal({
             >
               전체
             </button>
-            {ARTISTS.map(a => (
+            {artists.map(a => (
               <button
                 key={a.id}
                 onClick={() => setSelectedArtist(a.id)}

@@ -1,13 +1,16 @@
 import React from 'react';
 import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3, CheckSquare, Square } from 'lucide-react';
 
-export const ARTISTS = [
+export const DEFAULT_ARTISTS = [
   { id: 'group', name: '포레스텔라', badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
   { id: 'jomingyu', name: '조민규', badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30' },
   { id: 'baedoohun', name: '배두훈', badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
   { id: 'kanghyungho', name: '강형호(PITTA)', badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' },
   { id: 'gowoorim', name: '고우림', badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/30' }
 ];
+
+export const ARTISTS = DEFAULT_ARTISTS;
+
 
 export const MODES = [
   {
@@ -37,6 +40,7 @@ export const MODES = [
 ];
 
 export default function FilterSection({
+  artists = DEFAULT_ARTISTS,
   selectedArtists,
   onChangeArtists,
   mode,
@@ -56,7 +60,7 @@ export default function FilterSection({
   };
 
   const selectAllArtists = () => {
-    onChangeArtists(ARTISTS.map(a => a.id));
+    onChangeArtists(artists.map(a => a.id));
   };
 
   const deselectAllArtists = () => {
@@ -64,12 +68,15 @@ export default function FilterSection({
   };
 
   const selectOnlyGroup = () => {
-    onChangeArtists(['group']);
+    const groupArtists = artists.filter(a => a.category === 'group' || a.id === 'group').map(a => a.id);
+    onChangeArtists(groupArtists.length > 0 ? groupArtists : ['group']);
   };
 
   const selectOnlySolos = () => {
-    onChangeArtists(['jomingyu', 'baedoohun', 'kanghyungho', 'gowoorim']);
+    const soloArtists = artists.filter(a => a.category === 'solo' || a.id !== 'group').map(a => a.id);
+    onChangeArtists(soloArtists);
   };
+
 
   // Title song candidates for focus selector (filtered by selected artists if active)
   const availableTitleSongs = allSongs.filter(s => {
@@ -119,7 +126,7 @@ export default function FilterSection({
 
         {/* Artist Pills */}
         <div className="flex flex-wrap gap-2">
-          {ARTISTS.map((artist) => {
+          {artists.map((artist) => {
             const isSelected = selectedArtists.includes(artist.id);
             return (
               <button
@@ -136,6 +143,7 @@ export default function FilterSection({
             );
           })}
         </div>
+
 
         {selectedArtists.length === 0 && (
           <p className="text-[11px] text-amber-400/90 mt-2 bg-amber-950/20 border border-amber-900/30 px-2.5 py-1 rounded-lg">

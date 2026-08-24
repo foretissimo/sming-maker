@@ -1,0 +1,57 @@
+[
+  {
+    "id": "group",
+    "name": "포레스텔라",
+    "category": "group",
+    "badgeColor": "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+    "platformArtistIds": {
+      "melon": "2241604",
+      "genie": "80629471",
+      "bugs": "80312948"
+    }
+  },
+  {
+    "id": "jomingyu",
+    "name": "조민규",
+    "category": "solo",
+    "badgeColor": "bg-rose-500/20 text-rose-300 border-rose-500/30",
+    "platformArtistIds": {
+      "melon": "2136009",
+      "genie": "80718294",
+      "bugs": "80341829"
+    }
+  },
+  {
+    "id": "baedoohun",
+    "name": "배두훈",
+    "category": "solo",
+    "badgeColor": "bg-amber-500/20 text-amber-300 border-amber-500/30",
+    "platformArtistIds": {
+      "melon": "2136011",
+      "genie": "80718295",
+      "bugs": "80341830"
+    }
+  },
+  {
+    "id": "kanghyungho",
+    "name": "강형호(PITTA)",
+    "category": "solo",
+    "badgeColor": "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
+    "platformArtistIds": {
+      "melon": "2136012",
+      "genie": "80718296",
+      "bugs": "80341831"
+    }
+  },
+  {
+    "id": "gowoorim",
+    "name": "고우림",
+    "category": "solo",
+    "badgeColor": "bg-sky-500/20 text-sky-300 border-sky-500/30",
+    "platformArtistIds": {
+      "melon": "2136013",
+      "genie": "80718297",
+      "bugs": "80341832"
+    }
+  }
+]

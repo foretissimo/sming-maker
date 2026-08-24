@@ -1,55 +1,91 @@
 import React from 'react';
-import { Sparkles, HelpCircle, Share2, Music2 } from 'lucide-react';
+import { Sparkles, HelpCircle, Share2, Music2, Database, Sliders } from 'lucide-react';
 
-export default function Header({ onOpenGuide, onShare }) {
+export default function Header({
+  activeView,
+  onChangeView,
+  onOpenGuide,
+  onShare
+}) {
   return (
     <header className="border-b border-emerald-900/30 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
-      <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
+      <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
         {/* Left: Brand */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-950/50">
-            <span className="text-xl">🌲</span>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-950/50 flex-shrink-0">
+            <span className="text-lg">🌲</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-emerald-400 via-teal-200 to-amber-200 bg-clip-text text-transparent">
-                포레스텔라 원클릭 스밍리스트
+              <h1 className="text-base sm:text-lg font-bold bg-gradient-to-r from-emerald-400 via-teal-200 to-amber-200 bg-clip-text text-transparent">
+                스밍 메이커
               </h1>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hidden sm:inline-block">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hidden md:inline-block">
                 Sming Maker
               </span>
             </div>
-            <p className="text-xs text-slate-400 hidden md:block">
-              포레스텔라 & 솔로 4인 맞춤 1시간 플레이리스트 자동 생성
+            <p className="text-[11px] text-slate-400 hidden sm:block">
+              포레스텔라 & 솔로 4인 원클릭 스밍리스트 생성 & 음원 데이터 검증
             </p>
           </div>
         </div>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-2">
+        {/* Center: Main View Toggle */}
+        <div className="flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl">
           <button
-            onClick={onOpenGuide}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-emerald-300 font-medium transition-all cursor-pointer shadow-sm hover:border-emerald-500/30"
-            title="스밍 가이드 보기"
+            onClick={() => onChangeView('generator')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              activeView === 'generator'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
           >
-            <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="hidden sm:inline">스밍 필수 가이드</span>
+            <Music2 className="w-3.5 h-3.5" />
+            <span>스밍 생성기</span>
           </button>
 
           <button
-            onClick={onShare}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/40 text-xs text-emerald-200 font-medium transition-all cursor-pointer shadow-sm"
-            title="리스트 링크 공유"
+            onClick={() => onChangeView('editor')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              activeView === 'editor'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
           >
-            <Share2 className="w-3.5 h-3.5 text-emerald-300" />
-            <span className="hidden sm:inline">공유</span>
+            <Database className="w-3.5 h-3.5" />
+            <span>음원 데이터 편집기</span>
           </button>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-1.5">
+          {activeView === 'generator' && (
+            <>
+              <button
+                onClick={onOpenGuide}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-emerald-300 font-medium transition-all cursor-pointer shadow-sm hover:border-emerald-500/30"
+                title="스밍 가이드 보기"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden md:inline">가이드</span>
+              </button>
+
+              <button
+                onClick={onShare}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/40 text-xs text-emerald-200 font-medium transition-all cursor-pointer shadow-sm"
+                title="리스트 링크 공유"
+              >
+                <Share2 className="w-3.5 h-3.5 text-emerald-300" />
+                <span className="hidden md:inline">공유</span>
+              </button>
+            </>
+          )}
 
           <a
             href="https://github.com/foretissimo/sming-maker"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
+            className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
             title="GitHub 저장소"
           >
             <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -61,4 +97,3 @@ export default function Header({ onOpenGuide, onShare }) {
     </header>
   );
 }
-

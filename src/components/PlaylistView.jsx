@@ -12,7 +12,7 @@ import {
   PlusCircle
 } from 'lucide-react';
 import { formatSecondsToTime, formatTotalDuration } from '../utils/formatters';
-import { ARTISTS } from './FilterSection';
+
 
 export default function PlaylistView({
   playlist,
@@ -20,7 +20,8 @@ export default function PlaylistView({
   onMoveDown,
   onRemove,
   onAddCustom,
-  targetDurationSeconds = 3600
+  targetDurationSeconds = 3600,
+  artists = []
 }) {
   const totalSeconds = playlist.reduce((sum, s) => sum + (s.duration || 0), 0);
   const totalDurationFormatted = formatTotalDuration(totalSeconds);
@@ -32,9 +33,10 @@ export default function PlaylistView({
   const progressPercent = Math.min(100, Math.round((totalSeconds / targetDurationSeconds) * 100));
 
   const getArtistBadge = (artistType) => {
-    const found = ARTISTS.find(a => a.id === artistType);
+    const found = artists.find(a => a.id === artistType);
     return found ? found.badgeColor : 'bg-slate-800 text-slate-300 border-slate-700';
   };
+
 
   return (
     <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-4 md:p-5 shadow-xl space-y-4">
