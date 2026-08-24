@@ -9,4 +9,36 @@ export default defineConfig({
     tailwindcss(),
   ],
   base: './',
+  server: {
+    proxy: {
+      '/proxy/melon': {
+        target: 'https://www.melon.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/proxy\/melon/, ''),
+        headers: {
+          'Referer': 'https://www.melon.com/',
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        }
+      },
+      '/proxy/genie': {
+        target: 'https://www.genie.co.kr',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/proxy\/genie/, ''),
+        headers: {
+          'Referer': 'https://www.genie.co.kr/',
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        }
+      },
+      '/proxy/bugs': {
+        target: 'https://music.bugs.co.kr',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/proxy\/bugs/, ''),
+        headers: {
+          'Referer': 'https://music.bugs.co.kr/',
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        }
+      }
+    }
+  }
 })
+
