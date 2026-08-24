@@ -1,6 +1,10 @@
 /**
  * Utility to fetch and synchronize ALL artist tracks across ALL pages from Melon, Genie, and Bugs.
- * Prioritizes Melon release dates, falling back to Genie if missing.
+ *
+ * Data Source Priority:
+ *   - Release Date (발매일): Melon 1st → Genie 2nd
+ *   - Duration (곡 길이):    Genie 1st → Bugs 2nd
+ *   - Song ID 매칭:          normalized title fuzzy match
  */
 
 // Helper to get HTML content with fallback proxy support
@@ -190,6 +194,43 @@ export async function fetchGenieTracks(genieArtistId) {
 }
 
 /**
+ * Fetch song duration (seconds) from Genie song detail page
+ * Pattern: alt="재생시간" ... <span class="value">05:35</span>
+ */
+async function fetchGenieSongDuration(genieSongId) {
+  try {
+    const url = `https://www.genie.co.kr/detail/songInfo?xgnm=${genieSongId}`;
+    const html = await fetchHtml(url, '/proxy/genie');
+    const match = html.match(/alt="재생시간"[^>]*>\s*<\/span>\s*<span class="value">(\d{1,2}:\d{2})<\/span>/);
+    if (match) {
+      const [m, s] = match[1].split(':').map(Number);
+      return m * 60 + s;
+    }
+  } catch (err) {
+    // silent fail for individual song lookup
+  }
+  return null;
+}
+
+/**
+ * Batch-fetch durations from Genie in parallel batches of BATCH_SIZE
+ * Returns a Map<genieSongId, durationSeconds>
+ */
+async function batchFetchGenieDurations(genieSongIds, batchSize = 5) {
+  const durationMap = {};
+  for (let i = 0; i < genieSongIds.length; i += batchSize) {
+    const batch = genieSongIds.slice(i, i + batchSize);
+    const results = await Promise.all(
+      batch.map(id => fetchGenieSongDuration(id).then(dur => ({ id, dur })))
+    );
+    results.forEach(({ id, dur }) => {
+      if (dur !== null) durationMap[id] = dur;
+    });
+  }
+  return durationMap;
+}
+
+/**
  * Fetch ALL tracks from Bugs for an artist across all pagination pages
  */
 export async function fetchBugsTracks(bugsArtistId) {
@@ -251,12 +292,18 @@ function normalizeTitle(t) {
 
 /**
  * Synchronize all tracks for a single artist
- * Priority: Melon release date -> Genie date -> empty string (displays '-')
+ *
+ * Data Source Priority:
+ *   - Release Date: Melon (albumPaging → songPaging cross-map) → empty ''
+ *   - Duration:     Genie (songInfo detail page, batch fetch) → existing → default 225s
+ *   - Song IDs:     Melon, Genie, Bugs (normalized title matching)
  */
-export async function syncArtistTracks(artist, currentSongs) {
+export async function syncArtistTracks(artist, currentSongs, progressCallback) {
   const melonId = artist.platformArtistIds?.melon;
   const genieId = artist.platformArtistIds?.genie;
   const bugsId = artist.platformArtistIds?.bugs;
+
+  if (progressCallback) progressCallback(`[${artist.name}] 멜론/지니/벅스 곡 목록 조회 중...`);
 
   const [melonTracks, genieTracks, bugsTracks] = await Promise.all([
     fetchMelonTracks(melonId),
@@ -299,7 +346,7 @@ export async function syncArtistTracks(artist, currentSongs) {
         artistType: artist.id,
         album: mt.album || `${artist.name} 앨범`,
         releaseDate: mt.releaseDate || '',
-        duration: 225, // default 3:45
+        duration: 0, // will be filled by Genie duration fetch
         isTitle: false,
         platformIds: {
           melon: mt.id,
@@ -313,7 +360,7 @@ export async function syncArtistTracks(artist, currentSongs) {
     }
   });
 
-  // 2. Link Genie tracks
+  // 2. Link Genie tracks (match by title)
   genieTracks.forEach(gt => {
     const norm = normalizeTitle(gt.title);
     const existing = updatedSongs.find(
@@ -328,7 +375,7 @@ export async function syncArtistTracks(artist, currentSongs) {
     }
   });
 
-  // 3. Link Bugs tracks
+  // 3. Link Bugs tracks (match by title)
   bugsTracks.forEach(bt => {
     const norm = normalizeTitle(bt.title);
     const existing = updatedSongs.find(
@@ -343,6 +390,37 @@ export async function syncArtistTracks(artist, currentSongs) {
     }
   });
 
+  // 4. Batch-fetch durations from Genie for songs that need it
+  //    Target: songs belonging to this artist that have a genie songId AND
+  //            either have no duration, default duration (225), or duration=0
+  const songsNeedingDuration = updatedSongs.filter(
+    s => s.artistType === artist.id &&
+         s.platformIds?.genie &&
+         (!s.duration || s.duration === 0 || s.duration === 225)
+  );
+
+  if (songsNeedingDuration.length > 0) {
+    if (progressCallback) progressCallback(`[${artist.name}] 지니에서 ${songsNeedingDuration.length}곡 재생시간 조회 중...`);
+
+    const genieIds = songsNeedingDuration.map(s => s.platformIds.genie);
+    const durationMap = await batchFetchGenieDurations(genieIds, 5);
+
+    songsNeedingDuration.forEach(s => {
+      const dur = durationMap[s.platformIds.genie];
+      if (dur && dur > 0) {
+        s.duration = dur;
+        updatedCount++;
+      }
+    });
+  }
+
+  // 5. For any remaining songs with duration=0 that still have no duration, set a sensible default
+  updatedSongs.forEach(s => {
+    if (s.artistType === artist.id && (!s.duration || s.duration === 0)) {
+      s.duration = 225; // fallback default: 3:45
+    }
+  });
+
   return {
     updatedSongs,
     stats: {
@@ -350,6 +428,12 @@ export async function syncArtistTracks(artist, currentSongs) {
       melonTracksCount: melonTracks.length,
       genieTracksCount: genieTracks.length,
       bugsTracksCount: bugsTracks.length,
+      durationsFetched: Object.keys(
+        songsNeedingDuration.reduce((acc, s) => {
+          if (s.duration && s.duration !== 225) acc[s.platformIds?.genie] = true;
+          return acc;
+        }, {})
+      ).length,
       updatedCount,
       addedCount
     }

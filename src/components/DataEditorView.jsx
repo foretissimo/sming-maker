@@ -193,15 +193,16 @@ export default function DataEditorView({
   const handleSyncSingleArtist = async (artist) => {
     setSyncingArtistId(artist.id);
     try {
-      const { updatedSongs, stats } = await syncArtistTracks(artist, songs);
+      const { updatedSongs, stats } = await syncArtistTracks(artist, songs, (msg) => setSyncProgressText(msg));
       onUpdateSongs(updatedSongs);
       onShowToast(
-        `[${artist.name}] 멜론(${stats.melonTracksCount}곡), 지니(${stats.genieTracksCount}곡), 벅스(${stats.bugsTracksCount}곡) 동기화 완료! (+${stats.addedCount}곡 추가, ${stats.updatedCount}곡 업데이트)`
+        `[${artist.name}] 멜론(${stats.melonTracksCount}곡), 지니(${stats.genieTracksCount}곡), 벅스(${stats.bugsTracksCount}곡) 동기화 완료! (+${stats.addedCount}곡 추가, ${stats.updatedCount}곡 업데이트, ${stats.durationsFetched || 0}곡 재생시간 갱신)`
       );
     } catch (err) {
       alert(`[${artist.name}] 동기화 중 오류가 발생했습니다: ${err.message}`);
     } finally {
       setSyncingArtistId(null);
+      setSyncProgressText('');
     }
   };
 
@@ -216,14 +217,13 @@ export default function DataEditorView({
     try {
       for (let i = 0; i < artists.length; i++) {
         const a = artists[i];
-        setSyncProgressText(`[${i + 1}/${artists.length}] ${a.name} 음원 조회 및 동기화 중...`);
-        const { updatedSongs, stats } = await syncArtistTracks(a, current);
+        const { updatedSongs, stats } = await syncArtistTracks(a, current, (msg) => setSyncProgressText(`[${i + 1}/${artists.length}] ${msg}`));
         current = updatedSongs;
         totalAdded += stats.addedCount;
         totalUpdated += stats.updatedCount;
       }
       onUpdateSongs(current);
-      onShowToast(`전체 ${artists.length}명 아티스트 음원 동기화 완료! (+${totalAdded}곡 추가, ${totalUpdated}곡 ID 업데이트) ✨`);
+      onShowToast(`전체 ${artists.length}명 아티스트 음원 동기화 완료! (+${totalAdded}곡 추가, ${totalUpdated}곡 업데이트) ✨`);
     } catch (err) {
       alert(`전체 동기화 중 오류가 발생했습니다: ${err.message}`);
     } finally {
@@ -401,6 +401,13 @@ export default function DataEditorView({
         </div>
       </div>
 
+      {/* Sync Progress Banner */}
+      {syncProgressText && (
+        <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-medium animate-pulse shadow-sm">
+          <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-400 flex-shrink-0" />
+          <span>{syncProgressText}</span>
+        </div>
+      )}
       {/* TAB 1: ARTIST-CENTRIC SONG VIEW & EDITING */}
       {activeTab === 'artist_songs' && currentArtistObj && (
         <div className="space-y-5">
