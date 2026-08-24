@@ -2,14 +2,45 @@ import React from 'react';
 import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3, CheckSquare, Square } from 'lucide-react';
 
 export const DEFAULT_ARTISTS = [
-  { id: 'group', name: '포레스텔라', badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
-  { id: 'jomingyu', name: '조민규', badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30' },
-  { id: 'baedoohun', name: '배두훈', badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
-  { id: 'kanghyungho', name: '강형호(PITTA)', badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' },
-  { id: 'gowoorim', name: '고우림', badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/30' }
+  { 
+    id: 'group', 
+    name: '포레스텔라', 
+    category: 'group',
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    platformArtistIds: { melon: '2111354', genie: '80649718', bugs: '20059384' }
+  },
+  { 
+    id: 'jomingyu', 
+    name: '조민규', 
+    category: 'solo',
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    platformArtistIds: { melon: '1907930', genie: '80641258', bugs: '20067644' }
+  },
+  { 
+    id: 'baedoohun', 
+    name: '배두훈', 
+    category: 'solo',
+    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    platformArtistIds: { melon: '1137071', genie: '80645163', bugs: '20063228' }
+  },
+  { 
+    id: 'kanghyungho', 
+    name: '강형호(PITTA)', 
+    category: 'solo',
+    badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
+    platformArtistIds: { melon: '2774351', genie: '81283625', bugs: '20121731' }
+  },
+  { 
+    id: 'gowoorim', 
+    name: '고우림', 
+    category: 'solo',
+    badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+    platformArtistIds: { melon: '2065851', genie: '80649774', bugs: '20063223' }
+  }
 ];
 
 export const ARTISTS = DEFAULT_ARTISTS;
+
 
 
 export const MODES = [
