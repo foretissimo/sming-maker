@@ -12,21 +12,8 @@ export default function SongCatalogModal({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Selected artist (Default: 'group' 완전체 우선 선택, LocalStorage 기억)
-  const [selectedArtist, setSelectedArtist] = useState(() => {
-    try {
-      const saved = localStorage.getItem('sming_catalog_selected_artist');
-      if (saved) return saved;
-    } catch (e) {}
-    return 'group'; // Default '완전체' 우선 선택
-  });
+  const [selectedArtist, setSelectedArtist] = useState('all');
 
-  // Persist selectedArtist to LocalStorage
-  React.useEffect(() => {
-    try {
-      localStorage.setItem('sming_catalog_selected_artist', selectedArtist);
-    } catch (e) {}
-  }, [selectedArtist]);
 
   const [onlyTitle, setOnlyTitle] = useState(false);
   const [sortBy, setSortBy] = useState('default'); // 'default' | 'duration_desc' | 'duration_asc' | 'date_desc' | 'title'
