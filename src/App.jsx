@@ -58,8 +58,41 @@ export default function App() {
 
   const [mode, setMode] = useState('title_focus');
   const [targetDurationMinutes, setTargetDurationMinutes] = useState(60);
-  const [focusSongId, setFocusSongId] = useState(null);
-  const [playlist, setPlaylist] = useState([]);
+  // Synchronous Playlist Initialization (Eliminates page-load flicker and layout shift)
+  const [playlist, setPlaylist] = useState(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const songIdsParam = params.get('songs');
+
+        if (songIdsParam) {
+          const ids = songIdsParam.split(',');
+          const restored = [];
+          ids.forEach(id => {
+            const found = allSongs.find(s => s.id === id);
+            if (found) {
+              restored.push({ ...found, uniqueKey: `${found.id}-${Math.random().toString(36).substr(2, 9)}` });
+            }
+          });
+          if (restored.length > 0) return restored;
+        }
+      }
+
+      // Default initial generation based on selectedArtists
+      const groupArtist = artists.find(a => a.category === 'group' || a.id === 'group');
+      const defaultArtists = selectedArtists && selectedArtists.length > 0
+        ? selectedArtists
+        : (groupArtist ? [groupArtist.id] : ['group']);
+
+      return generateStreamingList(allSongs, {
+        targetSeconds: 3600,
+        mode: 'title_focus',
+        selectedArtistTypes: defaultArtists
+      });
+    } catch (e) {
+      return [];
+    }
+  });
   
   // Modals & Feedback
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
@@ -98,38 +131,15 @@ export default function App() {
     setAllSongs(initialSongsData);
     setArtists(initialArtistsData);
     const groupArtist = initialArtistsData.find(a => a.category === 'group' || a.id === 'group');
-    setSelectedArtists(groupArtist ? [groupArtist.id] : ['group']);
-  };
-
-
-  // Initialize playlist on mount or from URL params
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const songIdsParam = params.get('songs');
-
-    if (songIdsParam) {
-      const ids = songIdsParam.split(',');
-      const restored = [];
-      ids.forEach(id => {
-        const found = allSongs.find(s => s.id === id);
-        if (found) {
-          restored.push({ ...found, uniqueKey: `${found.id}-${Math.random().toString(36).substr(2, 9)}` });
-        }
-      });
-      if (restored.length > 0) {
-        setPlaylist(restored);
-        return;
-      }
-    }
-
-    // Default initial generation
-    const initialList = generateStreamingList(allSongs, {
+    const defaultArtists = groupArtist ? [groupArtist.id] : ['group'];
+    setSelectedArtists(defaultArtists);
+    setPlaylist(generateStreamingList(initialSongsData, {
       targetSeconds: 3600,
       mode: 'title_focus',
-      selectedArtistTypes: artists.map(a => a.id)
-    });
-    setPlaylist(initialList);
-  }, []);
+      selectedArtistTypes: defaultArtists
+    }));
+  };
+
 
   const showToast = (msg) => {
     setToastMessage(msg);

@@ -84,15 +84,18 @@ export default function DataEditorView({
   const [rawText, setRawText] = useState('');
   const [jsonError, setJsonError] = useState(null);
 
-  // Sync raw text when switching to raw_json tab or when songs/artists update
+  // Sync raw text ONLY when switching to raw_json tab to optimize performance
   useEffect(() => {
-    if (rawTarget === 'songs') {
-      setRawText(JSON.stringify(songs, null, 2));
-    } else {
-      setRawText(JSON.stringify(artists, null, 2));
+    if (activeTab === 'raw_json') {
+      if (rawTarget === 'songs') {
+        setRawText(JSON.stringify(songs, null, 2));
+      } else {
+        setRawText(JSON.stringify(artists, null, 2));
+      }
+      setJsonError(null);
     }
-    setJsonError(null);
   }, [rawTarget, activeTab, songs, artists]);
+
 
   // Modals
   const [editingSong, setEditingSong] = useState(null);
