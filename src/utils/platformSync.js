@@ -1,5 +1,6 @@
 /**
  * Utility to fetch and synchronize ALL artist tracks across ALL pages from Melon, Genie, and Bugs.
+ * Prioritizes Melon release dates, falling back to Genie if missing.
  */
 
 // Helper to get HTML content with fallback proxy support
@@ -34,7 +35,42 @@ async function fetchHtml(targetUrl, proxyPrefix) {
 }
 
 /**
- * Fetch ALL tracks from Melon for an artist across all pagination pages
+ * Fetch Album Release Dates dictionary from Melon for an artist
+ */
+async function fetchMelonAlbumDates(melonArtistId) {
+  if (!melonArtistId) return {};
+  const albumMap = {};
+  const maxPages = 5; // up to 250 albums
+
+  for (let p = 0; p < maxPages; p++) {
+    const startIndex = p * 50 + 1;
+    const url = `https://www.melon.com/artist/albumPaging.htm?artistId=${melonArtistId}&act=artistAlbum&startIndex=${startIndex}&pageSize=50`;
+    try {
+      const html = await fetchHtml(url, '/proxy/melon');
+      const liMatches = [...html.matchAll(/<li[^>]*class="album11_li"[\s\S]*?<\/li>/g)];
+      if (liMatches.length === 0) break;
+
+      liMatches.forEach(m => {
+        const li = m[0];
+        const albumId = li.match(/goAlbumDetail\(\x27(\d+)\x27\)/)?.[1];
+        const dateMatch = li.match(/<span class="cnt_view">(\d{4}\.\d{2}\.\d{2})<\/span>/);
+        if (albumId && dateMatch) {
+          albumMap[albumId] = dateMatch[1].replace(/\./g, '-');
+        }
+      });
+
+      if (liMatches.length < 50) break;
+    } catch (err) {
+      console.warn(`[Melon Album Sync] Error on page ${p}:`, err);
+      break;
+    }
+  }
+
+  return albumMap;
+}
+
+/**
+ * Fetch ALL tracks from Melon for an artist across all pagination pages with exact release dates
  */
 export async function fetchMelonTracks(melonArtistId) {
   if (!melonArtistId) return [];
@@ -43,39 +79,55 @@ export async function fetchMelonTracks(melonArtistId) {
   const pageSize = 50;
   const maxPages = 10; // fetch up to 500 songs
 
+  // 1. Pre-fetch album release dates
+  const albumMap = await fetchMelonAlbumDates(melonArtistId);
+
+  // 2. Fetch all song pages
   for (let page = 0; page < maxPages; page++) {
     const url = `https://www.melon.com/artist/songPaging.htm?artistId=${melonArtistId}&act=artistSong&listType=A&orderBy=ISSUE_DATE&startIndex=${startIndex}&pageSize=${pageSize}`;
     try {
       const html = await fetchHtml(url, '/proxy/melon');
+      const rows = html.split(/<\/tr>/i);
+      let pageRowCount = 0;
 
-      const matches = [...html.matchAll(/href="javascript:melon\.link\.goSongDetail\(\x27(\d+)\x27\);"[^>]*title="([^"]+)"/g)];
-      const albumMatches = [...html.matchAll(/href="javascript:melon\.link\.goAlbumDetail\([^\)]*\)"[^>]*title="([^"]+)"/g)];
+      rows.forEach(tr => {
+        const songId = tr.match(/goSongDetail\(\x27(\d+)\x27\)/)?.[1];
+        const titleMatch = tr.match(/goSongDetail\(\x27\d+\x27\);"[^>]*title="([^"]+)"/);
+        const albumId = tr.match(/goAlbumDetail\(\x27(\d+)\x27\)/)?.[1];
+        const albumTitle = tr.match(/goAlbumDetail\(\x27\d+\x27\);"[^>]*title="([^"]+)"/);
 
-      if (matches.length === 0) break;
+        if (songId && titleMatch) {
+          const title = titleMatch[1]
+            .replace(/곡정보\s*-\s*페이지\s*이동/i, '')
+            .replace(/&#x27;/g, "'")
+            .replace(/&amp;/g, '&')
+            .replace(/\u00a0/g, ' ')
+            .trim();
+          const album = albumTitle
+            ? albumTitle[1]
+                .replace(/앨범정보\s*-\s*페이지\s*이동/i, '')
+                .replace(/&#x27;/g, "'")
+                .replace(/&amp;/g, '&')
+                .replace(/\u00a0/g, ' ')
+                .trim()
+            : '';
 
-      matches.forEach((m, idx) => {
-        const id = m[1];
-        let title = m[2]
-          .replace(/곡정보\s*-\s*페이지\s*이동/i, '')
-          .replace(/&#x27;/g, "'")
-          .replace(/&amp;/g, '&')
-          .replace(/\u00a0/g, ' ')
-          .trim();
-        const album = albumMatches[idx]
-          ? albumMatches[idx][1].replace(/앨범정보\s*-\s*페이지\s*이동/i, '').replace(/&#x27;/g, "'").trim()
-          : '';
+          const releaseDate = albumMap[albumId] || '';
 
-        if (title && id && !tracks.some(t => t.id === id)) {
-          tracks.push({
-            platform: 'melon',
-            id,
-            title,
-            album
-          });
+          if (title && !tracks.some(t => t.id === songId)) {
+            tracks.push({
+              platform: 'melon',
+              id: songId,
+              title,
+              album,
+              releaseDate
+            });
+            pageRowCount++;
+          }
         }
       });
 
-      if (matches.length < pageSize) break;
+      if (pageRowCount === 0 || pageRowCount < pageSize) break;
       startIndex += pageSize;
     } catch (err) {
       console.warn(`[Melon Sync] Error on startIndex ${startIndex}:`, err);
@@ -126,7 +178,7 @@ export async function fetchGenieTracks(genieArtistId) {
         }
       });
 
-      if (trMatches.length < 30) break; // Genie page size is 30
+      if (trMatches.length < 30) break;
       page++;
     } catch (err) {
       console.warn(`[Genie Sync] Error on page ${page}:`, err);
@@ -199,6 +251,7 @@ function normalizeTitle(t) {
 
 /**
  * Synchronize all tracks for a single artist
+ * Priority: Melon release date -> Genie date -> empty string (displays '-')
  */
 export async function syncArtistTracks(artist, currentSongs) {
   const melonId = artist.platformArtistIds?.melon;
@@ -215,27 +268,37 @@ export async function syncArtistTracks(artist, currentSongs) {
   let addedCount = 0;
   const updatedSongs = [...currentSongs];
 
-  // 1. Update existing songs matching this artist with Melon tracks
+  // 1. Update or Add Melon tracks (Melon Release Date is 1st Priority)
   melonTracks.forEach(mt => {
     const norm = normalizeTitle(mt.title);
     const existing = updatedSongs.find(
       s => s.artistType === artist.id && (normalizeTitle(s.title) === norm || s.title.includes(mt.title) || mt.title.includes(s.title))
     );
+
     if (existing) {
       if (!existing.platformIds) existing.platformIds = {};
       if (existing.platformIds.melon !== mt.id) {
         existing.platformIds.melon = mt.id;
         updatedCount++;
       }
+      // Update release date from Melon
+      if (mt.releaseDate && existing.releaseDate !== mt.releaseDate) {
+        existing.releaseDate = mt.releaseDate;
+        updatedCount++;
+      }
+      // Update album title from Melon if missing
+      if (mt.album && (!existing.album || existing.album === `${artist.name} 앨범`)) {
+        existing.album = mt.album;
+      }
     } else {
-      // Add newly discovered track
+      // Add newly discovered track from Melon
       const newSong = {
         id: `auto-${artist.id}-${mt.id}`,
         title: mt.title,
         artist: artist.name,
         artistType: artist.id,
         album: mt.album || `${artist.name} 앨범`,
-        releaseDate: '',
+        releaseDate: mt.releaseDate || '',
         duration: 225, // default 3:45
         isTitle: false,
         platformIds: {
@@ -245,7 +308,6 @@ export async function syncArtistTracks(artist, currentSongs) {
         },
         tags: ['auto-synced']
       };
-
       updatedSongs.push(newSong);
       addedCount++;
     }

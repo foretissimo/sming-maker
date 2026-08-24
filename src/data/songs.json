@@ -9,11 +9,15 @@
     "duration": 224,
     "isTitle": true,
     "platformIds": {
-      "melon": "36567891",
+      "melon": "36579720",
       "genie": "10283948",
       "bugs": "32891234"
     },
-    "tags": ["title", "single", "recent"]
+    "tags": [
+      "title",
+      "single",
+      "recent"
+    ]
   },
   {
     "id": "fore-002",
@@ -25,11 +29,15 @@
     "duration": 218,
     "isTitle": true,
     "platformIds": {
-      "melon": "36940123",
+      "melon": "36944762",
       "genie": "10412345",
       "bugs": "33124567"
     },
-    "tags": ["title", "mini2", "winter"]
+    "tags": [
+      "title",
+      "mini2",
+      "winter"
+    ]
   },
   {
     "id": "fore-003",
@@ -41,11 +49,14 @@
     "duration": 230,
     "isTitle": false,
     "platformIds": {
-      "melon": "36940124",
+      "melon": "36944764",
       "genie": "10412346",
       "bugs": "33124568"
     },
-    "tags": ["bside", "mini2"]
+    "tags": [
+      "bside",
+      "mini2"
+    ]
   },
   {
     "id": "fore-004",
@@ -57,11 +68,15 @@
     "duration": 196,
     "isTitle": true,
     "platformIds": {
-      "melon": "36750192",
+      "melon": "36760232",
       "genie": "10351294",
       "bugs": "32981240"
     },
-    "tags": ["title", "single", "pop"]
+    "tags": [
+      "title",
+      "single",
+      "pop"
+    ]
   },
   {
     "id": "fore-005",
@@ -73,11 +88,15 @@
     "duration": 242,
     "isTitle": true,
     "platformIds": {
-      "melon": "35957018",
+      "melon": "35955149",
       "genie": "10019482",
       "bugs": "32671928"
     },
-    "tags": ["title", "single", "rock-opera"]
+    "tags": [
+      "title",
+      "single",
+      "rock-opera"
+    ]
   },
   {
     "id": "fore-006",
@@ -89,11 +108,15 @@
     "duration": 228,
     "isTitle": true,
     "platformIds": {
-      "melon": "35073912",
+      "melon": "35222075",
       "genie": "98127391",
       "bugs": "32451920"
     },
-    "tags": ["title", "mini1", "crossover"]
+    "tags": [
+      "title",
+      "mini1",
+      "crossover"
+    ]
   },
   {
     "id": "fore-007",
@@ -105,11 +128,14 @@
     "duration": 235,
     "isTitle": false,
     "platformIds": {
-      "melon": "35073913",
+      "melon": "35222076",
       "genie": "98127392",
       "bugs": "32451921"
     },
-    "tags": ["bside", "mini1"]
+    "tags": [
+      "bside",
+      "mini1"
+    ]
   },
   {
     "id": "fore-008",
@@ -121,11 +147,15 @@
     "duration": 210,
     "isTitle": false,
     "platformIds": {
-      "melon": "35073914",
+      "melon": "35222077",
       "genie": "98127393",
       "bugs": "32451922"
     },
-    "tags": ["bside", "mini1", "ballad"]
+    "tags": [
+      "bside",
+      "mini1",
+      "ballad"
+    ]
   },
   {
     "id": "fore-009",
@@ -141,7 +171,10 @@
       "genie": "98127394",
       "bugs": "32451923"
     },
-    "tags": ["bside", "mini1"]
+    "tags": [
+      "bside",
+      "mini1"
+    ]
   },
   {
     "id": "fore-010",
@@ -153,11 +186,14 @@
     "duration": 215,
     "isTitle": false,
     "platformIds": {
-      "melon": "35073916",
+      "melon": "35222079",
       "genie": "98127395",
       "bugs": "32451924"
     },
-    "tags": ["bside", "mini1"]
+    "tags": [
+      "bside",
+      "mini1"
+    ]
   },
   {
     "id": "fore-011",
@@ -165,15 +201,19 @@
     "artist": "포레스텔라",
     "artistType": "group",
     "album": "The Forestella",
-    "releaseDate": "2021-04-19",
+    "releaseDate": "2020-08-03",
     "duration": 248,
     "isTitle": true,
     "platformIds": {
-      "melon": "33419283",
+      "melon": "32831569",
       "genie": "94192834",
       "bugs": "31948201"
     },
-    "tags": ["title", "regular3", "ballad"]
+    "tags": [
+      "title",
+      "regular3",
+      "ballad"
+    ]
   },
   {
     "id": "fore-012",
@@ -181,15 +221,18 @@
     "artist": "포레스텔라",
     "artistType": "group",
     "album": "The Forestella",
-    "releaseDate": "2021-04-19",
+    "releaseDate": "2020-09-24",
     "duration": 252,
     "isTitle": true,
     "platformIds": {
-      "melon": "33419284",
+      "melon": "32945414",
       "genie": "94192835",
       "bugs": "31948202"
     },
-    "tags": ["title", "regular3"]
+    "tags": [
+      "title",
+      "regular3"
+    ]
   },
   {
     "id": "fore-013",
@@ -197,15 +240,18 @@
     "artist": "포레스텔라",
     "artistType": "group",
     "album": "The Forestella",
-    "releaseDate": "2021-04-19",
+    "releaseDate": "2021-02-10",
     "duration": 284,
     "isTitle": false,
     "platformIds": {
-      "melon": "33419285",
+      "melon": "33273523",
       "genie": "94192836",
       "bugs": "31948203"
     },
-    "tags": ["regular3", "chanson"]
+    "tags": [
+      "regular3",
+      "chanson"
+    ]
   },
   {
     "id": "fore-014",
@@ -217,11 +263,14 @@
     "duration": 252,
     "isTitle": false,
     "platformIds": {
-      "melon": "33419286",
+      "melon": "33421784",
       "genie": "94192837",
       "bugs": "31948204"
     },
-    "tags": ["regular3", "ballad"]
+    "tags": [
+      "regular3",
+      "ballad"
+    ]
   },
   {
     "id": "fore-015",
@@ -229,15 +278,18 @@
     "artist": "포레스텔라",
     "artistType": "group",
     "album": "The Forestella",
-    "releaseDate": "2021-04-19",
+    "releaseDate": "2020-07-01",
     "duration": 236,
     "isTitle": false,
     "platformIds": {
-      "melon": "33419287",
+      "melon": "32729820",
       "genie": "94192838",
       "bugs": "31948205"
     },
-    "tags": ["regular3", "fan-song"]
+    "tags": [
+      "regular3",
+      "fan-song"
+    ]
   },
   {
     "id": "fore-016",
@@ -249,11 +301,14 @@
     "duration": 265,
     "isTitle": false,
     "platformIds": {
-      "melon": "33419288",
+      "melon": "33421780",
       "genie": "94192839",
       "bugs": "31948206"
     },
-    "tags": ["regular3", "classic"]
+    "tags": [
+      "regular3",
+      "classic"
+    ]
   },
   {
     "id": "fore-017",
@@ -269,7 +324,9 @@
       "genie": "94192840",
       "bugs": "31948207"
     },
-    "tags": ["regular3"]
+    "tags": [
+      "regular3"
+    ]
   },
   {
     "id": "fore-018",
@@ -277,15 +334,19 @@
     "artist": "포레스텔라",
     "artistType": "group",
     "album": "Mystique",
-    "releaseDate": "2019-05-22",
+    "releaseDate": "2019-05-10",
     "duration": 265,
     "isTitle": true,
     "platformIds": {
-      "melon": "31819205",
+      "melon": "31784533",
       "genie": "89182935",
       "bugs": "31092842"
     },
-    "tags": ["title", "regular2", "traditional"]
+    "tags": [
+      "title",
+      "regular2",
+      "traditional"
+    ]
   },
   {
     "id": "fore-019",
@@ -297,11 +358,14 @@
     "duration": 235,
     "isTitle": true,
     "platformIds": {
-      "melon": "31819206",
+      "melon": "31814745",
       "genie": "89182936",
       "bugs": "31092843"
     },
-    "tags": ["title", "regular2"]
+    "tags": [
+      "title",
+      "regular2"
+    ]
   },
   {
     "id": "fore-020",
@@ -313,11 +377,14 @@
     "duration": 272,
     "isTitle": false,
     "platformIds": {
-      "melon": "31819207",
+      "melon": "31814746",
       "genie": "89182937",
       "bugs": "31092844"
     },
-    "tags": ["regular2", "cover"]
+    "tags": [
+      "regular2",
+      "cover"
+    ]
   },
   {
     "id": "fore-021",
@@ -329,11 +396,15 @@
     "duration": 348,
     "isTitle": false,
     "platformIds": {
-      "melon": "31819208",
+      "melon": "31814753",
       "genie": "89182938",
       "bugs": "31092845"
     },
-    "tags": ["regular2", "queen", "rock-opera"]
+    "tags": [
+      "regular2",
+      "queen",
+      "rock-opera"
+    ]
   },
   {
     "id": "fore-022",
@@ -345,11 +416,13 @@
     "duration": 260,
     "isTitle": false,
     "platformIds": {
-      "melon": "31819209",
+      "melon": "31814750",
       "genie": "89182939",
       "bugs": "31092846"
     },
-    "tags": ["regular2"]
+    "tags": [
+      "regular2"
+    ]
   },
   {
     "id": "fore-023",
@@ -361,11 +434,13 @@
     "duration": 255,
     "isTitle": false,
     "platformIds": {
-      "melon": "31819210",
+      "melon": "31814752",
       "genie": "89182940",
       "bugs": "31092847"
     },
-    "tags": ["regular2"]
+    "tags": [
+      "regular2"
+    ]
   },
   {
     "id": "fore-024",
@@ -377,11 +452,14 @@
     "duration": 245,
     "isTitle": true,
     "platformIds": {
-      "melon": "30948192",
+      "melon": "30949468",
       "genie": "87192845",
       "bugs": "30819283"
     },
-    "tags": ["title", "regular1"]
+    "tags": [
+      "title",
+      "regular1"
+    ]
   },
   {
     "id": "fore-025",
@@ -393,11 +471,14 @@
     "duration": 258,
     "isTitle": true,
     "platformIds": {
-      "melon": "30948193",
+      "melon": "30949469",
       "genie": "87192846",
       "bugs": "30819284"
     },
-    "tags": ["title", "regular1"]
+    "tags": [
+      "title",
+      "regular1"
+    ]
   },
   {
     "id": "fore-026",
@@ -409,11 +490,14 @@
     "duration": 272,
     "isTitle": false,
     "platformIds": {
-      "melon": "30948194",
+      "melon": "30949473",
       "genie": "87192847",
       "bugs": "30819285"
     },
-    "tags": ["regular1", "classic"]
+    "tags": [
+      "regular1",
+      "classic"
+    ]
   },
   {
     "id": "fore-027",
@@ -425,11 +509,13 @@
     "duration": 240,
     "isTitle": false,
     "platformIds": {
-      "melon": "30948195",
+      "melon": "30949470",
       "genie": "87192848",
       "bugs": "30819286"
     },
-    "tags": ["regular1"]
+    "tags": [
+      "regular1"
+    ]
   },
   {
     "id": "fore-028",
@@ -445,7 +531,11 @@
       "genie": "10681920",
       "bugs": "33918204"
     },
-    "tags": ["ost", "rock", "recent"]
+    "tags": [
+      "ost",
+      "rock",
+      "recent"
+    ]
   },
   {
     "id": "fore-029",
@@ -457,11 +547,14 @@
     "duration": 215,
     "isTitle": true,
     "platformIds": {
-      "melon": "36798123",
+      "melon": "36800785",
       "genie": "10381923",
       "bugs": "33019283"
     },
-    "tags": ["ost", "epic"]
+    "tags": [
+      "ost",
+      "epic"
+    ]
   },
   {
     "id": "fore-030",
@@ -477,7 +570,10 @@
       "genie": "92182940",
       "bugs": "31681920"
     },
-    "tags": ["ost", "ballad"]
+    "tags": [
+      "ost",
+      "ballad"
+    ]
   },
   {
     "id": "cho-001",
@@ -485,15 +581,19 @@
     "artist": "조민규",
     "artistType": "jomingyu",
     "album": "신세계 : PARANA",
-    "releaseDate": "2021-12-03",
+    "releaseDate": "2020-02-16",
     "duration": 215,
     "isTitle": true,
     "platformIds": {
-      "melon": "34361928",
+      "melon": "32376826",
       "genie": "96128490",
       "bugs": "32182940"
     },
-    "tags": ["solo", "title", "parana"]
+    "tags": [
+      "solo",
+      "title",
+      "parana"
+    ]
   },
   {
     "id": "cho-002",
@@ -509,7 +609,11 @@
       "genie": "91283940",
       "bugs": "31482910"
     },
-    "tags": ["solo", "title", "serenade"]
+    "tags": [
+      "solo",
+      "title",
+      "serenade"
+    ]
   },
   {
     "id": "cho-003",
@@ -517,15 +621,19 @@
     "artist": "조민규",
     "artistType": "jomingyu",
     "album": "신세계 : PARANA",
-    "releaseDate": "2021-12-03",
+    "releaseDate": "2021-04-06",
     "duration": 234,
     "isTitle": false,
     "platformIds": {
-      "melon": "34361929",
+      "melon": "33391059",
       "genie": "96128491",
       "bugs": "32182941"
     },
-    "tags": ["solo", "parana", "emotional"]
+    "tags": [
+      "solo",
+      "parana",
+      "emotional"
+    ]
   },
   {
     "id": "cho-004",
@@ -533,15 +641,18 @@
     "artist": "조민규",
     "artistType": "jomingyu",
     "album": "신세계 : PARANA",
-    "releaseDate": "2021-12-03",
+    "releaseDate": "2020-02-16",
     "duration": 208,
     "isTitle": false,
     "platformIds": {
-      "melon": "34361930",
+      "melon": "32376827",
       "genie": "96128492",
       "bugs": "32182942"
     },
-    "tags": ["solo", "parana"]
+    "tags": [
+      "solo",
+      "parana"
+    ]
   },
   {
     "id": "cho-005",
@@ -553,11 +664,14 @@
     "duration": 218,
     "isTitle": false,
     "platformIds": {
-      "melon": "34361931",
+      "melon": "34360564",
       "genie": "96128493",
       "bugs": "32182943"
     },
-    "tags": ["solo", "parana"]
+    "tags": [
+      "solo",
+      "parana"
+    ]
   },
   {
     "id": "cho-006",
@@ -569,11 +683,14 @@
     "duration": 226,
     "isTitle": false,
     "platformIds": {
-      "melon": "34361932",
+      "melon": "34360566",
       "genie": "96128494",
       "bugs": "32182944"
     },
-    "tags": ["solo", "parana"]
+    "tags": [
+      "solo",
+      "parana"
+    ]
   },
   {
     "id": "kang-001",
@@ -581,15 +698,20 @@
     "artist": "강형호 (PITTA)",
     "artistType": "kanghyungho",
     "album": "ID: PITTA",
-    "releaseDate": "2021-11-10",
+    "releaseDate": "2021-10-26",
     "duration": 245,
     "isTitle": true,
     "platformIds": {
-      "melon": "34251920",
+      "melon": "34156135",
       "genie": "95819204",
       "bugs": "32118192"
     },
-    "tags": ["solo", "pitta", "title", "rock"]
+    "tags": [
+      "solo",
+      "pitta",
+      "title",
+      "rock"
+    ]
   },
   {
     "id": "kang-002",
@@ -601,11 +723,16 @@
     "duration": 220,
     "isTitle": true,
     "platformIds": {
-      "melon": "34251921",
+      "melon": "34235514",
       "genie": "95819205",
       "bugs": "32118193"
     },
-    "tags": ["solo", "pitta", "title", "energy"]
+    "tags": [
+      "solo",
+      "pitta",
+      "title",
+      "energy"
+    ]
   },
   {
     "id": "kang-003",
@@ -617,11 +744,14 @@
     "duration": 238,
     "isTitle": false,
     "platformIds": {
-      "melon": "34251922",
+      "melon": "34235515",
       "genie": "95819206",
       "bugs": "32118194"
     },
-    "tags": ["solo", "pitta"]
+    "tags": [
+      "solo",
+      "pitta"
+    ]
   },
   {
     "id": "kang-004",
@@ -629,15 +759,18 @@
     "artist": "강형호 (PITTA)",
     "artistType": "kanghyungho",
     "album": "ID: PITTA",
-    "releaseDate": "2021-11-10",
+    "releaseDate": "2017-09-30",
     "duration": 250,
     "isTitle": false,
     "platformIds": {
-      "melon": "34251923",
+      "melon": "30659881",
       "genie": "95819207",
       "bugs": "32118195"
     },
-    "tags": ["solo", "pitta"]
+    "tags": [
+      "solo",
+      "pitta"
+    ]
   },
   {
     "id": "kang-005",
@@ -649,11 +782,16 @@
     "duration": 254,
     "isTitle": true,
     "platformIds": {
-      "melon": "33019283",
+      "melon": "33020491",
       "genie": "93019284",
       "bugs": "31782910"
     },
-    "tags": ["solo", "pitta", "single", "epic"]
+    "tags": [
+      "solo",
+      "pitta",
+      "single",
+      "epic"
+    ]
   },
   {
     "id": "kang-006",
@@ -665,11 +803,15 @@
     "duration": 218,
     "isTitle": true,
     "platformIds": {
-      "melon": "36218294",
+      "melon": "36255707",
       "genie": "10141829",
       "bugs": "32751829"
     },
-    "tags": ["solo", "pitta", "single"]
+    "tags": [
+      "solo",
+      "pitta",
+      "single"
+    ]
   },
   {
     "id": "kang-007",
@@ -681,11 +823,15 @@
     "duration": 230,
     "isTitle": true,
     "platformIds": {
-      "melon": "36381920",
+      "melon": "36380617",
       "genie": "10201928",
       "bugs": "32801928"
     },
-    "tags": ["solo", "pitta", "special"]
+    "tags": [
+      "solo",
+      "pitta",
+      "special"
+    ]
   },
   {
     "id": "ko-001",
@@ -693,15 +839,20 @@
     "artist": "고우림",
     "artistType": "gowoorim",
     "album": "디 엠파이어: 법의 제국 OST Part.3",
-    "releaseDate": "2022-10-15",
+    "releaseDate": "2022-10-16",
     "duration": 235,
     "isTitle": true,
     "platformIds": {
-      "melon": "35719284",
+      "melon": "35723911",
       "genie": "99719284",
       "bugs": "32571928"
     },
-    "tags": ["solo", "ost", "basso", "tango"]
+    "tags": [
+      "solo",
+      "ost",
+      "basso",
+      "tango"
+    ]
   },
   {
     "id": "ko-002",
@@ -709,15 +860,20 @@
     "artist": "고우림",
     "artistType": "gowoorim",
     "album": "나의 아저씨 OST Part.5",
-    "releaseDate": "2018-04-26",
+    "releaseDate": "2018-04-19",
     "duration": 260,
     "isTitle": true,
     "platformIds": {
-      "melon": "31041928",
+      "melon": "31031208",
       "genie": "88129384",
       "bugs": "30918204"
     },
-    "tags": ["solo", "ost", "basso", "deep"]
+    "tags": [
+      "solo",
+      "ost",
+      "basso",
+      "deep"
+    ]
   },
   {
     "id": "ko-003",
@@ -729,11 +885,14 @@
     "duration": 228,
     "isTitle": true,
     "platformIds": {
-      "melon": "31948192",
+      "melon": "31438775",
       "genie": "89819284",
       "bugs": "31192840"
     },
-    "tags": ["duet", "warm"]
+    "tags": [
+      "duet",
+      "warm"
+    ]
   },
   {
     "id": "bae-001",
@@ -749,7 +908,11 @@
       "genie": "79182049",
       "bugs": "21948201"
     },
-    "tags": ["solo", "single", "ballad"]
+    "tags": [
+      "solo",
+      "single",
+      "ballad"
+    ]
   },
   {
     "id": "bae-002",
@@ -765,7 +928,11 @@
       "genie": "81928401",
       "bugs": "24918204"
     },
-    "tags": ["solo", "single", "ballad"]
+    "tags": [
+      "solo",
+      "single",
+      "ballad"
+    ]
   },
   {
     "id": "bae-003",
@@ -777,10 +944,13 @@
     "duration": 218,
     "isTitle": true,
     "platformIds": {
-      "melon": "30192840",
+      "melon": "5475800",
       "genie": "84918204",
       "bugs": "28918204"
     },
-    "tags": ["solo", "musical"]
+    "tags": [
+      "solo",
+      "musical"
+    ]
   }
 ]
