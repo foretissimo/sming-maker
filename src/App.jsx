@@ -35,8 +35,27 @@ export default function App() {
     }
   });
 
-  // Generator Options
-  const [selectedArtists, setSelectedArtists] = useState(() => artists.map(a => a.id));
+  // Generator Options with LocalStorage persistence (Default: '완전체' 우선 선택)
+  const [selectedArtists, setSelectedArtists] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sming_selected_artists');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    // Default: '완전체' 우선 선택
+    const groupArtist = artists.find(a => a.category === 'group' || a.id === 'group');
+    return groupArtist ? [groupArtist.id] : ['group'];
+  });
+
+  // Persist selectedArtists to LocalStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('sming_selected_artists', JSON.stringify(selectedArtists));
+    } catch (e) {}
+  }, [selectedArtists]);
+
   const [mode, setMode] = useState('title_focus');
   const [targetDurationMinutes, setTargetDurationMinutes] = useState(60);
   const [focusSongId, setFocusSongId] = useState(null);
@@ -67,7 +86,7 @@ export default function App() {
     }
   };
 
-  // Reset to default bundled dataset
+  // Reset to default bundled dataset (완전체 우선 복구)
   const handleResetToDefault = () => {
     try {
       localStorage.removeItem('sming_songs');
@@ -78,16 +97,18 @@ export default function App() {
     } catch (e) {}
     setAllSongs(initialSongsData);
     setArtists(initialArtistsData);
-    setSelectedArtists(initialArtistsData.map(a => a.id));
+    const groupArtist = initialArtistsData.find(a => a.category === 'group' || a.id === 'group');
+    const defaultGroup = groupArtist ? [groupArtist.id] : ['group'];
+    setSelectedArtists(defaultGroup);
     setFocusSongId(null);
     setPlaylist(generateStreamingList(initialSongsData, {
       targetSeconds: 3600,
       mode: 'title_focus',
-      selectedArtistTypes: initialArtistsData.map(a => a.id)
+      selectedArtistTypes: defaultGroup
     }));
   };
 
-  // Initialize playlist on mount or from URL params
+  // Initialize playlist on mount or from URL params (완전체/LocalStorage 선택 기반 생성)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const songIdsParam = params.get('songs');
@@ -107,14 +128,15 @@ export default function App() {
       }
     }
 
-    // Default initial generation
+    // Default initial generation based on selectedArtists (group by default or LocalStorage)
     const initialList = generateStreamingList(allSongs, {
       targetSeconds: 3600,
       mode: 'title_focus',
-      selectedArtistTypes: artists.map(a => a.id)
+      selectedArtistTypes: selectedArtists
     });
     setPlaylist(initialList);
   }, []);
+
 
   const showToast = (msg) => {
     setToastMessage(msg);
