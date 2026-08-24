@@ -1,0 +1,740 @@
+[
+  {
+    "id": "fore-001",
+    "title": "White Night (백야)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "White Night (백야)",
+    "releaseDate": "2023-07-01",
+    "duration": 224,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36567891",
+      "genie": "10283948",
+      "bugs": "32891234",
+      "vibe": "67891234",
+      "flo": "49876543"
+    },
+    "tags": ["title", "ballad", "recent"]
+  },
+  {
+    "id": "fore-002",
+    "title": "Snow Globe",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Unfinished",
+    "releaseDate": "2023-11-08",
+    "duration": 218,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36940123",
+      "genie": "10412345",
+      "bugs": "33124567",
+      "vibe": "69123456",
+      "flo": "51234567"
+    },
+    "tags": ["title", "winter", "recent"]
+  },
+  {
+    "id": "fore-003",
+    "title": "KOOL",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "KOOL",
+    "releaseDate": "2023-09-06",
+    "duration": 196,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36750192",
+      "genie": "10351294",
+      "bugs": "32981240",
+      "vibe": "68451290",
+      "flo": "50451290"
+    },
+    "tags": ["title", "pop", "dance", "recent"]
+  },
+  {
+    "id": "fore-004",
+    "title": "UTOPIA",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "[The Bloom : UTOPIA] The Borders of Utopia",
+    "releaseDate": "2022-12-22",
+    "duration": 242,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "35957018",
+      "genie": "10019482",
+      "bugs": "32671928",
+      "vibe": "65192847",
+      "flo": "47192847"
+    },
+    "tags": ["title", "epic", "rock-opera"]
+  },
+  {
+    "id": "fore-005",
+    "title": "Save our lives",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "The Beginning : World Tree",
+    "releaseDate": "2022-05-30",
+    "duration": 228,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "35073912",
+      "genie": "98127391",
+      "bugs": "32451920",
+      "vibe": "63182940",
+      "flo": "45182940"
+    },
+    "tags": ["title", "crossover", "epic"]
+  },
+  {
+    "id": "fore-006",
+    "title": "Moonlight (달하 노피곰 도dash아)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "The Beginning : World Tree",
+    "releaseDate": "2022-05-30",
+    "duration": 235,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "35073913",
+      "genie": "98127392",
+      "bugs": "32451921",
+      "vibe": "63182941",
+      "flo": "45182941"
+    },
+    "tags": ["traditional", "korean", "crossover"]
+  },
+  {
+    "id": "fore-007",
+    "title": "Stay with me",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "The Beginning : World Tree",
+    "releaseDate": "2022-05-30",
+    "duration": 210,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "35073914",
+      "genie": "98127393",
+      "bugs": "32451922",
+      "vibe": "63182942",
+      "flo": "45182942"
+    },
+    "tags": ["bside", "ballad"]
+  },
+  {
+    "id": "fore-008",
+    "title": "Chagall's Dream (샤갈의 꿈)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Unfinished",
+    "releaseDate": "2023-11-08",
+    "duration": 230,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "36940124",
+      "genie": "10412346",
+      "bugs": "33124568",
+      "vibe": "69123457",
+      "flo": "51234568"
+    },
+    "tags": ["bside", "art-pop"]
+  },
+  {
+    "id": "fore-009",
+    "title": "바람이 건네준 말 (Words The Wind Passed)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "The Forestella",
+    "releaseDate": "2021-04-19",
+    "duration": 248,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "33419283",
+      "genie": "94192834",
+      "bugs": "31948201",
+      "vibe": "59482019",
+      "flo": "41948201"
+    },
+    "tags": ["title", "emotional", "ballad"]
+  },
+  {
+    "id": "fore-010",
+    "title": "당신이 듣던",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "The Forestella",
+    "releaseDate": "2021-04-19",
+    "duration": 252,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "33419284",
+      "genie": "94192835",
+      "bugs": "31948202",
+      "vibe": "59482020",
+      "flo": "41948202"
+    },
+    "tags": ["bside", "ballad"]
+  },
+  {
+    "id": "fore-011",
+    "title": "Je suis malade",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "The Forestella",
+    "releaseDate": "2021-04-19",
+    "duration": 284,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "33419285",
+      "genie": "94192836",
+      "bugs": "31948203",
+      "vibe": "59482021",
+      "flo": "41948203"
+    },
+    "tags": ["chanson", "dramatic"]
+  },
+  {
+    "id": "fore-012",
+    "title": "Together",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "The Forestella",
+    "releaseDate": "2021-04-19",
+    "duration": 236,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "33419286",
+      "genie": "94192837",
+      "bugs": "31948204",
+      "vibe": "59482022",
+      "flo": "41948204"
+    },
+    "tags": ["fan-song", "warm"]
+  },
+  {
+    "id": "fore-013",
+    "title": "Bohemian Rhapsody",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Mystique",
+    "releaseDate": "2019-05-22",
+    "duration": 348,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "31819204",
+      "genie": "89182934",
+      "bugs": "31092841",
+      "vibe": "51092841",
+      "flo": "31092841"
+    },
+    "tags": ["title", "queen", "rock-opera"]
+  },
+  {
+    "id": "fore-014",
+    "title": "달하 노피곰 도dash아 (Mystique Ver.)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Mystique",
+    "releaseDate": "2019-05-22",
+    "duration": 265,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "31819205",
+      "genie": "89182935",
+      "bugs": "31092842",
+      "vibe": "51092842",
+      "flo": "31092842"
+    },
+    "tags": ["title", "mystic"]
+  },
+  {
+    "id": "fore-015",
+    "title": "Angel (VIP OST)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "VIP OST Part.3",
+    "releaseDate": "2019-11-18",
+    "duration": 235,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "32182910",
+      "genie": "90182934",
+      "bugs": "31294810",
+      "vibe": "52182910",
+      "flo": "32182910"
+    },
+    "tags": ["ost", "dramatic"]
+  },
+  {
+    "id": "fore-016",
+    "title": "Boomerang (지옥에서 온 판사 OST)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "지옥에서 온 판사 OST Part.1",
+    "releaseDate": "2024-09-28",
+    "duration": 204,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "37951234",
+      "genie": "10681920",
+      "bugs": "33918204",
+      "vibe": "71928401",
+      "flo": "53918204"
+    },
+    "tags": ["ost", "rock", "recent"]
+  },
+  {
+    "id": "fore-017",
+    "title": "Chosen One (아라문의 검 OST)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "아라문의 검 OST Part.1",
+    "releaseDate": "2023-09-16",
+    "duration": 215,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36798123",
+      "genie": "10381923",
+      "bugs": "33019283",
+      "vibe": "68912345",
+      "flo": "50912345"
+    },
+    "tags": ["ost", "epic", "fantasy"]
+  },
+  {
+    "id": "fore-018",
+    "title": "In Un'Altra Vita",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Evolution",
+    "releaseDate": "2018-03-14",
+    "duration": 272,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "30948192",
+      "genie": "87192845",
+      "bugs": "30819283",
+      "vibe": "49182934",
+      "flo": "29182934"
+    },
+    "tags": ["classic", "signature"]
+  },
+  {
+    "id": "fore-019",
+    "title": "사랑, 그 쓸쓸함에 대하여",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Evolution",
+    "releaseDate": "2018-03-14",
+    "duration": 258,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "30948193",
+      "genie": "87192846",
+      "bugs": "30819284",
+      "vibe": "49182935",
+      "flo": "29182935"
+    },
+    "tags": ["title", "emotional", "ballad"]
+  },
+  {
+    "id": "fore-020",
+    "title": "Champions",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Evolution",
+    "releaseDate": "2018-03-14",
+    "duration": 238,
+    "isTitle": false,
+    "platformIds": {
+      "melon": "30948194",
+      "genie": "87192847",
+      "bugs": "30819285",
+      "vibe": "49182936",
+      "flo": "29182936"
+    },
+    "tags": ["anthem", "energy"]
+  },
+  {
+    "id": "fore-021",
+    "title": "Still Here",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "Still Here",
+    "releaseDate": "2025-12-15",
+    "duration": 240,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "39120481",
+      "genie": "10819284",
+      "bugs": "34918204",
+      "vibe": "74819204",
+      "flo": "56819204"
+    },
+    "tags": ["title", "recent", "harmony"]
+  },
+  {
+    "id": "fore-022",
+    "title": "THE LEGACY",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "THE LEGACY",
+    "releaseDate": "2026-04-23",
+    "duration": 255,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "39819284",
+      "genie": "10981924",
+      "bugs": "35819204",
+      "vibe": "76192840",
+      "flo": "58192840"
+    },
+    "tags": ["title", "recent", "epic"]
+  },
+  {
+    "id": "cho-001",
+    "title": "신세계 : NEW WAVE",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "신세계 : NEW WAVE",
+    "releaseDate": "2020-02-16",
+    "duration": 218,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "32378192",
+      "genie": "91283940",
+      "bugs": "31482910",
+      "vibe": "53819204",
+      "flo": "33819204"
+    },
+    "tags": ["solo", "title", "tango"]
+  },
+  {
+    "id": "cho-002",
+    "title": "바람 (Wish)",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "바람 (Wish)",
+    "releaseDate": "2021-12-10",
+    "duration": 234,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "34419284",
+      "genie": "96182940",
+      "bugs": "32194820",
+      "vibe": "61294820",
+      "flo": "43294820"
+    },
+    "tags": ["solo", "title", "emotional"]
+  },
+  {
+    "id": "cho-003",
+    "title": "라 케 serenade",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "라 케 serenade",
+    "releaseDate": "2020-11-20",
+    "duration": 222,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "33091824",
+      "genie": "93182940",
+      "bugs": "31829401",
+      "vibe": "57182940",
+      "flo": "39182940"
+    },
+    "tags": ["solo", "title", "serenade"]
+  },
+  {
+    "id": "cho-004",
+    "title": "Be My Love",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Be My Love",
+    "releaseDate": "2021-08-15",
+    "duration": 208,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "33819204",
+      "genie": "95192840",
+      "bugs": "32091824",
+      "vibe": "60192840",
+      "flo": "42192840"
+    },
+    "tags": ["solo", "pop", "sweet"]
+  },
+  {
+    "id": "cho-005",
+    "title": "달콤한 꿈",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "달콤한 꿈",
+    "releaseDate": "2022-09-12",
+    "duration": 215,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "35581920",
+      "genie": "99182940",
+      "bugs": "32581920",
+      "vibe": "64182940",
+      "flo": "46182940"
+    },
+    "tags": ["solo", "lullaby", "comfort"]
+  },
+  {
+    "id": "bae-001",
+    "title": "첫사랑",
+    "artist": "배두훈",
+    "artistType": "baedoohun",
+    "album": "첫사랑",
+    "releaseDate": "2023-04-18",
+    "duration": 226,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36371928",
+      "genie": "10192840",
+      "bugs": "32791820",
+      "vibe": "66819204",
+      "flo": "48819204"
+    },
+    "tags": ["solo", "title", "ballad"]
+  },
+  {
+    "id": "bae-002",
+    "title": "My Everything",
+    "artist": "배두훈",
+    "artistType": "baedoohun",
+    "album": "My Everything",
+    "releaseDate": "2024-03-10",
+    "duration": 212,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "37381920",
+      "genie": "10519284",
+      "bugs": "33481920",
+      "vibe": "70481920",
+      "flo": "52481920"
+    },
+    "tags": ["solo", "title", "romantic", "recent"]
+  },
+  {
+    "id": "bae-003",
+    "title": "물들어요",
+    "artist": "배두훈",
+    "artistType": "baedoohun",
+    "album": "물들어요",
+    "releaseDate": "2023-10-25",
+    "duration": 230,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36891204",
+      "genie": "10391820",
+      "bugs": "33091820",
+      "vibe": "68918204",
+      "flo": "50918204"
+    },
+    "tags": ["solo", "autumn", "warm"]
+  },
+  {
+    "id": "bae-004",
+    "title": "너를 사랑하는 이유",
+    "artist": "배두훈",
+    "artistType": "baedoohun",
+    "album": "너를 사랑하는 이유",
+    "releaseDate": "2022-11-14",
+    "duration": 240,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "35819204",
+      "genie": "99819204",
+      "bugs": "32619284",
+      "vibe": "64918204",
+      "flo": "46918204"
+    },
+    "tags": ["solo", "ballad"]
+  },
+  {
+    "id": "kang-001",
+    "title": "Universe",
+    "artist": "강형호 (PITTA)",
+    "artistType": "kanghyungho",
+    "album": "Universe",
+    "releaseDate": "2021-11-10",
+    "duration": 254,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "34291820",
+      "genie": "95918204",
+      "bugs": "32148192",
+      "vibe": "60918204",
+      "flo": "42918204"
+    },
+    "tags": ["solo", "pitta", "rock", "epic"]
+  },
+  {
+    "id": "kang-002",
+    "title": "Be the One",
+    "artist": "강형호 (PITTA)",
+    "artistType": "kanghyungho",
+    "album": "Be the One",
+    "releaseDate": "2022-10-04",
+    "duration": 220,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "35691820",
+      "genie": "99481920",
+      "bugs": "32548192",
+      "vibe": "64481920",
+      "flo": "46481920"
+    },
+    "tags": ["solo", "pitta", "rock", "energy"]
+  },
+  {
+    "id": "kang-003",
+    "title": "The Nation",
+    "artist": "강형호 (PITTA)",
+    "artistType": "kanghyungho",
+    "album": "The Nation",
+    "releaseDate": "2023-05-15",
+    "duration": 245,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36451920",
+      "genie": "10248192",
+      "bugs": "32848192",
+      "vibe": "67481920",
+      "flo": "49481920"
+    },
+    "tags": ["solo", "pitta", "symphonic-rock"]
+  },
+  {
+    "id": "kang-004",
+    "title": "Carpe Diem",
+    "artist": "강형호 (PITTA)",
+    "artistType": "kanghyungho",
+    "album": "Carpe Diem",
+    "releaseDate": "2023-08-20",
+    "duration": 218,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36718294",
+      "genie": "10341829",
+      "bugs": "32951829",
+      "vibe": "68341829",
+      "flo": "50341829"
+    },
+    "tags": ["solo", "pitta", "rock"]
+  },
+  {
+    "id": "kang-005",
+    "title": "BETTER",
+    "artist": "강형호 (PITTA)",
+    "artistType": "kanghyungho",
+    "album": "BETTER",
+    "releaseDate": "2024-04-12",
+    "duration": 228,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "37481920",
+      "genie": "10581920",
+      "bugs": "33581920",
+      "vibe": "70819204",
+      "flo": "52819204"
+    },
+    "tags": ["solo", "pitta", "rock", "recent"]
+  },
+  {
+    "id": "kang-006",
+    "title": "Persona",
+    "artist": "강형호 (PITTA)",
+    "artistType": "kanghyungho",
+    "album": "Persona",
+    "releaseDate": "2021-06-18",
+    "duration": 238,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "33618294",
+      "genie": "94819204",
+      "bugs": "32019284",
+      "vibe": "59819204",
+      "flo": "41819204"
+    },
+    "tags": ["solo", "pitta", "dramatic"]
+  },
+  {
+    "id": "ko-001",
+    "title": "별 헤는 밤",
+    "artist": "고우림",
+    "artistType": "gowoorim",
+    "album": "별 헤는 밤",
+    "releaseDate": "2023-10-28",
+    "duration": 262,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36918204",
+      "genie": "10401928",
+      "bugs": "33101928",
+      "vibe": "69019284",
+      "flo": "51019284"
+    },
+    "tags": ["solo", "basso", "deep", "poetic", "recent"]
+  },
+  {
+    "id": "ko-002",
+    "title": "Somewhere",
+    "artist": "고우림",
+    "artistType": "gowoorim",
+    "album": "Somewhere",
+    "releaseDate": "2022-08-20",
+    "duration": 248,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "35418294",
+      "genie": "98918204",
+      "bugs": "32519284",
+      "vibe": "63918204",
+      "flo": "45918204"
+    },
+    "tags": ["solo", "musical", "warm"]
+  },
+  {
+    "id": "ko-003",
+    "title": "삐에로",
+    "artist": "고우림",
+    "artistType": "gowoorim",
+    "album": "삐에로",
+    "releaseDate": "2023-06-15",
+    "duration": 235,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "36519284",
+      "genie": "10271928",
+      "bugs": "32871928",
+      "vibe": "67719284",
+      "flo": "49719284"
+    },
+    "tags": ["solo", "basso", "tango"]
+  },
+  {
+    "id": "ko-004",
+    "title": "Yellow",
+    "artist": "고우림",
+    "artistType": "gowoorim",
+    "album": "Yellow",
+    "releaseDate": "2021-10-18",
+    "duration": 250,
+    "isTitle": true,
+    "platformIds": {
+      "melon": "34182940",
+      "genie": "95618294",
+      "bugs": "32101928",
+      "vibe": "60618294",
+      "flo": "42618294"
+    },
+    "tags": ["solo", "cover", "coldplay", "deep"]
+  }
+]
