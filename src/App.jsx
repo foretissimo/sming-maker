@@ -35,8 +35,27 @@ export default function App() {
     }
   });
 
-  // Generator Options
-  const [selectedArtists, setSelectedArtists] = useState(() => artists.map(a => a.id));
+  // Generator Options with LocalStorage persistence (Default: '완전체' 우선 선택)
+  const [selectedArtists, setSelectedArtists] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sming_selected_artists');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    // Default: '완전체' 우선 선택
+    const groupArtist = artists.find(a => a.category === 'group' || a.id === 'group');
+    return groupArtist ? [groupArtist.id] : ['group'];
+  });
+
+  // Persist selectedArtists to LocalStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('sming_selected_artists', JSON.stringify(selectedArtists));
+    } catch (e) {}
+  }, [selectedArtists]);
+
   const [mode, setMode] = useState('title_focus');
   const [targetDurationMinutes, setTargetDurationMinutes] = useState(60);
   const [focusSongId, setFocusSongId] = useState(null);
@@ -72,11 +91,16 @@ export default function App() {
     try {
       localStorage.removeItem('sming_songs');
       localStorage.removeItem('sming_artists');
+      localStorage.removeItem('sming_selected_artists');
+      localStorage.removeItem('sming_editor_selected_artist');
+      localStorage.removeItem('sming_catalog_selected_artist');
     } catch (e) {}
     setAllSongs(initialSongsData);
     setArtists(initialArtistsData);
-    setSelectedArtists(initialArtistsData.map(a => a.id));
+    const groupArtist = initialArtistsData.find(a => a.category === 'group' || a.id === 'group');
+    setSelectedArtists(groupArtist ? [groupArtist.id] : ['group']);
   };
+
 
   // Initialize playlist on mount or from URL params
   useEffect(() => {

@@ -45,10 +45,28 @@ export default function DataEditorView({
 }) {
   const [activeTab, setActiveTab] = useState('artist_songs'); // 'artist_songs' | 'all_songs' | 'raw_json' | 'sync'
   
-  // Selected artist in artist-centric view
-  const [selectedArtistId, setSelectedArtistId] = useState(() => artists[0]?.id || 'group');
+  // Selected artist in artist-centric view (Default: '완전체' 우선 선택, LocalStorage 기억)
+  const [selectedArtistId, setSelectedArtistId] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sming_editor_selected_artist');
+      if (saved && artists.some(a => a.id === saved)) {
+        return saved;
+      }
+    } catch (e) {}
+    const groupArtist = artists.find(a => a.category === 'group' || a.id === 'group');
+    return groupArtist ? groupArtist.id : (artists[0]?.id || 'group');
+  });
+
+  // Persist selectedArtistId to LocalStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('sming_editor_selected_artist', selectedArtistId);
+    } catch (e) {}
+  }, [selectedArtistId]);
+
   const [artistSongSearch, setArtistSongSearch] = useState('');
   const [sortBy, setSortBy] = useState('date_desc'); // 'date_desc' | 'date_asc' | 'title' | 'duration'
+
 
   // Global search for all_songs tab
   const [searchQuery, setSearchQuery] = useState('');
