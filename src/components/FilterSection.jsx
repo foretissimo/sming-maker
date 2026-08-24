@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3 } from 'lucide-react';
+import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3, CheckSquare, Square } from 'lucide-react';
 
 export const ARTISTS = [
   { id: 'group', name: '포레스텔라', badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
@@ -13,13 +13,13 @@ export const MODES = [
   {
     id: 'title_focus',
     name: '타이틀 집중 모드 (권장)',
-    desc: '최신 타이틀곡을 주기적으로 반복 배치해 음원 차트 반영 극대화',
+    desc: '최신 타이틀(완전체/솔로)을 주기적으로 반복 배치해 음원 차트 반영 극대화',
     icon: Flame
   },
   {
     id: 'recent_first',
     name: '최신곡 우선',
-    desc: '가장 최근 발매된 앨범/싱글 순으로 1시간 구성',
+    desc: '가장 최근 발매된 앨범/싱글 순으로 1시간 최적 조합',
     icon: Sparkles
   },
   {
@@ -49,7 +49,6 @@ export default function FilterSection({
 }) {
   const toggleArtist = (id) => {
     if (selectedArtists.includes(id)) {
-      if (selectedArtists.length === 1) return; // Keep at least one
       onChangeArtists(selectedArtists.filter(a => a !== id));
     } else {
       onChangeArtists([...selectedArtists, id]);
@@ -60,39 +59,65 @@ export default function FilterSection({
     onChangeArtists(ARTISTS.map(a => a.id));
   };
 
+  const deselectAllArtists = () => {
+    onChangeArtists([]);
+  };
+
   const selectOnlyGroup = () => {
     onChangeArtists(['group']);
   };
 
-  // Title song candidates for focus selector
-  const titleSongs = allSongs.filter(s => s.isTitle);
+  const selectOnlySolos = () => {
+    onChangeArtists(['jomingyu', 'baedoohun', 'kanghyungho', 'gowoorim']);
+  };
+
+  // Title song candidates for focus selector (filtered by selected artists if active)
+  const availableTitleSongs = allSongs.filter(s => {
+    if (!s.isTitle) return false;
+    if (selectedArtists.length === 0) return true;
+    return selectedArtists.includes(s.artistType);
+  });
 
   return (
     <div className="bg-slate-900/70 border border-slate-800/80 rounded-2xl p-4 md:p-5 shadow-xl space-y-5">
       {/* 1. Artist Multi-select */}
       <div>
-        <div className="flex items-center justify-between mb-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5 uppercase tracking-wider">
             <Users className="w-3.5 h-3.5 text-emerald-400" />
             아티스트 선택
           </label>
-          <div className="flex gap-2">
+          
+          {/* Quick Select / Deselect Action Chips */}
+          <div className="flex items-center gap-1.5 flex-wrap">
             <button
               onClick={selectAllArtists}
-              className="text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+              className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer border border-slate-700/60"
             >
               전체 선택
             </button>
-            <span className="text-slate-600 text-xs">|</span>
+            <button
+              onClick={deselectAllArtists}
+              className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-rose-400 hover:text-rose-300 transition-colors cursor-pointer border border-slate-700/60"
+            >
+              전체 해제
+            </button>
             <button
               onClick={selectOnlyGroup}
-              className="text-[11px] text-slate-400 hover:text-slate-300 transition-colors cursor-pointer"
+              className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer border border-slate-700/60"
             >
               완전체만
+            </button>
+            <button
+              onClick={selectOnlySolos}
+              className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-amber-200 transition-colors cursor-pointer border border-slate-700/60"
+            >
+              솔로곡만
             </button>
           </div>
         </div>
 
+        {/* Artist Pills */}
         <div className="flex flex-wrap gap-2">
           {ARTISTS.map((artist) => {
             const isSelected = selectedArtists.includes(artist.id);
@@ -100,17 +125,23 @@ export default function FilterSection({
               <button
                 key={artist.id}
                 onClick={() => toggleArtist(artist.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 cursor-pointer border ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 cursor-pointer border flex items-center gap-1.5 ${
                   isSelected
-                    ? `${artist.badgeColor} shadow-sm shadow-emerald-950/40 ring-1 ring-emerald-400/40`
+                    ? `${artist.badgeColor} shadow-sm shadow-emerald-950/40 ring-1 ring-emerald-400/40 font-semibold`
                     : 'bg-slate-950/60 text-slate-400 border-slate-800/80 hover:bg-slate-800/50 hover:text-slate-300'
                 }`}
               >
-                {artist.name}
+                <span>{artist.name}</span>
               </button>
             );
           })}
         </div>
+
+        {selectedArtists.length === 0 && (
+          <p className="text-[11px] text-amber-400/90 mt-2 bg-amber-950/20 border border-amber-900/30 px-2.5 py-1 rounded-lg">
+            ⚠️ 선택된 아티스트가 없어 전체 곡 풀에서 1시간 조합을 생성합니다.
+          </p>
+        )}
       </div>
 
       {/* 2. Generation Mode */}
@@ -154,7 +185,7 @@ export default function FilterSection({
         <div>
           <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5 mb-2">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
-            목표 스밍 시간
+            목표 스밍 시간 (정밀 맞춤)
           </label>
           <div className="flex gap-2">
             {[55, 60, 65].map((mins) => (
@@ -167,7 +198,7 @@ export default function FilterSection({
                     : 'bg-slate-950/50 text-slate-400 border-slate-800 hover:bg-slate-800'
                 }`}
               >
-                {mins}분 {mins === 60 && '(추천)'}
+                {mins}분 {mins === 60 && '(정확)'}
               </button>
             ))}
           </div>
@@ -184,10 +215,10 @@ export default function FilterSection({
             onChange={(e) => onChangeFocusSong(e.target.value || null)}
             className="w-full bg-slate-950/80 border border-slate-800 text-xs rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
           >
-            <option value="">자동 선택 (가장 최신 타이틀곡)</option>
-            {titleSongs.map((song) => (
+            <option value="">자동 선택 (선택 아티스트 최신 타이틀)</option>
+            {availableTitleSongs.map((song) => (
               <option key={song.id} value={song.id}>
-                {song.title} - {song.artist} ({song.album})
+                [{song.artist}] {song.title} ({song.album})
               </option>
             ))}
           </select>
