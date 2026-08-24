@@ -44,9 +44,10 @@ export async function fetchMelonTracks(melonArtistId) {
   const maxPages = 10; // fetch up to 500 songs
 
   for (let page = 0; page < maxPages; page++) {
-    const url = `https://www.melon.com/artist/songPaging.htm?artistId=${melonArtistId}&act=artistSong&startIndex=${startIndex}&pageSize=${pageSize}`;
+    const url = `https://www.melon.com/artist/songPaging.htm?artistId=${melonArtistId}&act=artistSong&listType=A&orderBy=ISSUE_DATE&startIndex=${startIndex}&pageSize=${pageSize}`;
     try {
       const html = await fetchHtml(url, '/proxy/melon');
+
       const matches = [...html.matchAll(/href="javascript:melon\.link\.goSongDetail\(\x27(\d+)\x27\);"[^>]*title="([^"]+)"/g)];
       const albumMatches = [...html.matchAll(/href="javascript:melon\.link\.goAlbumDetail\([^\)]*\)"[^>]*title="([^"]+)"/g)];
 
