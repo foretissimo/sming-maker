@@ -1,5 +1,7 @@
-import React from 'react';
-import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3, CheckSquare, Square } from 'lucide-react';
+import React, { useState } from 'react';
+import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3, Search, X, Check } from 'lucide-react';
+import { formatSecondsToTime } from '../utils/formatters';
+import FocusSongModal from './FocusSongModal';
 
 export const DEFAULT_ARTISTS = [
   { 
@@ -39,16 +41,13 @@ export const DEFAULT_ARTISTS = [
   }
 ];
 
-
 export const ARTISTS = DEFAULT_ARTISTS;
-
-
 
 export const MODES = [
   {
     id: 'title_focus',
     name: '타이틀 집중 모드 (권장)',
-    desc: '최신 타이틀(완전체/솔로)을 주기적으로 반복 배치해 음원 차트 반영 극대화',
+    desc: '지정한 집중곡(타이틀/수록곡)을 주기적으로 반복 배치해 음원 차트 반영 극대화',
     icon: Flame
   },
   {
@@ -81,8 +80,10 @@ export default function FilterSection({
   onChangeTargetDuration,
   focusSongId,
   onChangeFocusSong,
-  allSongs
+  allSongs = []
 }) {
+  const [isFocusModalOpen, setIsFocusModalOpen] = useState(false);
+
   const toggleArtist = (id) => {
     if (selectedArtists.includes(id)) {
       onChangeArtists(selectedArtists.filter(a => a !== id));
@@ -109,13 +110,9 @@ export default function FilterSection({
     onChangeArtists(soloArtists);
   };
 
-
-  // Title song candidates for focus selector (filtered by selected artists if active)
-  const availableTitleSongs = allSongs.filter(s => {
-    if (!s.isTitle) return false;
-    if (selectedArtists.length === 0) return true;
-    return selectedArtists.includes(s.artistType);
-  });
+  // Find currently selected focus song
+  const currentFocusSong = allSongs.find(s => s.id === focusSongId);
+  const focusSongArtistObj = currentFocusSong ? artists.find(a => a.id === currentFocusSong.artistType) : null;
 
   return (
     <div className="bg-slate-900/70 border border-slate-800/80 rounded-2xl p-4 md:p-5 shadow-xl space-y-5">
@@ -176,7 +173,6 @@ export default function FilterSection({
           })}
         </div>
 
-
         {selectedArtists.length === 0 && (
           <p className="text-[11px] text-amber-400/90 mt-2 bg-amber-950/20 border border-amber-900/30 px-2.5 py-1 rounded-lg">
             ⚠️ 선택된 아티스트가 없어 전체 곡 풀에서 1시간 조합을 생성합니다.
@@ -232,38 +228,99 @@ export default function FilterSection({
               <button
                 key={mins}
                 onClick={() => onChangeTargetDuration(mins)}
-                className={`flex-1 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                className={`flex-1 py-2 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
                   targetDurationMinutes === mins
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm font-bold'
                     : 'bg-slate-950/50 text-slate-400 border-slate-800 hover:bg-slate-800'
                 }`}
               >
-                {mins}분 {mins === 60 && '(정확)'}
+                {mins}분 {mins === 60 && '(기본)'}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Focus song selector (if in title focus mode) */}
+        {/* Focus song selector with Search & Any Song Selection */}
         <div>
-          <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5 mb-2">
-            <Flame className="w-3.5 h-3.5 text-rose-400" />
-            집중 스트리밍곡 (타이틀)
-          </label>
-          <select
-            value={focusSongId || ''}
-            onChange={(e) => onChangeFocusSong(e.target.value || null)}
-            className="w-full bg-slate-950/80 border border-slate-800 text-xs rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
-          >
-            <option value="">자동 선택 (선택 아티스트 최신 타이틀)</option>
-            {availableTitleSongs.map((song) => (
-              <option key={song.id} value={song.id}>
-                [{song.artist}] {song.title} ({song.album})
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <Flame className="w-3.5 h-3.5 text-rose-400" />
+              집중 스트리밍곡 (반복 집중)
+            </label>
+            {focusSongId && (
+              <button
+                onClick={() => onChangeFocusSong(null)}
+                className="text-[11px] text-slate-400 hover:text-rose-300 flex items-center gap-0.5 cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+                <span>자동 선택으로</span>
+              </button>
+            )}
+          </div>
+
+          {/* Focus Song Card / Button */}
+          {currentFocusSong ? (
+            <div className="p-2.5 rounded-xl bg-slate-950 border border-rose-500/40 flex items-center justify-between gap-2 shadow-sm">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-xs font-bold text-rose-200 truncate">
+                    {currentFocusSong.title}
+                  </span>
+                  {currentFocusSong.isTitle && (
+                    <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      타이틀
+                    </span>
+                  )}
+                  <span className="text-[10px] font-mono text-slate-400">
+                    ({formatSecondsToTime(currentFocusSong.duration)})
+                  </span>
+                </div>
+                <div className="text-[10px] text-slate-400 truncate mt-0.5">
+                  <span className="text-slate-300 font-medium">[{currentFocusSong.artist}]</span> {currentFocusSong.album}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsFocusModalOpen(true)}
+                className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1 flex-shrink-0 cursor-pointer border border-slate-700 transition-colors"
+                title="다른 곡으로 변경"
+              >
+                <Search className="w-3 h-3 text-rose-400" />
+                <span>변경</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsFocusModalOpen(true)}
+              className="w-full p-2.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-left flex items-center justify-between gap-2 cursor-pointer transition-colors group"
+            >
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-slate-300 group-hover:text-slate-100 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>자동 선택 (선택 아티스트 최신 타이틀곡)</span>
+                </div>
+                <div className="text-[10px] text-slate-500 mt-0.5">
+                  클릭하여 원하는 특정 곡(수록곡/타이틀곡)을 직접 검색 및 지정할 수 있습니다.
+                </div>
+              </div>
+              <span className="px-2.5 py-1 rounded-lg bg-slate-800 group-hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 flex-shrink-0 border border-slate-700">
+                <Search className="w-3 h-3 text-rose-400" />
+                <span>곡 검색</span>
+              </span>
+            </button>
+          )}
         </div>
       </div>
+
+      {/* Focus Song Search Modal */}
+      <FocusSongModal
+        isOpen={isFocusModalOpen}
+        onClose={() => setIsFocusModalOpen(false)}
+        allSongs={allSongs}
+        artists={artists}
+        selectedSongId={focusSongId}
+        onSelectSong={onChangeFocusSong}
+      />
     </div>
   );
 }
