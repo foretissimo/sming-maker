@@ -235,7 +235,7 @@ export async function syncArtistTracks(artist, currentSongs) {
         artist: artist.name,
         artistType: artist.id,
         album: mt.album || `${artist.name} 앨범`,
-        releaseDate: new Date().toISOString().split('T')[0],
+        releaseDate: '',
         duration: 225, // default 3:45
         isTitle: false,
         platformIds: {
@@ -245,6 +245,7 @@ export async function syncArtistTracks(artist, currentSongs) {
         },
         tags: ['auto-synced']
       };
+
       updatedSongs.push(newSong);
       addedCount++;
     }

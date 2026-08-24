@@ -24,9 +24,10 @@ export function formatTotalDuration(seconds) {
 }
 
 /**
- * Format release date YYYY-MM-DD to YYYY.MM.DD
+ * Format release date YYYY-MM-DD to YYYY.MM.DD (returns "-" if empty)
  */
 export function formatDate(dateString) {
-  if (!dateString) return "";
+  if (!dateString || typeof dateString !== 'string' || dateString.trim() === '') return "-";
   return dateString.replace(/-/g, '.');
 }
+

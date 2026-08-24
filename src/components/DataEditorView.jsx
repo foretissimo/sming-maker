@@ -644,15 +644,16 @@ export default function DataEditorView({
 
                           {/* Release Date (Prominent) */}
                           <td className="py-3 px-3 text-center whitespace-nowrap">
-                            {song.releaseDate ? (
+                            {song.releaseDate && song.releaseDate.trim() ? (
                               <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 font-mono text-[11px] text-slate-200">
                                 <Calendar className="w-3 h-3 text-emerald-400" />
                                 <span>{formatDate(song.releaseDate)}</span>
                               </div>
                             ) : (
-                              <span className="text-slate-600 text-[11px]">미등록</span>
+                              <span className="text-slate-600 font-mono text-xs">-</span>
                             )}
                           </td>
+
 
                           {/* Duration */}
                           <td className="py-3 px-3 text-center font-mono text-slate-300 whitespace-nowrap">
