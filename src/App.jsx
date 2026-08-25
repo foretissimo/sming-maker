@@ -5,14 +5,17 @@ import Header from './components/Header';
 import FilterSection from './components/FilterSection';
 import GeneratorControl from './components/GeneratorControl';
 import PlaylistView from './components/PlaylistView';
+import ReadOnlyPlaylistView from './components/ReadOnlyPlaylistView';
 import PlatformActions from './components/PlatformActions';
 import SongCatalogModal from './components/SongCatalogModal';
 import StreamingGuideModal from './components/StreamingGuideModal';
+import CreatorStudioModal from './components/CreatorStudioModal';
 import DataEditorView from './components/DataEditorView';
 import { generateStreamingList } from './utils/generator';
+import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
 
 export default function App() {
-  // Main View Mode: 'generator' | 'editor'
+  // Main View Mode: 'generator' | 'editor' | 'readonly'
   const [activeView, setActiveView] = useState('generator');
 
   // Artists State with LocalStorage persistence
@@ -60,10 +63,19 @@ export default function App() {
   const [targetDurationMinutes, setTargetDurationMinutes] = useState(60);
   const [focusSongId, setFocusSongId] = useState(null);
   const [playlist, setPlaylist] = useState([]);
+
+  // Shared Read-Only Playlist Metadata
+  const [sharedData, setSharedData] = useState({
+    title: '포레스텔라 1시간 스밍리스트',
+    creator: '숲별',
+    desc: '',
+    playlist: []
+  });
   
   // Modals & Feedback
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isCreatorStudioOpen, setIsCreatorStudioOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
 
   // Sync artists to LocalStorage
@@ -108,11 +120,24 @@ export default function App() {
     }));
   };
 
-  // Initialize playlist on mount or from URL params (완전체/LocalStorage 선택 기반 생성)
+  // Initialize playlist on mount or from URL params (?share= or ?songs=)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const shareToken = params.get('share');
     const songIdsParam = params.get('songs');
 
+    // 1. Check for Base64 encoded share token (?share=...)
+    if (shareToken) {
+      const decoded = decodeShareablePlaylist(shareToken, allSongs);
+      if (decoded && decoded.playlist.length > 0) {
+        setSharedData(decoded);
+        setPlaylist(decoded.playlist);
+        setActiveView('readonly');
+        return;
+      }
+    }
+
+    // 2. Check for legacy comma-separated IDs (?songs=...)
     if (songIdsParam) {
       const ids = songIdsParam.split(',');
       const restored = [];
@@ -123,12 +148,19 @@ export default function App() {
         }
       });
       if (restored.length > 0) {
+        setSharedData({
+          title: '🌲 공유된 포레스텔라 스밍리스트',
+          creator: '숲별',
+          desc: '',
+          playlist: restored
+        });
         setPlaylist(restored);
+        setActiveView('readonly');
         return;
       }
     }
 
-    // Default initial generation based on selectedArtists (group by default or LocalStorage)
+    // 3. Default initial generation based on selectedArtists (group by default or LocalStorage)
     const initialList = generateStreamingList(allSongs, {
       targetSeconds: 3600,
       mode: 'title_focus',
@@ -136,7 +168,6 @@ export default function App() {
     });
     setPlaylist(initialList);
   }, []);
-
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -184,6 +215,11 @@ export default function App() {
     ]);
   };
 
+  const handleLoadPlaylistFromStudio = (newPlaylist) => {
+    setPlaylist(newPlaylist);
+    setActiveView('generator');
+  };
+
   const handleReset = () => {
     if (window.confirm('재생목록을 비우시겠습니까?')) {
       setPlaylist([]);
@@ -196,12 +232,16 @@ export default function App() {
       showToast('공유할 곡이 없습니다.');
       return;
     }
-    const songIds = playlist.map(s => s.id).join(',');
-    const shareUrl = `${window.location.origin}${window.location.pathname}?songs=${songIds}`;
+    const shareUrl = generateShareUrl({
+      title: '🌲 포레스텔라 1시간 스밍리스트',
+      creator: '숲별',
+      desc: '매시 정각 재생 시작 권장 💚',
+      playlist
+    });
     
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareUrl);
-      showToast('스밍리스트 공유 링크가 복사되었습니다! 🔗');
+      showToast('스밍리스트 Read-Only 공유 링크가 복사되었습니다! 🔗');
     }
   };
 
@@ -219,12 +259,25 @@ export default function App() {
         activeView={activeView}
         onChangeView={setActiveView}
         onOpenGuide={() => setIsGuideOpen(true)}
+        onOpenCreatorStudio={() => setIsCreatorStudioOpen(true)}
         onShare={handleShare}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
-        {activeView === 'generator' ? (
+        {activeView === 'readonly' ? (
+          /* READ-ONLY VIEWER VIEW (For shared links & fans) */
+          <ReadOnlyPlaylistView
+            title={sharedData.title}
+            creator={sharedData.creator}
+            desc={sharedData.desc}
+            playlist={playlist}
+            artists={artists}
+            onGoToGenerator={() => setActiveView('generator')}
+            onShowToast={showToast}
+          />
+        ) : activeView === 'generator' ? (
+          /* GENERATOR VIEW */
           <>
             {/* Hero Notice */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-teal-950/40 border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
@@ -241,10 +294,17 @@ export default function App() {
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
                 <button
+                  onClick={() => setIsCreatorStudioOpen(true)}
+                  className="text-xs text-emerald-300 hover:text-emerald-200 font-bold underline cursor-pointer"
+                >
+                  👑 리스트 발행/보관함 &rarr;
+                </button>
+                <span className="text-slate-700">|</span>
+                <button
                   onClick={() => setActiveView('editor')}
                   className="text-xs text-slate-400 hover:text-emerald-300 underline font-medium cursor-pointer"
                 >
-                  음원 데이터 검증/수정 &rarr;
+                  음원 데이터 편집기 &rarr;
                 </button>
                 <span className="text-slate-700">|</span>
                 <button
@@ -339,6 +399,15 @@ export default function App() {
       <StreamingGuideModal
         isOpen={isGuideOpen}
         onClose={() => setIsGuideOpen(false)}
+      />
+
+      <CreatorStudioModal
+        isOpen={isCreatorStudioOpen}
+        onClose={() => setIsCreatorStudioOpen(false)}
+        currentPlaylist={playlist}
+        allSongs={allSongs}
+        onLoadPlaylist={handleLoadPlaylistFromStudio}
+        onShowToast={showToast}
       />
     </div>
   );

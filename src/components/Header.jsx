@@ -1,17 +1,24 @@
 import React from 'react';
-import { Sparkles, HelpCircle, Share2, Music2, Database, Sliders } from 'lucide-react';
+import { Sparkles, HelpCircle, Share2, Music2, Database, Key, SlidersHorizontal, Layers } from 'lucide-react';
+import { getCurrentCreator } from '../utils/creatorStorage';
 
 export default function Header({
   activeView,
   onChangeView,
   onOpenGuide,
+  onOpenCreatorStudio,
   onShare
 }) {
+  const creator = getCurrentCreator();
+
   return (
     <header className="border-b border-emerald-900/30 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
         {/* Left: Brand */}
-        <div className="flex items-center gap-3">
+        <div 
+          onClick={() => onChangeView('generator')}
+          className="flex items-center gap-3 cursor-pointer select-none"
+        >
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-950/50 flex-shrink-0">
             <span className="text-lg">🌲</span>
           </div>
@@ -25,16 +32,16 @@ export default function Header({
               </span>
             </div>
             <p className="text-[11px] text-slate-400 hidden sm:block">
-              포레스텔라 & 솔로 4인 원클릭 스밍리스트 생성 & 음원 데이터 검증
+              포레스텔라 & 솔로 4인 원클릭 스밍리스트 생성 & 발행
             </p>
           </div>
         </div>
 
         {/* Center: Main View Toggle */}
-        <div className="flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl">
+        <div className="flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl overflow-x-auto">
           <button
             onClick={() => onChangeView('generator')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeView === 'generator'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200'
@@ -46,7 +53,7 @@ export default function Header({
 
           <button
             onClick={() => onChangeView('editor')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeView === 'editor'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200'
@@ -55,10 +62,31 @@ export default function Header({
             <Database className="w-3.5 h-3.5" />
             <span>음원 데이터 편집기</span>
           </button>
+
+          {activeView === 'readonly' && (
+            <button
+              onClick={() => onChangeView('readonly')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/30 text-emerald-200 border border-emerald-400/50 shadow-sm whitespace-nowrap"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <span>공유 뷰어 (Read-Only)</span>
+            </button>
+          )}
         </div>
 
-        {/* Right: Actions */}
+        {/* Right: Actions & Creator Studio */}
         <div className="flex items-center gap-1.5">
+          <button
+            onClick={onOpenCreatorStudio}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 border border-emerald-500/40 text-xs text-emerald-300 font-bold transition-all cursor-pointer shadow-sm shadow-emerald-950/50"
+            title="크리에이터 스튜디오 & 스밍리스트 발행"
+          >
+            <Key className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="hidden sm:inline">
+              {creator ? `👑 ${creator.name}` : '리스트 발행'}
+            </span>
+          </button>
+
           {activeView === 'generator' && (
             <>
               <button
