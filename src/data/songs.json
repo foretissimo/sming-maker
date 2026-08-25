@@ -518,26 +518,6 @@
     ]
   },
   {
-    "id": "fore-028",
-    "title": "Boomerang (지옥에서 온 판사 OST)",
-    "artist": "포레스텔라",
-    "artistType": "group",
-    "album": "지옥에서 온 판사 OST Part.1",
-    "releaseDate": "2024-09-28",
-    "duration": 204,
-    "isTitle": true,
-    "platformIds": {
-      "melon": "37951234",
-      "genie": "10681920",
-      "bugs": "33918204"
-    },
-    "tags": [
-      "ost",
-      "rock",
-      "recent"
-    ]
-  },
-  {
     "id": "fore-029",
     "title": "Chosen One (아라문의 검 OST)",
     "artist": "포레스텔라",
