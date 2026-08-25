@@ -391,6 +391,71 @@ export default function DataEditorView({
     }
   };
 
+  // Directly save edited songs into src/data/songs.json
+  const [isSavingFile, setIsSavingFile] = useState(false);
+
+  const handleSaveSongsToFile = async () => {
+    setIsSavingFile(true);
+    try {
+      const res = await fetch('/api/save-songs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(songs, null, 2)
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success) {
+          onShowToast(`💾 ${json.message}`);
+          setIsSavingFile(false);
+          return;
+        }
+      }
+    } catch (e) {
+      // Dev server API not available in static mode
+    }
+
+    // Fallback: download songs.json
+    try {
+      handleExportJson(songs, 'songs.json');
+      onShowToast('📥 songs.json 파일이 다운로드되었습니다. 프로젝트에 덮어써주세요.');
+    } catch (e) {
+      onShowToast('파일 저장 실패: ' + e.message);
+    } finally {
+      setIsSavingFile(false);
+    }
+  };
+
+  // Directly save edited artists into src/data/artists.json
+  const handleSaveArtistsToFile = async () => {
+    setIsSavingFile(true);
+    try {
+      const res = await fetch('/api/save-artists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(artists, null, 2)
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success) {
+          onShowToast(`💾 ${json.message}`);
+          setIsSavingFile(false);
+          return;
+        }
+      }
+    } catch (e) {}
+
+    try {
+      handleExportJson(artists, 'artists.json');
+      onShowToast('📥 artists.json 파일이 다운로드되었습니다.');
+    } catch (e) {
+      onShowToast('파일 저장 실패: ' + e.message);
+    } finally {
+      setIsSavingFile(false);
+    }
+  };
+
   // JSON Import
   const handleImportJsonFile = (e) => {
     const file = e.target.files?.[0];
@@ -481,8 +546,19 @@ export default function DataEditorView({
           </button>
         </div>
 
-        {/* Global Dual Sync Buttons */}
+        {/* Global Dual Sync & Direct File Save Buttons */}
         <div className="flex items-center gap-1.5 flex-wrap">
+          {/* Direct File Save Button */}
+          <button
+            onClick={handleSaveSongsToFile}
+            disabled={isSavingFile}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-500 hover:from-violet-500 hover:to-indigo-400 text-white text-xs font-bold cursor-pointer shadow-md disabled:opacity-50 transition-all border border-violet-400/30"
+            title="현재 편집기에서 수정한 모든 음원 데이터를 프로젝트의 src/data/songs.json 파일에 직접 저장하여 영구 반영합니다."
+          >
+            {isSavingFile ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5 text-violet-200" />}
+            <span>{isSavingFile ? '저장 중...' : '💾 songs.json에 직접 반영'}</span>
+          </button>
+
           {/* Mode 1: Smart Sync (Protects User Edits) */}
           <button
             onClick={() => handleSyncAllArtists('smart')}
@@ -491,7 +567,7 @@ export default function DataEditorView({
             title="사용자가 직접 수정한 곡 정보를 보존하면서, 신곡 추가 및 미수정 곡의 발매일/길이를 동기화합니다."
           >
             {isSyncingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" /> : <ShieldCheck className="w-3.5 h-3.5 text-slate-950" />}
-            <span>{isSyncingAll ? '동기화 중...' : '⚡ 스마트 동기화 (수정본 보호)'}</span>
+            <span>{isSyncingAll ? '동기화 중...' : '⚡ 스마트 동기화'}</span>
           </button>
 
           {/* Mode 2: Overwrite All (Full Platform Reset) */}
@@ -1174,13 +1250,25 @@ export default function DataEditorView({
               </button>
             </div>
 
-            <button
-              onClick={handleSaveRawJson}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-950/60 cursor-pointer"
-            >
-              <Save className="w-4 h-4 fill-current" />
-              <span>변경사항 즉시 적용하기</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSaveSongsToFile}
+                disabled={isSavingFile}
+                className="px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-violet-950/60 cursor-pointer border border-violet-400/30 transition-all"
+                title="현재 편집기에서 수정한 내용을 src/data/songs.json 파일에 직접 저장합니다."
+              >
+                {isSavingFile ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                <span>💾 songs.json에 직접 반영</span>
+              </button>
+
+              <button
+                onClick={handleSaveRawJson}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-950/60 cursor-pointer"
+              >
+                <Save className="w-4 h-4 fill-current" />
+                <span>변경사항 즉시 적용하기</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1188,6 +1276,45 @@ export default function DataEditorView({
       {/* TAB 4: DATA SYNC, EXPORT & BACKUP */}
       {activeTab === 'sync' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Direct File Save Panel (NEW & PROMINENT) */}
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-violet-950/40 via-slate-900 to-indigo-950/30 border border-violet-500/40 space-y-4 md:col-span-2 shadow-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center justify-center font-bold">
+                  💾
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-violet-200">
+                    프로젝트 원본 파일(songs.json)에 직접 저장 & 영구 반영
+                  </h4>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    로컬 개발 환경(`npm run dev`)에서 버튼 클릭 한 번으로 `src/data/songs.json` 파일을 즉시 덮어씁니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 pt-1">
+              <button
+                onClick={handleSaveSongsToFile}
+                disabled={isSavingFile}
+                className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-500 hover:from-violet-500 hover:to-indigo-400 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-violet-950/60 cursor-pointer disabled:opacity-50 border border-violet-400/30"
+              >
+                {isSavingFile ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                <span>💾 songs.json 파일에 직접 저장 & 반영 ({songs.length}곡)</span>
+              </button>
+
+              <button
+                onClick={handleSaveArtistsToFile}
+                disabled={isSavingFile}
+                className="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-violet-300 font-semibold text-xs flex items-center justify-center gap-1.5 border border-slate-700 cursor-pointer"
+              >
+                <Save className="w-3.5 h-3.5" />
+                <span>artists.json 저장</span>
+              </button>
+            </div>
+          </div>
+
           {/* Remote Sync Panel */}
           <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
             <div className="flex items-center gap-2">
