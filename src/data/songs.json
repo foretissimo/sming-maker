@@ -982,7 +982,7 @@
     "artistType": "group",
     "album": "<불후의 명곡> - 2026 왕중왕전",
     "releaseDate": "2026-07-25",
-    "isTitle": true,
+    "isTitle": false,
     "platformIds": {
       "melon": "602591314",
       "genie": "116078166",
@@ -994,7 +994,7 @@
       "auto-synced"
     ],
     "duration": 222,
-    "userEdited": false
+    "userEdited": true
   },
   {
     "id": "auto-group-601812669",
@@ -4902,16 +4902,18 @@
     "artistType": "group",
     "album": "창귀",
     "releaseDate": "2026-08-25",
-    "duration": 208,
-    "isTitle": false,
-    "userEdited": false,
+    "isTitle": true,
     "platformIds": {
       "melon": "602793545",
       "genie": "116376883",
-      "bugs": "133584374"
+      "bugs": "133584374",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 208,
+    "userEdited": true
   }
 ]
