@@ -7,7 +7,8 @@ export default function Header({
   onChangeView,
   onOpenGuide,
   onOpenCreatorStudio,
-  onShare
+  onShare,
+  showEditor = false
 }) {
   const creator = getCurrentCreator();
 
@@ -51,17 +52,19 @@ export default function Header({
             <span>스밍 생성기</span>
           </button>
 
-          <button
-            onClick={() => onChangeView('editor')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-              activeView === 'editor'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Database className="w-3.5 h-3.5" />
-            <span>음원 데이터 편집기</span>
-          </button>
+          {showEditor && (
+            <button
+              onClick={() => onChangeView('editor')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                activeView === 'editor'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Database className="w-3.5 h-3.5" />
+              <span>음원 데이터 편집기</span>
+            </button>
+          )}
 
           {activeView === 'readonly' && (
             <button

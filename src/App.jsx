@@ -13,10 +13,13 @@ import CreatorStudioModal from './components/CreatorStudioModal';
 import DataEditorView from './components/DataEditorView';
 import { generateStreamingList } from './utils/generator';
 import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
+import { isEditorEnabled } from './utils/env';
 
 export default function App() {
+  const showEditor = isEditorEnabled();
   // Main View Mode: 'generator' | 'editor' | 'readonly'
   const [activeView, setActiveView] = useState('generator');
+
 
   // Artists State with LocalStorage persistence
   const [artists, setArtists] = useState(() => {
@@ -261,6 +264,7 @@ export default function App() {
         onOpenGuide={() => setIsGuideOpen(true)}
         onOpenCreatorStudio={() => setIsCreatorStudioOpen(true)}
         onShare={handleShare}
+        showEditor={showEditor}
       />
 
       {/* Main Content Area */}
@@ -276,8 +280,18 @@ export default function App() {
             onGoToGenerator={() => setActiveView('generator')}
             onShowToast={showToast}
           />
-        ) : activeView === 'generator' ? (
-          /* GENERATOR VIEW */
+        ) : activeView === 'editor' && showEditor ? (
+          /* Editor View */
+          <DataEditorView
+            songs={allSongs}
+            onUpdateSongs={handleUpdateSongs}
+            artists={artists}
+            onUpdateArtists={handleUpdateArtists}
+            onResetToDefault={handleResetToDefault}
+            onShowToast={showToast}
+          />
+        ) : (
+          /* GENERATOR VIEW (Default) */
           <>
             {/* Hero Notice */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-teal-950/40 border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
@@ -299,13 +313,17 @@ export default function App() {
                 >
                   👑 리스트 발행/보관함 &rarr;
                 </button>
-                <span className="text-slate-700">|</span>
-                <button
-                  onClick={() => setActiveView('editor')}
-                  className="text-xs text-slate-400 hover:text-emerald-300 underline font-medium cursor-pointer"
-                >
-                  음원 데이터 편집기 &rarr;
-                </button>
+                {showEditor && (
+                  <>
+                    <span className="text-slate-700">|</span>
+                    <button
+                      onClick={() => setActiveView('editor')}
+                      className="text-xs text-slate-400 hover:text-emerald-300 underline font-medium cursor-pointer"
+                    >
+                      음원 데이터 검증/수정 &rarr;
+                    </button>
+                  </>
+                )}
                 <span className="text-slate-700">|</span>
                 <button
                   onClick={() => setIsGuideOpen(true)}
@@ -362,16 +380,6 @@ export default function App() {
               onShowToast={showToast}
             />
           </>
-        ) : (
-          /* Editor View */
-          <DataEditorView
-            songs={allSongs}
-            onUpdateSongs={handleUpdateSongs}
-            artists={artists}
-            onUpdateArtists={handleUpdateArtists}
-            onResetToDefault={handleResetToDefault}
-            onShowToast={showToast}
-          />
         )}
       </main>
 
