@@ -75,6 +75,15 @@ export default function App() {
     playlist: []
   });
   
+  // YouTube URL state
+  const [youtubeUrl, setYoutubeUrl] = useState(() => {
+    try {
+      return localStorage.getItem('sming_youtube_url') || '';
+    } catch (e) {
+      return '';
+    }
+  });
+
   // Modals & Feedback
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
@@ -275,6 +284,7 @@ export default function App() {
             title={sharedData.title}
             creator={sharedData.creator}
             desc={sharedData.desc}
+            youtubeUrl={sharedData.youtubeUrl || youtubeUrl}
             playlist={playlist}
             artists={artists}
             onGoToGenerator={() => setActiveView('generator')}
@@ -373,6 +383,8 @@ export default function App() {
             {/* One-Click Action Platform Panel */}
             <PlatformActions
               playlist={playlist}
+              youtubeUrl={youtubeUrl}
+              onChangeYoutubeUrl={setYoutubeUrl}
               onShowToast={showToast}
             />
           </>

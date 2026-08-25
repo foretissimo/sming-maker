@@ -42,7 +42,7 @@ export function base64UrlToUtf8(str) {
  * @param {string} data.desc - Description / instructions
  * @param {Array} data.playlist - Array of song objects
  */
-export function encodeShareablePlaylist({ title = '', creator = '', desc = '', playlist = [] }) {
+export function encodeShareablePlaylist({ title = '', creator = '', desc = '', youtubeUrl = '', playlist = [] }) {
   // If songs already have IDs, store compact representation
   const compactSongs = playlist.map(s => {
     // If it is a standard library song with an ID, we only need basic fields
@@ -64,6 +64,7 @@ export function encodeShareablePlaylist({ title = '', creator = '', desc = '', p
     t: title || '포레스텔라 1시간 스밍리스트',
     c: creator || '숲별',
     d: desc || '',
+    y: youtubeUrl || '',
     s: compactSongs,
     created: new Date().toISOString().split('T')[0]
   };
@@ -108,6 +109,7 @@ export function decodeShareablePlaylist(token, allKnownSongs = []) {
       title: payload.t || '공유된 스밍리스트',
       creator: payload.c || '숲별',
       desc: payload.d || '',
+      youtubeUrl: payload.y || '',
       created: payload.created || '',
       playlist: restoredPlaylist
     };
@@ -120,8 +122,8 @@ export function decodeShareablePlaylist(token, allKnownSongs = []) {
 /**
  * Generate full share URL
  */
-export function generateShareUrl({ title, creator, desc, playlist }) {
-  const token = encodeShareablePlaylist({ title, creator, desc, playlist });
+export function generateShareUrl({ title, creator, desc, youtubeUrl = '', playlist }) {
+  const token = encodeShareablePlaylist({ title, creator, desc, youtubeUrl, playlist });
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
   return `${origin}${pathname}?share=${token}`;

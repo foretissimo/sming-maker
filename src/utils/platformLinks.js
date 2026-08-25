@@ -1,17 +1,8 @@
 /**
- * Platform URL generator for 1-click streaming across PC & Mobile.
+ * Modular Platform URL Generator for 1-Click Streaming across PC, iOS, and Android.
  *
- * Supported Platform URLs:
- * - Bugs PC/Web:  https://music.bugs.co.kr/newPlayer?trackId={id1},{id2},...
- * - Genie PC/Web: https://www.genie.co.kr/player/shareProcessV2?xgnm={id1};{id2};...
- * - Melon PC/App: melonapp://play?cType=1&cList={id1},{id2},...
- *   (Plus sequential chunking for playlists containing duplicate tracks)
+ * Designed to easily extend with additional music platforms (Melon, Genie, Bugs, YouTube, FLO, VIBE, Spotify, Apple Music, etc.)
  */
-
-export function isMobileDevice() {
-  if (typeof window === 'undefined') return false;
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
 
 export function isIOS() {
   if (typeof window === 'undefined') return false;
@@ -23,11 +14,15 @@ export function isAndroid() {
   return /Android/i.test(navigator.userAgent);
 }
 
+export function getDefaultDeviceCategory() {
+  if (isIOS()) return 'ios';
+  if (isAndroid()) return 'android';
+  return 'pc';
+}
+
 /**
  * Split playlist into non-duplicate sequential parts for Melon
  * Melon player de-duplicates songs within a single cList parameter.
- * By segmenting into parts without duplicates, users can click Part 1 -> Part 2 -> Part 3
- * and have all duplicate tracks added with correct counts and sequence.
  */
 export function splitMelonPlaylistIntoParts(songs) {
   if (!songs || songs.length === 0) return [];
@@ -41,7 +36,6 @@ export function splitMelonPlaylistIntoParts(songs) {
     if (!melonId) return;
 
     if (seenIds.has(melonId)) {
-      // Encountered duplicate in current part -> finish current part and start next
       if (currentPart.length > 0) {
         const ids = currentPart.map(s => s.platformIds.melon);
         parts.push({
@@ -77,60 +71,83 @@ export function splitMelonPlaylistIntoParts(songs) {
 /**
  * Generate platform-specific deep links & fallback links
  */
-export function generatePlatformLinks(songs) {
+export function generatePlatformLinks(songs, options = {}) {
+  const youtubeUrl = options.youtubeUrl || '';
+
   if (!songs || songs.length === 0) {
     return {
-      melon: { full: '', parts: [], count: 0, ids: [] },
-      genie: { pc: '', app: '', count: 0, ids: [] },
-      bugs: { pc: '', app: '', count: 0, ids: [] },
-      vibe: { app: '', web: '', count: 0, ids: [] },
-      flo: { app: '', web: '', count: 0, ids: [] }
+      melon: { count: 0, parts: [], hasDuplicates: false, pc: '', ios: '', android: '', full: '' },
+      genie: { count: 0, pc: '', ios: '', android: '', app: '' },
+      bugs: { count: 0, pc: '', ios: '', android: '', app: '' },
+      youtube: { count: youtubeUrl ? 1 : 0, url: youtubeUrl, pc: youtubeUrl, ios: youtubeUrl, android: youtubeUrl },
+      flo: { count: 0, pc: '', ios: '', android: '' },
+      vibe: { count: 0, pc: '', ios: '', android: '' }
     };
   }
 
-  // Extract platform-specific IDs in playlist order
   const melonIds = songs.map(s => s.platformIds?.melon).filter(Boolean);
   const genieIds = songs.map(s => s.platformIds?.genie).filter(Boolean);
   const bugsIds = songs.map(s => s.platformIds?.bugs).filter(Boolean);
-  const vibeIds = songs.map(s => s.platformIds?.vibe).filter(Boolean);
   const floIds = songs.map(s => s.platformIds?.flo).filter(Boolean);
+  const vibeIds = songs.map(s => s.platformIds?.vibe).filter(Boolean);
 
   const melonParts = splitMelonPlaylistIntoParts(songs);
+  const melonFullUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonIds.join(',')}` : '';
 
   return {
     melon: {
-      // Direct Melon App / PC Player URI scheme
-      full: melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonIds.join(',')}` : '',
+      name: '멜론 (Melon)',
+      brandColor: '#00cd3c',
+      count: melonIds.length,
       parts: melonParts,
       hasDuplicates: melonParts.length > 1,
-      ids: melonIds,
-      count: melonIds.length
+      full: melonFullUri,
+      pc: melonFullUri,
+      ios: melonFullUri,
+      android: melonFullUri
     },
     genie: {
-      // Official Genie PC/Web Player Share URL with xgnm
+      name: '지니 (Genie)',
+      brandColor: '#0092fa',
+      count: genieIds.length,
       pc: genieIds.length > 0 ? `https://www.genie.co.kr/player/shareProcessV2?xgnm=${genieIds.join(';')}` : '',
-      app: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieIds.join(';')}` : '',
-      ids: genieIds,
-      count: genieIds.length
+      ios: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieIds.join(';')}` : '',
+      android: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieIds.join(';')}` : '',
+      app: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieIds.join(';')}` : ''
     },
     bugs: {
-      // Official Bugs PC/Web Player URL with trackId
+      name: '벅스 (Bugs)',
+      brandColor: '#f9423a',
+      count: bugsIds.length,
       pc: bugsIds.length > 0 ? `https://music.bugs.co.kr/newPlayer?trackId=${bugsIds.join(',')}` : '',
-      app: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=포레스텔라_스밍&miniplay=Y&track_ids=${bugsIds.join('|')}` : '',
-      ids: bugsIds,
-      count: bugsIds.length
+      ios: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=포레스텔라_스밍&miniplay=Y&track_ids=${bugsIds.join('|')}` : '',
+      android: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=포레스텔라_스밍&miniplay=Y&track_ids=${bugsIds.join('|')}` : '',
+      app: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=포레스텔라_스밍&miniplay=Y&track_ids=${bugsIds.join('|')}` : ''
     },
-    vibe: {
-      app: vibeIds.length > 0 ? `vibe://listen?version=3&trackIds=${vibeIds.join(',')}` : '',
-      web: `https://vibe.naver.com`,
-      ids: vibeIds,
-      count: vibeIds.length
+    youtube: {
+      name: '유튜브 (YouTube)',
+      brandColor: '#ff0000',
+      count: youtubeUrl ? 1 : 0,
+      url: youtubeUrl,
+      pc: youtubeUrl,
+      ios: youtubeUrl,
+      android: youtubeUrl
     },
     flo: {
-      app: floIds.length > 0 ? `flomobile://play?trackId=${floIds.join(',')}` : '',
-      web: `https://www.music-flo.com`,
-      ids: floIds,
-      count: floIds.length
+      name: '플로 (FLO)',
+      brandColor: '#3c3df5',
+      count: floIds.length,
+      pc: 'https://www.music-flo.com',
+      ios: floIds.length > 0 ? `flomobile://play?trackId=${floIds.join(',')}` : '',
+      android: floIds.length > 0 ? `flomobile://play?trackId=${floIds.join(',')}` : ''
+    },
+    vibe: {
+      name: '바이브 (VIBE)',
+      brandColor: '#ff1493',
+      count: vibeIds.length,
+      pc: 'https://vibe.naver.com',
+      ios: vibeIds.length > 0 ? `vibe://listen?version=3&trackIds=${vibeIds.join(',')}` : '',
+      android: vibeIds.length > 0 ? `vibe://listen?version=3&trackIds=${vibeIds.join(',')}` : ''
     }
   };
 }

@@ -142,6 +142,7 @@ export function saveCreatorPlaylist(creatorId, playlistData) {
     title: playlistData.title || '새 스밍리스트',
     creator: playlistData.creator || creatorId,
     desc: playlistData.desc || '',
+    youtubeUrl: playlistData.youtubeUrl || '',
     playlist: playlistData.playlist || [],
     songCount: (playlistData.playlist || []).length,
     totalSeconds,
@@ -150,6 +151,7 @@ export function saveCreatorPlaylist(creatorId, playlistData) {
       title: playlistData.title,
       creator: playlistData.creator,
       desc: playlistData.desc,
+      youtubeUrl: playlistData.youtubeUrl,
       playlist: playlistData.playlist
     })
   };

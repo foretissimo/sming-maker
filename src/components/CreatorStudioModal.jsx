@@ -52,6 +52,7 @@ export default function CreatorStudioModal({
   // Publish Form State
   const [publishTitle, setPublishTitle] = useState('');
   const [publishDesc, setPublishDesc] = useState('');
+  const [publishYoutubeUrl, setPublishYoutubeUrl] = useState('');
   const [publishedUrl, setPublishedUrl] = useState('');
   const [isCopied, setIsCopied] = useState(false);
 
@@ -111,6 +112,7 @@ export default function CreatorStudioModal({
       title: publishTitle.trim() || '포레스텔라 스밍리스트',
       creator: creatorSession.name,
       desc: publishDesc.trim(),
+      youtubeUrl: publishYoutubeUrl.trim(),
       playlist: currentPlaylist
     });
 
@@ -348,6 +350,20 @@ export default function CreatorStudioModal({
                         placeholder="예: 매시 정각 재생 시작 권장 / 전곡 완곡 재생 부탁드립니다 💚"
                         rows={3}
                         className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 resize-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+                        <span>유튜브 (YouTube / YouTube Music) 링크 (선택)</span>
+                        <span className="text-[10px] text-emerald-400 font-normal">입력 시 원클릭 버튼 생성</span>
+                      </label>
+                      <input
+                        type="url"
+                        value={publishYoutubeUrl}
+                        onChange={(e) => setPublishYoutubeUrl(e.target.value)}
+                        placeholder="예: https://youtu.be/... 또는 유튜브 뮤직 플레이리스트 링크"
+                        className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-mono"
                       />
                     </div>
 
