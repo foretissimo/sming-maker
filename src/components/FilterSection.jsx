@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3, Search, X, Check } from 'lucide-react';
+import { Flame, Clock, Users, Sparkles, SlidersHorizontal, Disc3, Search, X, Check, Dice5, Plus, RotateCcw } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { formatSecondsToTime } from '../utils/formatters';
 import FocusSongModal from './FocusSongModal';
 
@@ -80,7 +81,11 @@ export default function FilterSection({
   onChangeTargetDuration,
   focusSongId,
   onChangeFocusSong,
-  allSongs = []
+  allSongs = [],
+  onGenerate,
+  onOpenCatalog,
+  onReset,
+  playlistLength = 0
 }) {
   const [isFocusModalOpen, setIsFocusModalOpen] = useState(false);
 
@@ -179,6 +184,55 @@ export default function FilterSection({
           </p>
         )}
       </div>
+
+      {/* ⚡ GENERATOR BUTTON (Directly Below Member Selection) */}
+      {onGenerate && (
+        <div className="pt-0.5 pb-0.5">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                onGenerate();
+                try {
+                  confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.8 },
+                    colors: ['#10b981', '#34d399', '#6ee7b7', '#f59e0b']
+                  });
+                } catch (e) {}
+              }}
+              className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 hover:shadow-emerald-500/20 transition-all duration-200 cursor-pointer transform active:scale-[0.99]"
+            >
+              <Dice5 className="w-4 h-4 text-slate-950 fill-current" />
+              <span>1시간 스밍리스트 자동 생성</span>
+              <Sparkles className="w-3.5 h-3.5 text-emerald-950" />
+            </button>
+
+            {onOpenCatalog && (
+              <button
+                onClick={onOpenCatalog}
+                className="py-3 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-1 border border-slate-700 transition-colors cursor-pointer flex-shrink-0"
+                title="곡 검색 및 직접 추가"
+              >
+                <Plus className="w-4 h-4 text-emerald-400" />
+                <span className="hidden sm:inline">직접 추가</span>
+              </button>
+            )}
+
+            {onReset && (
+              <button
+                onClick={onReset}
+                disabled={playlistLength === 0}
+                className="py-3 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-rose-400 border border-slate-800 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
+                title="재생목록 초기화"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
 
       {/* 2. Generation Mode */}
       <div>

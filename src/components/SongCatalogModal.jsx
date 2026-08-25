@@ -168,26 +168,30 @@ export default function SongCatalogModal({
                 기본순
               </button>
               <button
-                onClick={() => setSortBy('duration_desc')}
+                onClick={() => {
+                  if (sortBy === 'duration_desc') {
+                    setSortBy('duration_asc');
+                  } else if (sortBy === 'duration_asc') {
+                    setSortBy('duration_desc');
+                  } else {
+                    setSortBy('duration_desc');
+                  }
+                }}
                 className={`px-2 py-0.5 rounded-md text-[11px] font-medium transition-colors cursor-pointer border flex items-center gap-1 ${
-                  sortBy === 'duration_desc'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                  sortBy === 'duration_desc' || sortBy === 'duration_asc'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
                     : 'bg-slate-900 text-slate-400 border-slate-800 hover:bg-slate-800'
                 }`}
+                title="곡길이 순 정렬 (클릭 시 긴순/짧은순 토글)"
               >
-                <Clock className="w-3 h-3" />
-                <span>길이 긴 순 ↓</span>
-              </button>
-              <button
-                onClick={() => setSortBy('duration_asc')}
-                className={`px-2 py-0.5 rounded-md text-[11px] font-medium transition-colors cursor-pointer border flex items-center gap-1 ${
-                  sortBy === 'duration_asc'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                    : 'bg-slate-900 text-slate-400 border-slate-800 hover:bg-slate-800'
-                }`}
-              >
-                <Clock className="w-3 h-3" />
-                <span>길이 짧은 순 ↑</span>
+                <Clock className="w-3 h-3 text-amber-400" />
+                <span>
+                  {sortBy === 'duration_desc'
+                    ? '곡길이 긴 순 ↓'
+                    : sortBy === 'duration_asc'
+                    ? '곡길이 짧은 순 ↑'
+                    : '곡길이순 ↕'}
+                </span>
               </button>
               <button
                 onClick={() => setSortBy('date_desc')}

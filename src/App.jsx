@@ -334,14 +334,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Generator Controls CTA */}
-            <GeneratorControl
-              onGenerate={handleGenerate}
-              onOpenCatalog={() => setIsCatalogOpen(true)}
-              onReset={handleReset}
-              playlistLength={playlist.length}
-            />
-
             {/* 2-Column Section */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left: Filter & Mode Config (5 cols) */}
@@ -357,6 +349,10 @@ export default function App() {
                   focusSongId={focusSongId}
                   onChangeFocusSong={setFocusSongId}
                   allSongs={allSongs}
+                  onGenerate={handleGenerate}
+                  onOpenCatalog={() => setIsCatalogOpen(true)}
+                  onReset={handleReset}
+                  playlistLength={playlist.length}
                 />
               </div>
 
