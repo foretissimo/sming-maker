@@ -15,7 +15,7 @@ import { generateStreamingList } from './utils/generator';
 import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
 import { isEditorEnabled } from './utils/env';
 
-const DATASET_VERSION = '2026-08-25-v4-noboomerang';
+const DATASET_VERSION = '2026-08-26-v5-artist-verified';
 
 export default function App() {
   const showEditor = isEditorEnabled();

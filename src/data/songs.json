@@ -6,18 +6,19 @@
     "artistType": "group",
     "album": "White Night (백야)",
     "releaseDate": "2023-07-01",
-    "duration": 224,
+    "duration": 217,
     "isTitle": true,
     "platformIds": {
       "melon": "36579720",
-      "genie": "10283948",
-      "bugs": "32891234"
+      "genie": "102458478",
+      "bugs": "6204649"
     },
     "tags": [
       "title",
       "single",
       "recent"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-002",
@@ -26,18 +27,19 @@
     "artistType": "group",
     "album": "Unfinished",
     "releaseDate": "2023-11-08",
-    "duration": 218,
+    "duration": 321,
     "isTitle": true,
     "platformIds": {
       "melon": "36944762",
-      "genie": "10412345",
+      "genie": "104244848",
       "bugs": "33124567"
     },
     "tags": [
       "title",
       "mini2",
       "winter"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-003",
@@ -56,7 +58,8 @@
     "tags": [
       "bside",
       "mini2"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-004",
@@ -65,18 +68,19 @@
     "artistType": "group",
     "album": "KOOL",
     "releaseDate": "2023-09-06",
-    "duration": 196,
+    "duration": 195,
     "isTitle": true,
     "platformIds": {
       "melon": "36760232",
-      "genie": "10351294",
-      "bugs": "32981240"
+      "genie": "103366847",
+      "bugs": "6214774"
     },
     "tags": [
       "title",
       "single",
       "pop"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-005",
@@ -85,18 +89,19 @@
     "artistType": "group",
     "album": "[The Bloom : UTOPIA] The Borders of Utopia",
     "releaseDate": "2022-12-22",
-    "duration": 242,
+    "duration": 312,
     "isTitle": true,
     "platformIds": {
       "melon": "35955149",
-      "genie": "10019482",
+      "genie": "99603282",
       "bugs": "32671928"
     },
     "tags": [
       "title",
       "single",
       "rock-opera"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-006",
@@ -105,18 +110,19 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 228,
+    "duration": 265,
     "isTitle": true,
     "platformIds": {
       "melon": "35222075",
-      "genie": "98127391",
+      "genie": "96886491",
       "bugs": "32451920"
     },
     "tags": [
       "title",
       "mini1",
       "crossover"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-007",
@@ -125,17 +131,18 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 235,
+    "duration": 316,
     "isTitle": false,
     "platformIds": {
       "melon": "35222076",
-      "genie": "98127392",
+      "genie": "96886492",
       "bugs": "32451921"
     },
     "tags": [
       "bside",
       "mini1"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-008",
@@ -155,7 +162,8 @@
       "bside",
       "mini1",
       "ballad"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-009",
@@ -183,63 +191,66 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 198,
+    "duration": 281,
     "isTitle": false,
     "platformIds": {
       "melon": "35222079",
-      "genie": "98127395",
-      "bugs": "32451924"
+      "genie": "96886499",
+      "bugs": "6163569"
     },
     "tags": [
       "bside",
       "mini1"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-011",
     "title": "바람이 건네준 말",
     "artist": "포레스텔라",
     "artistType": "group",
-    "album": "The Forestella",
+    "album": "바람이 건네준 말",
     "releaseDate": "2020-08-03",
-    "duration": 182,
+    "duration": 238,
     "isTitle": true,
     "platformIds": {
       "melon": "32831569",
-      "genie": "94192834",
-      "bugs": "31948201"
+      "genie": "90610003",
+      "bugs": "31984424"
     },
     "tags": [
       "title",
       "regular3",
       "ballad"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-012",
     "title": "연(緣)",
     "artist": "포레스텔라",
     "artistType": "group",
-    "album": "The Forestella",
+    "album": "연(緣)",
     "releaseDate": "2020-09-24",
-    "duration": 205,
+    "duration": 259,
     "isTitle": true,
     "platformIds": {
       "melon": "32945414",
-      "genie": "94192835",
-      "bugs": "31948202"
+      "genie": "90903813",
+      "bugs": "32025555"
     },
     "tags": [
       "title",
       "regular3"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-013",
     "title": "눈물 속에 홀로 (Je Suis Malade)",
     "artist": "포레스텔라",
     "artistType": "group",
-    "album": "The Forestella",
+    "album": "팬텀싱어 올스타전 Episode.3",
     "releaseDate": "2021-02-10",
     "duration": 185,
     "isTitle": false,
@@ -251,7 +262,8 @@
     "tags": [
       "regular3",
       "chanson"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-014",
@@ -260,36 +272,38 @@
     "artistType": "group",
     "album": "The Forestella",
     "releaseDate": "2021-04-19",
-    "duration": 206,
+    "duration": 292,
     "isTitle": false,
     "platformIds": {
       "melon": "33421784",
-      "genie": "94192837",
-      "bugs": "31948204"
+      "genie": "93042979",
+      "bugs": "32211280"
     },
     "tags": [
       "regular3",
       "ballad"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-015",
     "title": "함께라는 이유",
     "artist": "포레스텔라",
     "artistType": "group",
-    "album": "The Forestella",
+    "album": "함께라는 이유",
     "releaseDate": "2020-07-01",
-    "duration": 179,
+    "duration": 223,
     "isTitle": false,
     "platformIds": {
       "melon": "32729820",
-      "genie": "94192838",
-      "bugs": "31948205"
+      "genie": "90462551",
+      "bugs": "31957071"
     },
     "tags": [
       "regular3",
       "fan-song"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-016",
@@ -298,17 +312,18 @@
     "artistType": "group",
     "album": "The Forestella",
     "releaseDate": "2021-04-19",
-    "duration": 215,
+    "duration": 237,
     "isTitle": false,
     "platformIds": {
       "melon": "33421780",
-      "genie": "94192839",
-      "bugs": "31948206"
+      "genie": "93042975",
+      "bugs": "32211276"
     },
     "tags": [
       "regular3",
       "classic"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-017",
@@ -333,20 +348,21 @@
     "title": "달하 노피곰 도다샤",
     "artist": "포레스텔라",
     "artistType": "group",
-    "album": "Mystique",
+    "album": "달하 노피곰 도다샤",
     "releaseDate": "2019-05-10",
-    "duration": 673,
+    "duration": 255,
     "isTitle": true,
     "platformIds": {
       "melon": "31784533",
-      "genie": "89182935",
-      "bugs": "31092842"
+      "genie": "88912455",
+      "bugs": "31580296"
     },
     "tags": [
       "title",
       "regular2",
       "traditional"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-019",
@@ -355,17 +371,18 @@
     "artistType": "group",
     "album": "Mystique",
     "releaseDate": "2019-05-22",
-    "duration": 346,
+    "duration": 351,
     "isTitle": true,
     "platformIds": {
       "melon": "31814745",
-      "genie": "89182936",
-      "bugs": "31092843"
+      "genie": "88953590",
+      "bugs": "31594796"
     },
     "tags": [
       "title",
       "regular2"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-020",
@@ -374,17 +391,18 @@
     "artistType": "group",
     "album": "Mystique",
     "releaseDate": "2019-05-22",
-    "duration": 355,
+    "duration": 349,
     "isTitle": false,
     "platformIds": {
       "melon": "31814746",
-      "genie": "89182937",
-      "bugs": "31092844"
+      "genie": "88953591",
+      "bugs": "31594797"
     },
     "tags": [
       "regular2",
       "cover"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-021",
@@ -393,18 +411,19 @@
     "artistType": "group",
     "album": "Mystique",
     "releaseDate": "2019-05-22",
-    "duration": 331,
+    "duration": 362,
     "isTitle": false,
     "platformIds": {
       "melon": "31814753",
-      "genie": "89182938",
-      "bugs": "31092845"
+      "genie": "88953598",
+      "bugs": "31594804"
     },
     "tags": [
       "regular2",
       "queen",
       "rock-opera"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-022",
@@ -413,16 +432,17 @@
     "artistType": "group",
     "album": "Mystique",
     "releaseDate": "2019-05-22",
-    "duration": 283,
+    "duration": 311,
     "isTitle": false,
     "platformIds": {
       "melon": "31814750",
-      "genie": "89182939",
-      "bugs": "31092846"
+      "genie": "88953595",
+      "bugs": "31594801"
     },
     "tags": [
       "regular2"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-023",
@@ -431,16 +451,17 @@
     "artistType": "group",
     "album": "Mystique",
     "releaseDate": "2019-05-22",
-    "duration": 259,
+    "duration": 247,
     "isTitle": false,
     "platformIds": {
       "melon": "31814752",
-      "genie": "89182940",
-      "bugs": "31092847"
+      "genie": "88953597",
+      "bugs": "31594803"
     },
     "tags": [
       "regular2"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-024",
@@ -449,17 +470,18 @@
     "artistType": "group",
     "album": "Evolution",
     "releaseDate": "2018-03-14",
-    "duration": 245,
+    "duration": 215,
     "isTitle": true,
     "platformIds": {
       "melon": "30949468",
-      "genie": "87192845",
-      "bugs": "30819283"
+      "genie": "87826610",
+      "bugs": "5150344"
     },
     "tags": [
       "title",
       "regular1"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-025",
@@ -468,17 +490,18 @@
     "artistType": "group",
     "album": "Evolution",
     "releaseDate": "2018-03-14",
-    "duration": 258,
+    "duration": 262,
     "isTitle": true,
     "platformIds": {
       "melon": "30949469",
-      "genie": "87192846",
-      "bugs": "30819284"
+      "genie": "87826611",
+      "bugs": "5150345"
     },
     "tags": [
       "title",
       "regular1"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-026",
@@ -487,17 +510,18 @@
     "artistType": "group",
     "album": "Evolution",
     "releaseDate": "2018-03-14",
-    "duration": 272,
+    "duration": 341,
     "isTitle": false,
     "platformIds": {
       "melon": "30949473",
-      "genie": "87192847",
-      "bugs": "30819285"
+      "genie": "87826615",
+      "bugs": "5150349"
     },
     "tags": [
       "regular1",
       "classic"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-027",
@@ -506,23 +530,24 @@
     "artistType": "group",
     "album": "Evolution",
     "releaseDate": "2018-03-14",
-    "duration": 240,
+    "duration": 227,
     "isTitle": false,
     "platformIds": {
       "melon": "30949470",
-      "genie": "87192848",
-      "bugs": "30819286"
+      "genie": "87826612",
+      "bugs": "5150346"
     },
     "tags": [
       "regular1"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-029",
     "title": "Chosen One (아라문의 검 OST)",
     "artist": "포레스텔라",
     "artistType": "group",
-    "album": "아라문의 검 OST Part.1",
+    "album": "아라문의 검 OST Part 1",
     "releaseDate": "2023-09-16",
     "duration": 215,
     "isTitle": true,
@@ -534,7 +559,8 @@
     "tags": [
       "ost",
       "epic"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "fore-030",
@@ -560,20 +586,21 @@
     "title": "라야",
     "artist": "조민규",
     "artistType": "jomingyu",
-    "album": "신세계 : PARANA",
+    "album": "신세계 : NEW AGE",
     "releaseDate": "2020-02-16",
-    "duration": 215,
+    "duration": 252,
     "isTitle": true,
     "platformIds": {
       "melon": "32376826",
-      "genie": "96128490",
-      "bugs": "32182940"
+      "genie": "89854764",
+      "bugs": "31832330"
     },
     "tags": [
       "solo",
       "title",
       "parana"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "cho-002",
@@ -600,7 +627,7 @@
     "title": "바람 (Wish)",
     "artist": "조민규",
     "artistType": "jomingyu",
-    "album": "신세계 : PARANA",
+    "album": "바람",
     "releaseDate": "2021-04-06",
     "duration": 234,
     "isTitle": false,
@@ -613,26 +640,28 @@
       "solo",
       "parana",
       "emotional"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "cho-004",
     "title": "Be my love",
     "artist": "조민규",
     "artistType": "jomingyu",
-    "album": "신세계 : PARANA",
+    "album": "신세계 : NEW AGE",
     "releaseDate": "2020-02-16",
-    "duration": 208,
+    "duration": 169,
     "isTitle": false,
     "platformIds": {
       "melon": "32376827",
-      "genie": "96128492",
-      "bugs": "32182942"
+      "genie": "89854765",
+      "bugs": "31832331"
     },
     "tags": [
       "solo",
       "parana"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "cho-005",
@@ -641,17 +670,18 @@
     "artistType": "jomingyu",
     "album": "신세계 : PARANA",
     "releaseDate": "2021-12-03",
-    "duration": 218,
+    "duration": 237,
     "isTitle": false,
     "platformIds": {
       "melon": "34360564",
-      "genie": "96128493",
-      "bugs": "32182943"
+      "genie": "95210024",
+      "bugs": "32402238"
     },
     "tags": [
       "solo",
       "parana"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "cho-006",
@@ -660,38 +690,40 @@
     "artistType": "jomingyu",
     "album": "신세계 : PARANA",
     "releaseDate": "2021-12-03",
-    "duration": 226,
+    "duration": 190,
     "isTitle": false,
     "platformIds": {
       "melon": "34360566",
-      "genie": "96128494",
-      "bugs": "32182944"
+      "genie": "95210026",
+      "bugs": "32402240"
     },
     "tags": [
       "solo",
       "parana"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "kang-001",
     "title": "The Nation",
     "artist": "강형호 (PITTA)",
     "artistType": "kanghyungho",
-    "album": "ID: PITTA",
+    "album": "The Nation",
     "releaseDate": "2021-10-26",
-    "duration": 217,
+    "duration": 208,
     "isTitle": true,
     "platformIds": {
       "melon": "34156135",
-      "genie": "95819204",
-      "bugs": "32118192"
+      "genie": "94723258",
+      "bugs": "32364803"
     },
     "tags": [
       "solo",
       "pitta",
       "title",
       "rock"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "kang-002",
@@ -700,19 +732,20 @@
     "artistType": "kanghyungho",
     "album": "ID: PITTA",
     "releaseDate": "2021-11-10",
-    "duration": 226,
+    "duration": 211,
     "isTitle": true,
     "platformIds": {
       "melon": "34235514",
-      "genie": "95819205",
-      "bugs": "32118193"
+      "genie": "94900292",
+      "bugs": "32378591"
     },
     "tags": [
       "solo",
       "pitta",
       "title",
       "energy"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "kang-003",
@@ -721,24 +754,25 @@
     "artistType": "kanghyungho",
     "album": "ID: PITTA",
     "releaseDate": "2021-11-10",
-    "duration": 238,
+    "duration": 171,
     "isTitle": false,
     "platformIds": {
       "melon": "34235515",
-      "genie": "95819206",
-      "bugs": "32118194"
+      "genie": "94900293",
+      "bugs": "32378592"
     },
     "tags": [
       "solo",
       "pitta"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "kang-004",
     "title": "Prayer",
     "artist": "강형호 (PITTA)",
     "artistType": "kanghyungho",
-    "album": "ID: PITTA",
+    "album": "팬텀싱어2 Episode 6",
     "releaseDate": "2017-09-30",
     "duration": 250,
     "isTitle": false,
@@ -750,7 +784,8 @@
     "tags": [
       "solo",
       "pitta"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "kang-005",
@@ -759,39 +794,41 @@
     "artistType": "kanghyungho",
     "album": "Universe",
     "releaseDate": "2020-10-29",
-    "duration": 356,
+    "duration": 297,
     "isTitle": true,
     "platformIds": {
       "melon": "33020491",
-      "genie": "93019284",
-      "bugs": "31782910"
+      "genie": "91191857",
+      "bugs": "32053008"
     },
     "tags": [
       "solo",
       "pitta",
       "single",
       "epic"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "kang-006",
     "title": "Carpe Diem",
     "artist": "강형호 (PITTA)",
     "artistType": "kanghyungho",
-    "album": "Carpe Diem",
+    "album": "CARPE DIEM",
     "releaseDate": "2023-03-08",
-    "duration": 218,
+    "duration": 252,
     "isTitle": true,
     "platformIds": {
       "melon": "36255707",
-      "genie": "10141829",
+      "genie": "100761748",
       "bugs": "32751829"
     },
     "tags": [
       "solo",
       "pitta",
       "single"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "kang-007",
@@ -800,18 +837,19 @@
     "artistType": "kanghyungho",
     "album": "BE FREE",
     "releaseDate": "2023-04-19",
-    "duration": 230,
+    "duration": 282,
     "isTitle": true,
     "platformIds": {
       "melon": "36380617",
-      "genie": "10201928",
-      "bugs": "32801928"
+      "genie": "101381804",
+      "bugs": "32833216"
     },
     "tags": [
       "solo",
       "pitta",
       "special"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "ko-001",
@@ -832,7 +870,8 @@
       "ost",
       "basso",
       "tango"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "ko-002",
@@ -853,7 +892,8 @@
       "ost",
       "basso",
       "deep"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "ko-003",
@@ -872,7 +912,8 @@
     "tags": [
       "duet",
       "warm"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "bae-001",
@@ -919,19 +960,20 @@
     "title": "마이 버킷 리스트",
     "artist": "배두훈",
     "artistType": "baedoohun",
-    "album": "뮤지컬 마이 버킷 리스트 OST",
+    "album": "2014 뮤지컬 '마이 버킷 리스트' OST",
     "releaseDate": "2014-11-25",
-    "duration": 218,
+    "duration": 201,
     "isTitle": true,
     "platformIds": {
       "melon": "5475800",
-      "genie": "84918204",
-      "bugs": "28918204"
+      "genie": "82980350",
+      "bugs": "3779342"
     },
     "tags": [
       "solo",
       "musical"
-    ]
+    ],
+    "userEdited": false
   },
   {
     "id": "auto-group-602591314",
@@ -940,17 +982,19 @@
     "artistType": "group",
     "album": "<불후의 명곡> - 2026 왕중왕전",
     "releaseDate": "2026-07-25",
-    "duration": 222,
-    "isTitle": false,
-    "userEdited": false,
+    "isTitle": true,
     "platformIds": {
       "melon": "602591314",
       "genie": "116078166",
-      "bugs": "6495338"
+      "bugs": "6495338",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 222,
+    "userEdited": false
   },
   {
     "id": "auto-group-601812669",
@@ -1016,17 +1060,19 @@
     "artistType": "group",
     "album": "THE LEGACY",
     "releaseDate": "2026-04-23",
-    "duration": 277,
-    "isTitle": false,
-    "userEdited": false,
+    "isTitle": true,
     "platformIds": {
       "melon": "601812672",
       "genie": "114676433",
-      "bugs": "130659988"
+      "bugs": "130659988",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 277,
+    "userEdited": false
   },
   {
     "id": "auto-group-601812673",
@@ -1149,17 +1195,19 @@
     "artistType": "group",
     "album": "THE LEGACY",
     "releaseDate": "2026-04-23",
-    "duration": 335,
-    "isTitle": false,
-    "userEdited": false,
+    "isTitle": true,
     "platformIds": {
       "melon": "601812679",
       "genie": "114676440",
-      "bugs": "131827359"
+      "bugs": "131827359",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 335,
+    "userEdited": false
   },
   {
     "id": "auto-group-601812680",
@@ -1415,13 +1463,13 @@
     "artistType": "group",
     "album": "Unfinished",
     "releaseDate": "2023-11-08",
-    "duration": 225,
+    "duration": 320,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "36944765",
-      "genie": "",
-      "bugs": "131827345"
+      "genie": "104244851",
+      "bugs": "6221647"
     },
     "tags": [
       "auto-synced"
@@ -1434,12 +1482,12 @@
     "artistType": "group",
     "album": "Unfinished",
     "releaseDate": "2023-11-08",
-    "duration": 225,
+    "duration": 217,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "36944766",
-      "genie": "",
+      "genie": "104244852",
       "bugs": "6221648"
     },
     "tags": [
@@ -1453,13 +1501,13 @@
     "artistType": "group",
     "album": "Unfinished",
     "releaseDate": "2023-11-08",
-    "duration": 257,
+    "duration": 259,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "36944767",
-      "genie": "104244850",
-      "bugs": "6221646"
+      "genie": "104244853",
+      "bugs": "6221649"
     },
     "tags": [
       "auto-synced"
@@ -1496,7 +1544,7 @@
     "userEdited": false,
     "platformIds": {
       "melon": "36800786",
-      "genie": "100471844",
+      "genie": "103477833",
       "bugs": "32966068"
     },
     "tags": [
@@ -1529,13 +1577,13 @@
     "artistType": "group",
     "album": "[The Bloom : UTOPIA] The Borders of Utopia",
     "releaseDate": "2022-12-22",
-    "duration": 225,
+    "duration": 312,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "35955150",
-      "genie": "",
-      "bugs": "6185248"
+      "genie": "99603283",
+      "bugs": "6185249"
     },
     "tags": [
       "auto-synced"
@@ -1605,13 +1653,13 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 225,
+    "duration": 265,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "35222080",
-      "genie": "",
-      "bugs": "6163565"
+      "genie": "96886500",
+      "bugs": "6163570"
     },
     "tags": [
       "auto-synced"
@@ -1624,13 +1672,13 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 225,
+    "duration": 292,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "35222081",
-      "genie": "",
-      "bugs": "6163566"
+      "genie": "96886495",
+      "bugs": "6163571"
     },
     "tags": [
       "auto-synced"
@@ -1643,12 +1691,12 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 225,
+    "duration": 259,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "35222082",
-      "genie": "",
+      "genie": "96886496",
       "bugs": "6163572"
     },
     "tags": [
@@ -1662,12 +1710,12 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 225,
+    "duration": 250,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "35222083",
-      "genie": "",
+      "genie": "96886497",
       "bugs": "6163573"
     },
     "tags": [
@@ -1681,12 +1729,12 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 225,
+    "duration": 281,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "35222084",
-      "genie": "",
+      "genie": "96886498",
       "bugs": "6163574"
     },
     "tags": [
@@ -1782,7 +1830,7 @@
     "platformIds": {
       "melon": "34460826",
       "genie": "",
-      "bugs": "6140997"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -1801,7 +1849,7 @@
     "platformIds": {
       "melon": "34460827",
       "genie": "",
-      "bugs": "6140998"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -2048,7 +2096,7 @@
     "platformIds": {
       "melon": "33022525",
       "genie": "",
-      "bugs": "31649398"
+      "bugs": "32053028"
     },
     "tags": [
       "auto-synced"
@@ -2371,7 +2419,7 @@
     "platformIds": {
       "melon": "31068548",
       "genie": "",
-      "bugs": "5204302"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -2921,7 +2969,7 @@
     "userEdited": false,
     "platformIds": {
       "melon": "33391061",
-      "genie": "92884593",
+      "genie": "92884592",
       "bugs": "32199258"
     },
     "tags": [
@@ -2941,7 +2989,7 @@
     "platformIds": {
       "melon": "33310705",
       "genie": "",
-      "bugs": "32161253"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -2979,7 +3027,7 @@
     "platformIds": {
       "melon": "32911822",
       "genie": "",
-      "bugs": "32013519"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -2998,7 +3046,7 @@
     "platformIds": {
       "melon": "32911823",
       "genie": "",
-      "bugs": "32013520"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3017,7 +3065,7 @@
     "platformIds": {
       "melon": "31438775",
       "genie": "",
-      "bugs": "31324713"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3036,7 +3084,7 @@
     "platformIds": {
       "melon": "31438776",
       "genie": "",
-      "bugs": "31324714"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3055,7 +3103,7 @@
     "platformIds": {
       "melon": "31438777",
       "genie": "",
-      "bugs": "31324715"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3074,7 +3122,7 @@
     "platformIds": {
       "melon": "31438778",
       "genie": "",
-      "bugs": "31324716"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3093,7 +3141,7 @@
     "platformIds": {
       "melon": "30712681",
       "genie": "",
-      "bugs": "30836378"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3112,7 +3160,7 @@
     "platformIds": {
       "melon": "30712684",
       "genie": "",
-      "bugs": "30836381"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3131,7 +3179,7 @@
     "platformIds": {
       "melon": "30698044",
       "genie": "",
-      "bugs": "30825115"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3150,7 +3198,7 @@
     "platformIds": {
       "melon": "30698045",
       "genie": "",
-      "bugs": "30825116"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3169,7 +3217,7 @@
     "platformIds": {
       "melon": "30646280",
       "genie": "",
-      "bugs": "30791435"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3188,7 +3236,7 @@
     "platformIds": {
       "melon": "30622760",
       "genie": "",
-      "bugs": "30775115"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3302,7 +3350,7 @@
     "platformIds": {
       "melon": "33326481",
       "genie": "",
-      "bugs": "32168286"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3359,7 +3407,7 @@
     "platformIds": {
       "melon": "30712681",
       "genie": "",
-      "bugs": "30836378"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3378,7 +3426,7 @@
     "platformIds": {
       "melon": "30712684",
       "genie": "",
-      "bugs": "30836381"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3397,7 +3445,7 @@
     "platformIds": {
       "melon": "30698044",
       "genie": "",
-      "bugs": "30825115"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3416,7 +3464,7 @@
     "platformIds": {
       "melon": "30698045",
       "genie": "",
-      "bugs": "30825116"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3435,7 +3483,7 @@
     "platformIds": {
       "melon": "30646280",
       "genie": "",
-      "bugs": "30791435"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3454,7 +3502,7 @@
     "platformIds": {
       "melon": "30486273",
       "genie": "",
-      "bugs": "4934036"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3473,7 +3521,7 @@
     "platformIds": {
       "melon": "8181588",
       "genie": "",
-      "bugs": "30252416"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3511,7 +3559,7 @@
     "platformIds": {
       "melon": "4255463",
       "genie": "",
-      "bugs": "3215637"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -3530,7 +3578,7 @@
     "platformIds": {
       "melon": "4255464",
       "genie": "",
-      "bugs": "3215636"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4100,7 +4148,7 @@
     "platformIds": {
       "melon": "36380620",
       "genie": "",
-      "bugs": "32794929"
+      "bugs": "32833219"
     },
     "tags": [
       "auto-synced"
@@ -4233,7 +4281,7 @@
     "platformIds": {
       "melon": "33485659",
       "genie": "",
-      "bugs": "32234769"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4252,7 +4300,7 @@
     "platformIds": {
       "melon": "33485660",
       "genie": "",
-      "bugs": "32234770"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4271,7 +4319,7 @@
     "platformIds": {
       "melon": "33485661",
       "genie": "",
-      "bugs": "32234771"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4366,7 +4414,7 @@
     "platformIds": {
       "melon": "30712681",
       "genie": "",
-      "bugs": "30836378"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4385,7 +4433,7 @@
     "platformIds": {
       "melon": "30712684",
       "genie": "",
-      "bugs": "30836381"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4404,7 +4452,7 @@
     "platformIds": {
       "melon": "30698044",
       "genie": "",
-      "bugs": "30825115"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4423,7 +4471,7 @@
     "platformIds": {
       "melon": "30698045",
       "genie": "",
-      "bugs": "30825116"
+      "bugs": ""
     },
     "tags": [
       "auto-synced"
@@ -4517,7 +4565,7 @@
     "userEdited": false,
     "platformIds": {
       "melon": "35723912",
-      "genie": "98619153",
+      "genie": "98619154",
       "bugs": "6178890"
     },
     "tags": [
@@ -4613,7 +4661,7 @@
     "platformIds": {
       "melon": "31438777",
       "genie": "",
-      "bugs": "31324713"
+      "bugs": "31324715"
     },
     "tags": [
       "auto-synced"
@@ -4664,12 +4712,12 @@
     "artistType": "gowoorim",
     "album": "나의 아저씨 OST Part.5",
     "releaseDate": "2018-04-19",
-    "duration": 280,
+    "duration": 279,
     "isTitle": false,
     "userEdited": false,
     "platformIds": {
       "melon": "31031209",
-      "genie": "87990591",
+      "genie": "87927463",
       "bugs": "31038820"
     },
     "tags": [
@@ -4842,6 +4890,25 @@
       "melon": "30611323",
       "genie": "",
       "bugs": ""
+    },
+    "tags": [
+      "auto-synced"
+    ]
+  },
+  {
+    "id": "auto-group-602793545",
+    "title": "창귀",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "창귀",
+    "releaseDate": "2026-08-25",
+    "duration": 208,
+    "isTitle": false,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "602793545",
+      "genie": "116376883",
+      "bugs": "133584374"
     },
     "tags": [
       "auto-synced"

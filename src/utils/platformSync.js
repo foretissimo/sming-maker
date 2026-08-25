@@ -1,8 +1,10 @@
 /**
  * Utility to fetch and synchronize ALL artist tracks across ALL pages from Melon, Genie, and Bugs.
  *
- * Supports duplicate-named songs across different albums/releases (e.g. THE LEGACY vs Original/Single releases)
- * by uniquely tracking by Platform Song IDs and Album names.
+ * Robust Multi-Tier Matching Engine with Strict Artist & Instrumental Re-Verification:
+ *   - Artist Re-Verification: Verifies that candidate tracks on Genie/Bugs actually belong to the target artist/group
+ *   - Inst/Vocal Isolation: Prevents (Inst.) tracks from mistakenly linking to vocal tracks or vice versa
+ *   - Album Disambiguation: Correctly separates duplicate song titles across different album releases (e.g. THE LEGACY vs Original)
  *
  * Data Source Priority:
  *   - Release Date (발매일): Melon 1st → Genie 2nd
@@ -53,6 +55,123 @@ async function fetchHtml(targetUrl, proxyPrefix) {
   return await directRes.text();
 }
 
+/**
+ * Clean text strings from Melon/Genie/Bugs HTML
+ */
+export function cleanText(str) {
+  if (!str) return '';
+  return str
+    .replace(/<[^>]+>/g, '')
+    .replace(/곡정보\s*-\s*페이지\s*이동/gi, '')
+    .replace(/앨범정보\s*-\s*페이지\s*이동/gi, '')
+    .replace(/아티스트정보\s*-\s*페이지\s*이동/gi, '')
+    .replace(/-\s*페이지\s*이동/gi, '')
+    .replace(/&#x27;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/\u00a0/g, ' ')
+    .replace(/^TITLE/i, '')
+    .trim();
+}
+
+/**
+ * Detect whether a track title is an Instrumental / MR / Backing track
+ */
+export function isInstrumental(title) {
+  if (!title) return false;
+  return /[\(\[\{]?(?:inst(?:rumental)?|mr|반주)[\)\]\}]?/i.test(title);
+}
+
+/**
+ * Check whether two titles have matching Instrumental status
+ */
+export function isInstMatch(titleA, titleB) {
+  return isInstrumental(titleA) === isInstrumental(titleB);
+}
+
+/**
+ * Normalize strings for comparison
+ * @param {string} str - input string
+ * @param {boolean} stripInst - whether to strip inst tags for core title matching
+ */
+export function normalize(str, stripInst = false) {
+  let s = cleanText(str).toLowerCase();
+  if (stripInst) {
+    s = s.replace(/[\(\[\{]?(?:inst(?:rumental)?|mr|반주)[\)\]\}]?/gi, '');
+  }
+  return s.replace(/[\(\)\[\]\-_,\.\s\x27\"&]/g, '');
+}
+
+/**
+ * Verify whether a platform track's artist matches the target artist / group
+ */
+export function isArtistMatch(artistObjOrType, platformArtist) {
+  if (!platformArtist) return true; // If platform didn't list artist, allow with title check
+  const artistType = typeof artistObjOrType === 'string' ? artistObjOrType : artistObjOrType?.id;
+  const p = cleanText(platformArtist).toLowerCase().replace(/[\s\-_,\.\(\)]/g, '');
+
+  const rules = {
+    group: ['포레스텔라', 'forestella', '조민규', '배두훈', '강형호', '고우림', 'pitta'],
+    jomingyu: ['조민규', '포레스텔라', 'forestella', 'variousartists', '팬텀싱어', '동네앨범'],
+    baedoohun: ['배두훈', '포레스텔라', 'forestella', 'variousartists', '팬텀싱어', '동네앨범', '빨래', '렌트', '뮤지컬'],
+    kanghyungho: ['강형호', 'pitta', '피타', '포레스텔라', 'forestella', 'variousartists', '팬텀싱어'],
+    gowoorim: ['고우림', '포레스텔라', 'forestella', 'variousartists', '팬텀싱어', '동네앨범']
+  };
+
+  const allowed = rules[artistType] || [
+    artistType, 
+    artistObjOrType?.name?.toLowerCase().replace(/[\s\-_,\.\(\)]/g, '')
+  ].filter(Boolean);
+
+  return allowed.some(keyword => p.includes(keyword));
+}
+
+/**
+ * Compute similarity match score (0-100) between a target song and a candidate platform track
+ */
+export function computeTrackMatchScore(targetSong, candidateTrack, artistObj) {
+  // 1. Strict Artist Compatibility Check
+  if (!isArtistMatch(artistObj, candidateTrack.artist)) {
+    return -1; // REJECT: Different artist
+  }
+
+  // 2. Strict Instrumental Status Check
+  if (!isInstMatch(targetSong.title, candidateTrack.title)) {
+    return -1; // REJECT: One is Inst and the other is Vocal
+  }
+
+  const targetTitleNorm = normalize(targetSong.title, false);
+  const candTitleNorm = normalize(candidateTrack.title, false);
+
+  const targetAlbumNorm = normalize(targetSong.album || '');
+  const candAlbumNorm = normalize(candidateTrack.album || '');
+
+  // Exact Title Match
+  if (targetTitleNorm === candTitleNorm) {
+    if (targetAlbumNorm && candAlbumNorm && targetAlbumNorm === candAlbumNorm) {
+      return 100; // Perfect Title + Album Match
+    }
+    if (targetAlbumNorm && candAlbumNorm && (targetAlbumNorm.includes(candAlbumNorm) || candAlbumNorm.includes(targetAlbumNorm))) {
+      return 92; // High-Confidence Title + Sub-Album Match
+    }
+    return 80; // Exact Title Match (Album differing or unknown)
+  }
+
+  // Core Title Match (ignoring OST sub-labels or special version tags)
+  const targetCore = normalize(targetSong.title, true);
+  const candCore = normalize(candidateTrack.title, true);
+
+  if (targetCore && candCore && targetCore === candCore) {
+    if (targetAlbumNorm && candAlbumNorm && targetAlbumNorm === candAlbumNorm) {
+      return 78;
+    }
+    return 65;
+  }
+
+  return 0; // No match
+}
 
 /**
  * Fetch Album Release Dates dictionary from Melon for an artist
@@ -90,38 +209,7 @@ async function fetchMelonAlbumDates(melonArtistId) {
 }
 
 /**
- * Clean text strings from Melon/Genie/Bugs HTML
- */
-function cleanText(str) {
-  if (!str) return '';
-  return str
-    .replace(/<[^>]+>/g, '')
-    .replace(/곡정보\s*-\s*페이지\s*이동/gi, '')
-    .replace(/앨범정보\s*-\s*페이지\s*이동/gi, '')
-    .replace(/-\s*페이지\s*이동/gi, '')
-    .replace(/&#x27;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/\u00a0/g, ' ')
-    .replace(/^TITLE/i, '')
-    .trim();
-}
-
-/**
- * Normalize strings for fuzzy matching
- */
-function normalize(t) {
-  return cleanText(t)
-    .toLowerCase()
-    .replace(/[\(\)\[\]\-_,\.\s\x27\"&]/g, '')
-    .replace(/inst\.?/g, '')
-    .replace(/instrumental/g, '');
-}
-
-/**
- * Fetch ALL tracks from Melon for an artist across all pagination pages with exact release dates
+ * Fetch ALL tracks from Melon for an artist across all pagination pages with exact release dates & artist name
  */
 export async function fetchMelonTracks(melonArtistId) {
   if (!melonArtistId) return [];
@@ -144,11 +232,13 @@ export async function fetchMelonTracks(melonArtistId) {
       rows.forEach(tr => {
         const songId = tr.match(/goSongDetail\(\x27(\d+)\x27\)/)?.[1];
         const titleMatch = tr.match(/goSongDetail\(\x27\d+\x27\);"[^>]*title="([^"]+)"/);
+        const artistMatch = tr.match(/goArtistDetail\(\x27\d+\x27\);"[^>]*title="([^"]+)"/);
         const albumId = tr.match(/goAlbumDetail\(\x27(\d+)\x27\)/)?.[1];
         const albumTitle = tr.match(/goAlbumDetail\(\x27\d+\x27\);"[^>]*title="([^"]+)"/);
 
         if (songId && titleMatch) {
           const title = cleanText(titleMatch[1]);
+          const artist = artistMatch ? cleanText(artistMatch[1]) : '';
           const album = albumTitle ? cleanText(albumTitle[1]) : '';
           const releaseDate = albumMap[albumId] || '';
 
@@ -157,6 +247,7 @@ export async function fetchMelonTracks(melonArtistId) {
               platform: 'melon',
               id: songId,
               title,
+              artist,
               album,
               albumId,
               releaseDate
@@ -178,7 +269,7 @@ export async function fetchMelonTracks(melonArtistId) {
 }
 
 /**
- * Fetch ALL tracks from Genie for an artist across all pagination pages
+ * Fetch ALL tracks from Genie for an artist across all pagination pages with artist name
  */
 export async function fetchGenieTracks(genieArtistId) {
   if (!genieArtistId) return [];
@@ -198,9 +289,11 @@ export async function fetchGenieTracks(genieArtistId) {
         const songId = m[1];
         const tr = m[0];
         const titleMatch = tr.match(/class="title ellipsis"[^>]*>([\s\S]*?)<\/a>/);
+        const artistMatch = tr.match(/class="artist ellipsis"[^>]*>([\s\S]*?)<\/a>/);
         const albumMatch = tr.match(/class="albumtitle ellipsis"[^>]*>([\s\S]*?)<\/a>/);
 
         const title = titleMatch ? cleanText(titleMatch[1]) : '';
+        const artist = artistMatch ? cleanText(artistMatch[1]) : '';
         const album = albumMatch ? cleanText(albumMatch[1]) : '';
 
         if (songId && title && !tracks.some(t => t.id === songId)) {
@@ -208,6 +301,7 @@ export async function fetchGenieTracks(genieArtistId) {
             platform: 'genie',
             id: songId,
             title,
+            artist,
             album
           });
         }
@@ -226,7 +320,6 @@ export async function fetchGenieTracks(genieArtistId) {
 
 /**
  * Fetch song duration (seconds) from Genie song detail page
- * Pattern: alt="재생시간" ... <span class="value">05:35</span>
  */
 async function fetchGenieSongDuration(genieSongId) {
   try {
@@ -245,7 +338,6 @@ async function fetchGenieSongDuration(genieSongId) {
 
 /**
  * Batch-fetch durations from Genie in parallel batches of BATCH_SIZE
- * Returns a Map<genieSongId, durationSeconds>
  */
 async function batchFetchGenieDurations(genieSongIds, batchSize = 5) {
   const durationMap = {};
@@ -262,7 +354,7 @@ async function batchFetchGenieDurations(genieSongIds, batchSize = 5) {
 }
 
 /**
- * Fetch ALL tracks from Bugs for an artist across all pagination pages
+ * Fetch ALL tracks from Bugs for an artist across all pagination pages with artist name
  */
 export async function fetchBugsTracks(bugsArtistId) {
   if (!bugsArtistId) return [];
@@ -279,13 +371,15 @@ export async function fetchBugsTracks(bugsArtistId) {
 
       rows.forEach(r => {
         const tr = r[1];
-        const trackIdMatch = tr.match(/track\/(\d+)/) || tr.match(/openTrackInfoMenu\([^\)]*?(\d+)/);
+        const trackIdMatch = tr.match(/track\/(\d+)/) || tr.match(/openTrackInfoMenu\([^\)]*?(\d+)/) || tr.match(/trackId="(\d+)"/);
         const titleMatch = tr.match(/<p class="title"[^>]*>[\s\S]*?<a[^>]*>([^<]+)<\/a>/);
-        const albumMatch = tr.match(/<a class="album"[^>]*>([^<]+)<\/a>/);
+        const artistMatch = tr.match(/<p class="artist"[^>]*>[\s\S]*?<a[^>]*>([^<]+)<\/a>/);
+        const albumMatch = tr.match(/<a class="album"[^>]*title="([^"]+)"/) || tr.match(/<a class="album"[^>]*>([^<]+)<\/a>/);
 
         if (trackIdMatch && titleMatch) {
           const trackId = trackIdMatch[1];
           const rawTitle = cleanText(titleMatch[1]);
+          const artist = artistMatch ? cleanText(artistMatch[1]) : '';
           const album = albumMatch ? cleanText(albumMatch[1]) : '';
 
           if (trackId && rawTitle && !tracks.some(t => t.id === trackId)) {
@@ -293,6 +387,7 @@ export async function fetchBugsTracks(bugsArtistId) {
               platform: 'bugs',
               id: trackId,
               title: rawTitle,
+              artist,
               album
             });
             pageTrackCount++;
@@ -312,9 +407,7 @@ export async function fetchBugsTracks(bugsArtistId) {
 }
 
 /**
- * Synchronize all tracks for a single artist
- *
- * Supports duplicate-named songs across different albums/releases
+ * Synchronize all tracks for a single artist with Strict Artist & Instrumental Re-Verification
  *
  * @param {Object} artist - The artist object
  * @param {Array} currentSongs - Current song list
@@ -328,7 +421,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
   const bugsId = artist.platformArtistIds?.bugs;
 
   if (progressCallback) {
-    progressCallback(`[${artist.name}] 멜론/지니/벅스 전체 앨범 및 곡 목록 조회 중... (${isSmart ? '수정 보호' : '전체 갱신'})`);
+    progressCallback(`[${artist.name}] 멜론/지니/벅스 아티스트 검증 및 전체 곡 목록 조회 중... (${isSmart ? '수정 보호' : '전체 갱신'})`);
   }
 
   const [melonTracks, genieTracks, bugsTracks] = await Promise.all([
@@ -340,12 +433,18 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
   let updatedCount = 0;
   let addedCount = 0;
   let protectedCount = 0;
+  let artistVerifiedCount = 0;
   const updatedSongs = [...currentSongs];
 
   // 1. Process Melon Tracks (Each unique Melon track ID is a distinct song)
   melonTracks.forEach(mt => {
-    const normTitle = normalize(mt.title);
-    const normAlbum = normalize(mt.album);
+    // Artist Validation Check
+    if (!isArtistMatch(artist, mt.artist)) {
+      return; // Skip tracks not belonging to this artist
+    }
+
+    const normTitle = normalize(mt.title, false);
+    const normAlbum = normalize(mt.album, false);
 
     // Exact Melon ID match first
     let existing = updatedSongs.find(
@@ -357,13 +456,13 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
       existing = updatedSongs.find(
         s => s.artistType === artist.id &&
              !s.platformIds?.melon &&
-             normalize(s.title) === normTitle &&
-             (normalize(s.album) === normAlbum || !s.album || s.album === `${artist.name} 앨범`)
+             isInstMatch(s.title, mt.title) &&
+             normalize(s.title, false) === normTitle &&
+             (normalize(s.album || '', false) === normAlbum || !s.album || s.album === `${artist.name} 앨범`)
       );
     }
 
     if (existing) {
-      // If smart mode and user edited, preserve user's data
       if (isSmart && existing.userEdited) {
         protectedCount++;
         if (!existing.platformIds) existing.platformIds = {};
@@ -388,7 +487,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
         existing.album = mt.album;
       }
     } else {
-      // Newly discovered track (e.g. from THE LEGACY or other albums with same title) -> ADD AS DISTINCT SONG!
+      // Newly discovered track -> ADD AS DISTINCT SONG
       const newSong = {
         id: `auto-${artist.id}-${mt.id}`,
         title: mt.title,
@@ -396,7 +495,7 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
         artistType: artist.id,
         album: mt.album || `${artist.name} 앨범`,
         releaseDate: mt.releaseDate || '',
-        duration: 0, // will be filled by Genie duration fetch
+        duration: 0,
         isTitle: false,
         userEdited: false,
         platformIds: {
@@ -411,63 +510,84 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
     }
   });
 
-  // 2. Link Genie tracks (Priority 1: Title + Album match, Priority 2: Title match on unlinked songs)
-  genieTracks.forEach(gt => {
-    const normTitle = normalize(gt.title);
-    const normAlbum = normalize(gt.album);
+  // 2. Link Genie Tracks with Multi-Tier Scoring & Artist Verification
+  const artistSongs = updatedSongs.filter(s => s.artistType === artist.id);
 
-    // Priority 1: Title + Album match
-    let target = updatedSongs.find(
-      s => s.artistType === artist.id &&
-           !s.platformIds?.genie &&
-           normalize(s.title) === normTitle &&
-           normalize(s.album) === normAlbum
-    );
+  // Track already linked Genie IDs to avoid accidental duplicates
+  const usedGenieIds = new Set();
+  artistSongs.forEach(s => {
+    if (s.platformIds?.genie) usedGenieIds.add(s.platformIds.genie);
+  });
 
-    // Priority 2: Title match on unlinked song
-    if (!target) {
-      target = updatedSongs.find(
-        s => s.artistType === artist.id &&
-             !s.platformIds?.genie &&
-             (normalize(s.title) === normTitle || s.title.includes(gt.title) || gt.title.includes(s.title))
-      );
-    }
+  artistSongs.forEach(song => {
+    // If smart mode & already has a valid Genie ID & user edited, keep it
+    if (isSmart && song.userEdited && song.platformIds?.genie) return;
 
-    if (target) {
-      if (!target.platformIds) target.platformIds = {};
-      target.platformIds.genie = gt.id;
-      if (!isSmart || !target.userEdited) {
+    let bestScore = -1;
+    let bestGenieTrack = null;
+
+    genieTracks.forEach(gt => {
+      // Avoid stealing if already matched
+      if (usedGenieIds.has(gt.id) && song.platformIds?.genie !== gt.id) return;
+
+      const score = computeTrackMatchScore(song, gt, artist);
+      if (score > bestScore && score >= 60) {
+        bestScore = score;
+        bestGenieTrack = gt;
+      }
+    });
+
+    if (bestGenieTrack) {
+      if (!song.platformIds) song.platformIds = {};
+      if (song.platformIds.genie !== bestGenieTrack.id) {
+        song.platformIds.genie = bestGenieTrack.id;
+        usedGenieIds.add(bestGenieTrack.id);
+        updatedCount++;
+      }
+      artistVerifiedCount++;
+    } else if (!isSmart && song.platformIds?.genie) {
+      // In overwrite mode, if no valid artist-verified track found on Genie, clear wrong link
+      const existingMatch = genieTracks.find(gt => gt.id === song.platformIds.genie);
+      if (existingMatch && !isArtistMatch(artist, existingMatch.artist)) {
+        song.platformIds.genie = '';
         updatedCount++;
       }
     }
   });
 
-  // 3. Link Bugs tracks (Priority 1: Title + Album match, Priority 2: Title match on unlinked songs)
-  bugsTracks.forEach(bt => {
-    const normTitle = normalize(bt.title);
-    const normAlbum = normalize(bt.album);
+  // 3. Link Bugs Tracks with Multi-Tier Scoring & Artist Verification
+  const usedBugsIds = new Set();
+  artistSongs.forEach(s => {
+    if (s.platformIds?.bugs) usedBugsIds.add(s.platformIds.bugs);
+  });
 
-    // Priority 1: Title + Album match
-    let target = updatedSongs.find(
-      s => s.artistType === artist.id &&
-           !s.platformIds?.bugs &&
-           normalize(s.title) === normTitle &&
-           normalize(s.album) === normAlbum
-    );
+  artistSongs.forEach(song => {
+    if (isSmart && song.userEdited && song.platformIds?.bugs) return;
 
-    // Priority 2: Title match on unlinked song
-    if (!target) {
-      target = updatedSongs.find(
-        s => s.artistType === artist.id &&
-             !s.platformIds?.bugs &&
-             (normalize(s.title) === normTitle || s.title.includes(bt.title) || bt.title.includes(s.title))
-      );
-    }
+    let bestScore = -1;
+    let bestBugsTrack = null;
 
-    if (target) {
-      if (!target.platformIds) target.platformIds = {};
-      target.platformIds.bugs = bt.id;
-      if (!isSmart || !target.userEdited) {
+    bugsTracks.forEach(bt => {
+      if (usedBugsIds.has(bt.id) && song.platformIds?.bugs !== bt.id) return;
+
+      const score = computeTrackMatchScore(song, bt, artist);
+      if (score > bestScore && score >= 60) {
+        bestScore = score;
+        bestBugsTrack = bt;
+      }
+    });
+
+    if (bestBugsTrack) {
+      if (!song.platformIds) song.platformIds = {};
+      if (song.platformIds.bugs !== bestBugsTrack.id) {
+        song.platformIds.bugs = bestBugsTrack.id;
+        usedBugsIds.add(bestBugsTrack.id);
+        updatedCount++;
+      }
+    } else if (!isSmart && song.platformIds?.bugs) {
+      const existingMatch = bugsTracks.find(bt => bt.id === song.platformIds.bugs);
+      if (existingMatch && !isArtistMatch(artist, existingMatch.artist)) {
+        song.platformIds.bugs = '';
         updatedCount++;
       }
     }
