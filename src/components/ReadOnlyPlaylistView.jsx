@@ -16,10 +16,11 @@ import {
   SlidersHorizontal,
   Plus,
   Apple,
-  Link2
+  Link2,
+  Trash2
 } from 'lucide-react';
 import { formatSecondsToTime, formatTotalDuration, formatDate } from '../utils/formatters';
-import { generatePlatformLinks, generateTextPlaylist, getDefaultDeviceCategory } from '../utils/platformLinks';
+import { generatePlatformLinks, generateTextPlaylist } from '../utils/platformLinks';
 
 function YoutubeIcon({ className = "w-4 h-4" }) {
   return (
@@ -39,7 +40,6 @@ export default function ReadOnlyPlaylistView({
   onGoToGenerator,
   onShowToast
 }) {
-  const [deviceCategory, setDeviceCategory] = useState(() => getDefaultDeviceCategory());
   const [copiedType, setCopiedType] = useState(null);
   const [clickedMelonParts, setClickedMelonParts] = useState({});
   const [youtubeInput, setYoutubeInput] = useState(initialYoutubeUrl);
@@ -77,11 +77,11 @@ export default function ReadOnlyPlaylistView({
     }
   };
 
-  const handleMelonPartClick = (part) => {
-    handleOpenLink(part.url, `멜론 Part ${part.partIndex}`);
+  const handleMelonPartClick = (part, deviceName) => {
+    handleOpenLink(part.url, `멜론(${deviceName}) Part ${part.partIndex}`);
     setClickedMelonParts(prev => ({
       ...prev,
-      [part.partIndex]: true
+      [`${deviceName}-${part.partIndex}`]: true
     }));
     if (onShowToast) {
       onShowToast(`멜론 ${part.partIndex}차 리스트(${part.count}곡) 담기를 실행했습니다.`);
@@ -91,6 +91,78 @@ export default function ReadOnlyPlaylistView({
   const getArtistBadge = (artistType) => {
     const found = artists.find(a => a.id === artistType);
     return found ? found.badgeColor : 'bg-slate-800 text-slate-300 border-slate-700';
+  };
+
+  // Reusable Melon Buttons Box
+  const renderMelonBox = (deviceKey, deviceLabel) => {
+    return (
+      <div className="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-emerald-400/50 transition-colors shadow-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-[#00cd3c] text-slate-950 flex items-center justify-center font-black text-xs shadow-sm">
+              M
+            </div>
+            <div>
+              <span className="text-xs sm:text-sm font-bold text-slate-100">멜론</span>
+              <span className="text-[10px] text-emerald-400/80 ml-1 font-mono">({deviceLabel})</span>
+            </div>
+          </div>
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">
+            {links.melon.count}곡
+          </span>
+        </div>
+
+        <div className="space-y-1.5">
+          {links.melon.hasDuplicates ? (
+            <div className="space-y-1.5 p-2 rounded-xl bg-slate-950/80 border border-emerald-500/20">
+              <div className="flex items-center justify-between text-[10px] text-emerald-300 font-semibold">
+                <span className="flex items-center gap-1">
+                  <Layers className="w-3 h-3 text-emerald-400" />
+                  중복곡 분할 담기 ({links.melon.parts.length}단계)
+                </span>
+                <span className="text-[9px] text-slate-400">순서대로 클릭</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-1 pt-0.5">
+                {links.melon.parts.map((part) => {
+                  const isClicked = clickedMelonParts[`${deviceKey}-${part.partIndex}`];
+                  return (
+                    <button
+                      key={part.partIndex}
+                      onClick={() => handleMelonPartClick(part, deviceKey)}
+                      className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer border ${
+                        isClicked
+                          ? 'bg-emerald-950 text-emerald-400 border-emerald-500/40'
+                          : 'bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 border-transparent shadow-sm'
+                      }`}
+                    >
+                      {isClicked ? <Check className="w-3 h-3 text-emerald-400" /> : <Play className="w-3 h-3 fill-current" />}
+                      <span>{part.partIndex}차 ({part.count}곡)</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => handleOpenLink(links.melon.full, '멜론')}
+                className="w-full py-0.5 text-[9px] text-slate-400 hover:text-emerald-300 hover:underline text-center cursor-pointer transition-colors block"
+              >
+                전체 한 번에 담기 (중복 1회만 반영)
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => handleOpenLink(links.melon.full, '멜론')}
+              disabled={playlist.length === 0}
+              className="w-full py-2.5 px-3 rounded-xl bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>멜론 담기</span>
+            </button>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -161,233 +233,247 @@ export default function ReadOnlyPlaylistView({
         </div>
       </div>
 
-      {/* 2. ONE-CLICK PLATFORM ACTION CARDS (3 DEVICE CATEGORIES) */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-800">
-          <div>
-            <h3 className="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-              원클릭 플레이리스트 담기
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              사용하시는 기기 환경에 맞춰 음원 사이트 버튼을 눌러주세요.
-            </p>
-          </div>
-
-          {/* 3-Category Device Switcher */}
-          <div className="flex items-center p-1 bg-slate-950 border border-slate-800 rounded-xl">
-            <button
-              onClick={() => setDeviceCategory('pc')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                deviceCategory === 'pc'
-                  ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Monitor className="w-3.5 h-3.5" />
-              <span>PC</span>
-            </button>
-
-            <button
-              onClick={() => setDeviceCategory('ios')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                deviceCategory === 'ios'
-                  ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Apple className="w-3.5 h-3.5" />
-              <span>아이폰</span>
-            </button>
-
-            <button
-              onClick={() => setDeviceCategory('android')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                deviceCategory === 'android'
-                  ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-              <span>갤럭시</span>
-            </button>
-          </div>
+      {/* 2. ONE-CLICK PLATFORM ACTION CARDS (3 SECTIONS ALL AT ONCE) */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-6 shadow-2xl space-y-6">
+        <div className="pb-2 border-b border-slate-800">
+          <h3 className="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-emerald-400" />
+            원클릭 플레이리스트 담기 (PC • 갤럭시 • 아이폰)
+          </h3>
+          <p className="text-xs text-slate-400 mt-0.5">
+            사용하시는 기기 환경에 맞는 바로가기 버튼을 누르면 해당 플레이어나 앱으로 전송됩니다.
+          </p>
         </div>
 
-        {/* Platform Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {/* 1. MELON */}
-          <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 hover:border-emerald-400/50 transition-colors shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#00cd3c] text-slate-950 flex items-center justify-center font-black text-xs shadow-md">
-                  M
-                </div>
-                <div>
-                  <span className="text-sm font-bold text-slate-100">멜론</span>
-                  <span className="text-[10px] text-slate-400 ml-1.5">
-                    {deviceCategory === 'pc' ? 'PC 플레이어' : deviceCategory === 'ios' ? 'iOS 앱' : '안드로이드 앱'}
-                  </span>
-                </div>
-              </div>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">
-                {links.melon.count}곡
-              </span>
+        {/* ---------------- PC SECTION ---------------- */}
+        <div className="space-y-3 p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
+          <div className="flex items-center gap-2">
+            <div className="p-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <Monitor className="w-4 h-4" />
             </div>
-
-            <div className="space-y-2">
-              {links.melon.hasDuplicates ? (
-                <div className="space-y-2 p-2.5 rounded-xl bg-slate-950/80 border border-emerald-500/20">
-                  <div className="flex items-center justify-between text-[11px] text-emerald-300 font-semibold">
-                    <span className="flex items-center gap-1">
-                      <Layers className="w-3.5 h-3.5 text-emerald-400" />
-                      중복곡 분할 담기 ({links.melon.parts.length}단계)
-                    </span>
-                    <span className="text-[10px] text-slate-400">순서대로 클릭</span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 leading-tight">
-                    멜론 중복 누락 방지를 위해 순서대로 눌러주세요.
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-1.5 pt-1">
-                    {links.melon.parts.map((part) => {
-                      const isClicked = clickedMelonParts[part.partIndex];
-                      return (
-                        <button
-                          key={part.partIndex}
-                          onClick={() => handleMelonPartClick(part)}
-                          className={`py-1.5 px-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-all cursor-pointer border ${
-                            isClicked
-                              ? 'bg-emerald-950 text-emerald-400 border-emerald-500/40'
-                              : 'bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 border-transparent shadow-sm'
-                          }`}
-                        >
-                          {isClicked ? <Check className="w-3 h-3 text-emerald-400" /> : <Play className="w-3 h-3 fill-current" />}
-                          <span>{part.partIndex}차 ({part.count}곡)</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <button
-                    onClick={() => handleOpenLink(links.melon.full, '멜론')}
-                    className="w-full py-1 text-[10px] text-slate-400 hover:text-emerald-300 hover:underline text-center cursor-pointer transition-colors block"
-                  >
-                    전체 한 번에 담기 (중복 1회만 반영)
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => handleOpenLink(links.melon.full, '멜론')}
-                  disabled={playlist.length === 0}
-                  className="w-full py-2.5 px-3 rounded-lg bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
-                >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>멜론 원클릭 담기</span>
-                </button>
-              )}
-            </div>
+            <h4 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+              <span>PC</span>
+              <span className="text-xs text-slate-400 font-normal">(웹 브라우저 & PC 플레이어)</span>
+            </h4>
           </div>
 
-          {/* 2. GENIE */}
-          <div className="bg-sky-950/40 border border-sky-500/30 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 hover:border-sky-400/50 transition-colors shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#0092fa] text-white flex items-center justify-center font-black text-xs shadow-md">
-                  G
-                </div>
-                <div>
-                  <span className="text-sm font-bold text-slate-100">지니</span>
-                  <span className="text-[10px] text-slate-400 ml-1.5">
-                    {deviceCategory === 'pc' ? 'PC 웹플레이어' : deviceCategory === 'ios' ? 'iOS 앱' : '안드로이드 앱'}
-                  </span>
-                </div>
-              </div>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300">
-                {links.genie.count}곡
-              </span>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {renderMelonBox('pc', 'PC 플레이어')}
 
-            <div className="space-y-2">
+            <div className="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-sky-400/50 transition-colors shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#0092fa] text-white flex items-center justify-center font-black text-xs shadow-sm">
+                    G
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-100">지니</span>
+                    <span className="text-[10px] text-sky-400/80 ml-1 font-mono">(PC 웹)</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300">
+                  {links.genie.count}곡
+                </span>
+              </div>
               <button
-                onClick={() => handleOpenLink(deviceCategory === 'pc' ? links.genie.pc : links.genie.app, '지니')}
+                onClick={() => handleOpenLink(links.genie.pc, '지니')}
                 disabled={playlist.length === 0}
                 className="w-full py-2.5 px-3 rounded-xl bg-[#0092fa] hover:bg-[#0081dd] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
               >
-                {deviceCategory === 'pc' ? <Monitor className="w-3.5 h-3.5" /> : <Smartphone className="w-3.5 h-3.5" />}
-                <span>
-                  {deviceCategory === 'pc' ? '지니 PC 웹 플레이어 실행' : '지니 모바일 앱 실행'}
-                </span>
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>지니 PC 플레이어</span>
               </button>
             </div>
-          </div>
 
-          {/* 3. BUGS */}
-          <div className="bg-rose-950/40 border border-rose-500/30 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 hover:border-rose-400/50 transition-colors shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#f9423a] text-white flex items-center justify-center font-black text-xs shadow-md">
-                  B
+            <div className="bg-rose-950/30 border border-rose-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-rose-400/50 transition-colors shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#f9423a] text-white flex items-center justify-center font-black text-xs shadow-sm">
+                    B
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-100">벅스</span>
+                    <span className="text-[10px] text-rose-400/80 ml-1 font-mono">(PC 웹)</span>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-sm font-bold text-slate-100">벅스</span>
-                  <span className="text-[10px] text-slate-400 ml-1.5">
-                    {deviceCategory === 'pc' ? 'PC 웹플레이어' : deviceCategory === 'ios' ? 'iOS 앱' : '안드로이드 앱'}
-                  </span>
-                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300">
+                  {links.bugs.count}곡
+                </span>
               </div>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300">
-                {links.bugs.count}곡
-              </span>
-            </div>
-
-            <div className="space-y-2">
               <button
-                onClick={() => handleOpenLink(deviceCategory === 'pc' ? links.bugs.pc : links.bugs.app, '벅스')}
+                onClick={() => handleOpenLink(links.bugs.pc, '벅스')}
                 disabled={playlist.length === 0}
                 className="w-full py-2.5 px-3 rounded-xl bg-[#f9423a] hover:bg-[#e0342c] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
               >
-                {deviceCategory === 'pc' ? <Monitor className="w-3.5 h-3.5" /> : <Smartphone className="w-3.5 h-3.5" />}
-                <span>
-                  {deviceCategory === 'pc' ? '벅스 PC 웹 플레이어 실행' : '벅스 모바일 앱 실행'}
-                </span>
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>벅스 PC 플레이어</span>
               </button>
             </div>
-          </div>
 
-          {/* 4. YOUTUBE CARD (Dynamic: Appears when YouTube URL is provided) */}
-          {links.youtube.url && (
-            <div className="bg-red-950/40 border border-red-500/40 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 hover:border-red-400/60 transition-colors shadow-lg animate-fade-in">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#ff0000] text-white flex items-center justify-center font-black text-xs shadow-md">
-                    <YoutubeIcon className="w-4 h-4" />
+            {links.youtube.url && (
+              <div className="bg-red-950/40 border border-red-500/40 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-red-400/60 transition-colors shadow-sm animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-md bg-[#ff0000] text-white flex items-center justify-center font-black text-xs shadow-sm">
+                      <YoutubeIcon className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-100">유튜브</span>
+                      <span className="text-[10px] text-red-400/80 ml-1 font-mono">(MV/음원)</span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-sm font-bold text-slate-100">유튜브</span>
-                    <span className="text-[10px] text-red-300 ml-1.5">MV / 음원</span>
-                  </div>
+                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
+                    연결됨 🔗
+                  </span>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
-                  연결됨 🔗
-                </span>
-              </div>
-
-              <div className="space-y-2">
                 <button
                   onClick={() => handleOpenLink(links.youtube.url, '유튜브')}
                   className="w-full py-2.5 px-3 rounded-xl bg-[#ff0000] hover:bg-[#e60000] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>유튜브 바로가기 / 재생</span>
+                  <span>유튜브 바로가기</span>
                 </button>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* YouTube URL Input Form at bottom */}
-        <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+        {/* ---------------- GALAXY SECTION ---------------- */}
+        <div className="space-y-3 p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
+          <div className="flex items-center gap-2">
+            <div className="p-1 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/30">
+              <Smartphone className="w-4 h-4" />
+            </div>
+            <h4 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+              <span>갤럭시</span>
+              <span className="text-xs text-slate-400 font-normal">(안드로이드 모바일 앱)</span>
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {renderMelonBox('android', '안드로이드 앱')}
+
+            <div className="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-sky-400/50 transition-colors shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#0092fa] text-white flex items-center justify-center font-black text-xs shadow-sm">
+                    G
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-100">지니</span>
+                    <span className="text-[10px] text-sky-400/80 ml-1 font-mono">(안드로이드 앱)</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300">
+                  {links.genie.count}곡
+                </span>
+              </div>
+              <button
+                onClick={() => handleOpenLink(links.genie.android, '지니')}
+                disabled={playlist.length === 0}
+                className="w-full py-2.5 px-3 rounded-xl bg-[#0092fa] hover:bg-[#0081dd] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>지니 앱 실행</span>
+              </button>
+            </div>
+
+            <div className="bg-rose-950/30 border border-rose-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-rose-400/50 transition-colors shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#f9423a] text-white flex items-center justify-center font-black text-xs shadow-sm">
+                    B
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-100">벅스</span>
+                    <span className="text-[10px] text-rose-400/80 ml-1 font-mono">(안드로이드 앱)</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300">
+                  {links.bugs.count}곡
+                </span>
+              </div>
+              <button
+                onClick={() => handleOpenLink(links.bugs.android, '벅스')}
+                disabled={playlist.length === 0}
+                className="w-full py-2.5 px-3 rounded-xl bg-[#f9423a] hover:bg-[#e0342c] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>벅스 앱 실행</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ---------------- IPHONE SECTION ---------------- */}
+        <div className="space-y-3 p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
+          <div className="flex items-center gap-2">
+            <div className="p-1 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30">
+              <Apple className="w-4 h-4" />
+            </div>
+            <h4 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+              <span>아이폰</span>
+              <span className="text-xs text-slate-400 font-normal">(iOS 모바일 앱)</span>
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {renderMelonBox('ios', 'iOS 앱')}
+
+            <div className="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-sky-400/50 transition-colors shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#0092fa] text-white flex items-center justify-center font-black text-xs shadow-sm">
+                    G
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-100">지니</span>
+                    <span className="text-[10px] text-sky-400/80 ml-1 font-mono">(iOS 앱)</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300">
+                  {links.genie.count}곡
+                </span>
+              </div>
+              <button
+                onClick={() => handleOpenLink(links.genie.ios, '지니')}
+                disabled={playlist.length === 0}
+                className="w-full py-2.5 px-3 rounded-xl bg-[#0092fa] hover:bg-[#0081dd] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
+              >
+                <Apple className="w-3.5 h-3.5" />
+                <span>지니 앱 실행</span>
+              </button>
+            </div>
+
+            <div className="bg-rose-950/30 border border-rose-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-rose-400/50 transition-colors shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#f9423a] text-white flex items-center justify-center font-black text-xs shadow-md">
+                    B
+                  </div>
+                  <div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-100">벅스</span>
+                    <span className="text-[10px] text-rose-400/80 ml-1 font-mono">(iOS 앱)</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300">
+                  {links.bugs.count}곡
+                </span>
+              </div>
+              <button
+                onClick={() => handleOpenLink(links.bugs.ios, '벅스')}
+                disabled={playlist.length === 0}
+                className="w-full py-2.5 px-3 rounded-xl bg-[#f9423a] hover:bg-[#e0342c] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
+              >
+                <Apple className="w-3.5 h-3.5" />
+                <span>벅스 앱 실행</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ---------------- YOUTUBE URL INPUT FORM AT BOTTOM ---------------- */}
+        <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800/90 space-y-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
               <YoutubeIcon className="w-4 h-4 text-red-400" />
@@ -396,9 +482,10 @@ export default function ReadOnlyPlaylistView({
             {youtubeInput && (
               <button
                 onClick={() => setYoutubeInput('')}
-                className="text-[11px] text-slate-500 hover:text-rose-400 cursor-pointer"
+                className="text-[11px] text-slate-500 hover:text-rose-400 flex items-center gap-0.5 cursor-pointer"
               >
-                링크 지우기
+                <Trash2 className="w-3 h-3" />
+                <span>링크 지우기</span>
               </button>
             )}
           </div>
@@ -410,7 +497,7 @@ export default function ReadOnlyPlaylistView({
                 type="url"
                 value={youtubeInput}
                 onChange={(e) => setYoutubeInput(e.target.value)}
-                placeholder="유튜브 MV 또는 재생목록 링크를 입력하면 상단에 바로가기 버튼이 생성됩니다 (예: https://youtu.be/...)"
+                placeholder="유튜브 MV 또는 재생목록 링크를 입력하면 PC 섹션에 바로가기 버튼이 나타납니다 (예: https://youtu.be/...)"
                 className="w-full pl-8 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-red-500 transition-colors font-mono"
               />
             </div>
