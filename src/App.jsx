@@ -15,27 +15,44 @@ import { generateStreamingList } from './utils/generator';
 import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
 import { isEditorEnabled } from './utils/env';
 
+const DATASET_VERSION = '2026-08-25-v3-legacy';
+
 export default function App() {
   const showEditor = isEditorEnabled();
   // Main View Mode: 'generator' | 'editor' | 'readonly'
   const [activeView, setActiveView] = useState('generator');
 
-
   // Artists State with LocalStorage persistence
   const [artists, setArtists] = useState(() => {
     try {
+      const savedVersion = localStorage.getItem('sming_artists_version');
       const saved = localStorage.getItem('sming_artists');
-      return saved ? JSON.parse(saved) : initialArtistsData;
+      if (saved && savedVersion === DATASET_VERSION) {
+        return JSON.parse(saved);
+      }
+      localStorage.setItem('sming_artists_version', DATASET_VERSION);
+      localStorage.setItem('sming_artists', JSON.stringify(initialArtistsData));
+      return initialArtistsData;
     } catch (e) {
       return initialArtistsData;
     }
   });
 
-  // Songs State with LocalStorage persistence
+  // Songs State with LocalStorage persistence & Automatic version upgrade
   const [allSongs, setAllSongs] = useState(() => {
     try {
+      const savedVersion = localStorage.getItem('sming_songs_version');
       const saved = localStorage.getItem('sming_songs');
-      return saved ? JSON.parse(saved) : initialSongsData;
+      if (saved && savedVersion === DATASET_VERSION) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= initialSongsData.length) {
+          return parsed;
+        }
+      }
+      // Upgrade to latest bundled songs dataset
+      localStorage.setItem('sming_songs_version', DATASET_VERSION);
+      localStorage.setItem('sming_songs', JSON.stringify(initialSongsData));
+      return initialSongsData;
     } catch (e) {
       return initialSongsData;
     }
@@ -94,6 +111,7 @@ export default function App() {
   const handleUpdateArtists = (newArtists) => {
     setArtists(newArtists);
     try {
+      localStorage.setItem('sming_artists_version', DATASET_VERSION);
       localStorage.setItem('sming_artists', JSON.stringify(newArtists));
     } catch (e) {
       // ignore
@@ -104,6 +122,7 @@ export default function App() {
   const handleUpdateSongs = (newSongs) => {
     setAllSongs(newSongs);
     try {
+      localStorage.setItem('sming_songs_version', DATASET_VERSION);
       localStorage.setItem('sming_songs', JSON.stringify(newSongs));
     } catch (e) {
       // ignore
