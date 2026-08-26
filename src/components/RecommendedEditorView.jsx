@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { formatSecondsToTime } from '../utils/formatters';
 import { generateStreamingList } from '../utils/generator';
+import { hydratePlaylistWithMasterSongs } from '../utils/platformLinks';
 
 export default function RecommendedEditorView({
   allSongs = [],
@@ -44,13 +45,15 @@ export default function RecommendedEditorView({
       : ['group']
   );
 
-  // Songs in recommended playlist
+  // Songs in recommended playlist: Always hydrated with latest allSongs (songs.json)
   const [playlist, setPlaylist] = useState(() => {
-    return (recommendedData?.songs || []).map(s => ({
-      ...s,
-      uniqueKey: s.uniqueKey || `${s.id}-${Math.random().toString(36).substr(2, 9)}`
-    }));
+    return hydratePlaylistWithMasterSongs(recommendedData?.songs || [], allSongs);
   });
+
+  // Re-hydrate whenever master songs (songs.json) change
+  React.useEffect(() => {
+    setPlaylist(prev => hydratePlaylistWithMasterSongs(prev, allSongs));
+  }, [allSongs]);
 
   // Song catalog search & filters
   const [searchQuery, setSearchQuery] = useState('');

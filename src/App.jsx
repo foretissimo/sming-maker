@@ -14,9 +14,10 @@ import CreatorStudioModal from './components/CreatorStudioModal';
 import DataEditorView from './components/DataEditorView';
 import { generateStreamingList } from './utils/generator';
 import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
+import { hydratePlaylistWithMasterSongs } from './utils/platformLinks';
 import { isEditorEnabled } from './utils/env';
 
-const DATASET_VERSION = '2026-08-26-v7-recommended-playlist';
+const DATASET_VERSION = '2026-08-26-v8-hydrate-master';
 
 export default function App() {
   const showEditor = isEditorEnabled();
@@ -119,9 +120,10 @@ export default function App() {
     }
   };
 
-  // Sync songs to LocalStorage
+  // Sync songs to LocalStorage and automatically re-hydrate current playlist
   const handleUpdateSongs = (newSongs) => {
     setAllSongs(newSongs);
+    setPlaylist(prev => hydratePlaylistWithMasterSongs(prev, newSongs));
     try {
       localStorage.setItem('sming_songs_version', DATASET_VERSION);
       localStorage.setItem('sming_songs', JSON.stringify(newSongs));
@@ -158,10 +160,7 @@ export default function App() {
     setSelectedArtists(defaultGroup);
     setFocusSongId(null);
     if (initialRecommendedData?.songs && initialRecommendedData.songs.length > 0) {
-      setPlaylist(initialRecommendedData.songs.map(s => ({
-        ...s,
-        uniqueKey: `${s.id}-${Math.random().toString(36).substr(2, 9)}`
-      })));
+      setPlaylist(hydratePlaylistWithMasterSongs(initialRecommendedData.songs, initialSongsData));
     } else {
       setPlaylist(generateStreamingList(initialSongsData, {
         targetSeconds: 3600,
@@ -171,13 +170,10 @@ export default function App() {
     }
   };
 
-  // Load official recommended playlist on demand
+  // Load official recommended playlist on demand (Always hydrated with latest allSongs/songs.json)
   const handleLoadRecommended = () => {
     if (recommendedData && Array.isArray(recommendedData.songs) && recommendedData.songs.length > 0) {
-      const freshSongs = recommendedData.songs.map(s => ({
-        ...s,
-        uniqueKey: `${s.id}-${Math.random().toString(36).substr(2, 9)}`
-      }));
+      const freshSongs = hydratePlaylistWithMasterSongs(recommendedData.songs, allSongs);
       setPlaylist(freshSongs);
       if (recommendedData.selectedArtists && recommendedData.selectedArtists.length > 0) {
         setSelectedArtists(recommendedData.selectedArtists);
@@ -231,12 +227,9 @@ export default function App() {
       }
     }
 
-    // 3. Default on first visit: Load Official Recommended Playlist!
+    // 3. Default on first visit: Load Official Recommended Playlist hydrated with master allSongs!
     if (recommendedData && Array.isArray(recommendedData.songs) && recommendedData.songs.length > 0) {
-      const recSongs = recommendedData.songs.map(s => ({
-        ...s,
-        uniqueKey: `${s.id}-${Math.random().toString(36).substr(2, 9)}`
-      }));
+      const recSongs = hydratePlaylistWithMasterSongs(recommendedData.songs, allSongs);
       setPlaylist(recSongs);
       if (recommendedData.selectedArtists) {
         setSelectedArtists(recommendedData.selectedArtists);

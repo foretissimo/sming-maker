@@ -48,18 +48,20 @@
     "artistType": "group",
     "album": "Unfinished",
     "releaseDate": "2023-11-08",
-    "duration": 230,
     "isTitle": false,
     "platformIds": {
       "melon": "36944764",
-      "genie": "10412346",
-      "bugs": "33124568"
+      "genie": "104244850",
+      "bugs": "6221646",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "bside",
       "mini2"
     ],
-    "userEdited": false
+    "duration": 256,
+    "userEdited": true
   },
   {
     "id": "fore-004",
@@ -4913,7 +4915,7 @@
     "tags": [
       "auto-synced"
     ],
-    "duration": 208,
+    "duration": 207,
     "userEdited": true
   }
 ]

@@ -21,6 +21,31 @@ export function getDefaultDeviceCategory() {
 }
 
 /**
+ * Hydrates any playlist array with canonical attributes from master songs (songs.json).
+ * Guarantees that updates to titles, durations, platform IDs, isTitle in songs.json
+ * are always 100% reflected dynamically in the playlist.
+ */
+export function hydratePlaylistWithMasterSongs(playlist, masterSongs) {
+  if (!playlist || !Array.isArray(playlist)) return [];
+  if (!masterSongs || !Array.isArray(masterSongs)) return playlist;
+
+  const songMap = new Map();
+  masterSongs.forEach(s => {
+    if (s && s.id) songMap.set(s.id, s);
+  });
+
+  return playlist.map(item => {
+    if (!item) return item;
+    const master = songMap.get(item.id);
+    if (!master) return item;
+    return {
+      ...master,
+      uniqueKey: item.uniqueKey || `${item.id}-${Math.random().toString(36).substr(2, 9)}`
+    };
+  });
+}
+
+/**
  * Split playlist into non-duplicate sequential parts for Melon
  * Melon player de-duplicates songs within a single cList parameter.
  */
