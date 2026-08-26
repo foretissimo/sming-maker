@@ -362,7 +362,7 @@ export default function PlatformActions({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. IPHONE (IOS) SECTION */}
+      {/* 3. IPHONE & IPAD (IOS) SECTION */}
       {/* ========================================================================= */}
       <div className="space-y-3 p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
         <div className="flex items-center gap-2">
@@ -370,16 +370,19 @@ export default function PlatformActions({
             <Apple className="w-4 h-4" />
           </div>
           <h4 className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
-            <span>아이폰</span>
-            <span className="text-xs text-slate-400 font-normal">(iOS 모바일 앱)</span>
+            <span>아이폰 • 아이패드</span>
+            <span className="text-xs text-slate-400 font-normal">(iOS / iPadOS)</span>
           </h4>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Melon iPhone */}
-          {renderMelonBox('ios', 'iOS 앱')}
+          {renderMelonBox('ios', '아이폰 앱')}
 
-          {/* Genie iPhone */}
+          {/* Melon iPad */}
+          {renderMelonBox('ipad', '아이패드 앱')}
+
+          {/* Genie iPhone/iPad */}
           <div className="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-sky-400/50 transition-colors shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -388,7 +391,7 @@ export default function PlatformActions({
                 </div>
                 <div>
                   <span className="text-xs sm:text-sm font-bold text-slate-100">지니</span>
-                  <span className="text-[10px] text-sky-400/80 ml-1 font-mono">(iOS 앱)</span>
+                  <span className="text-[10px] text-sky-400/80 ml-1 font-mono">(iOS)</span>
                 </div>
               </div>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300">
@@ -406,16 +409,16 @@ export default function PlatformActions({
             </button>
           </div>
 
-          {/* Bugs iPhone */}
+          {/* Bugs iPhone/iPad */}
           <div className="bg-rose-950/30 border border-rose-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-rose-400/50 transition-colors shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#f9423a] text-white flex items-center justify-center font-black text-xs shadow-md">
+                <div className="w-6 h-6 rounded-md bg-[#f9423a] text-white flex items-center justify-center font-black text-xs shadow-sm">
                   B
                 </div>
                 <div>
                   <span className="text-xs sm:text-sm font-bold text-slate-100">벅스</span>
-                  <span className="text-[10px] text-rose-400/80 ml-1 font-mono">(iOS 앱)</span>
+                  <span className="text-[10px] text-rose-400/80 ml-1 font-mono">(iOS)</span>
                 </div>
               </div>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300">

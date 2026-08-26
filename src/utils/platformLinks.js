@@ -46,6 +46,7 @@ export function splitMelonPlaylistIntoParts(songs) {
           count: ids.length,
           pc: `melonapp://play?cType=1&cList=${joined}`,
           ios: `melonapp://play?cType=1&cList=${joined}`,
+          ipad: `melonipad://play/?ctype=1&menuid=0&cid=${joined}`,
           android: `melonapp://play?menuid=0&ctype=1&cid=${joined}`,
           url: `melonapp://play?cType=1&cList=${joined}`
         });
@@ -68,6 +69,7 @@ export function splitMelonPlaylistIntoParts(songs) {
       count: ids.length,
       pc: `melonapp://play?cType=1&cList=${joined}`,
       ios: `melonapp://play?cType=1&cList=${joined}`,
+      ipad: `melonipad://play/?ctype=1&menuid=0&cid=${joined}`,
       android: `melonapp://play?menuid=0&ctype=1&cid=${joined}`,
       url: `melonapp://play?cType=1&cList=${joined}`
     });
@@ -84,7 +86,7 @@ export function generatePlatformLinks(songs, options = {}) {
 
   if (!songs || songs.length === 0) {
     return {
-      melon: { count: 0, parts: [], hasDuplicates: false, pc: '', ios: '', android: '', full: '' },
+      melon: { count: 0, parts: [], hasDuplicates: false, pc: '', ios: '', ipad: '', android: '', full: '' },
       genie: { count: 0, pc: '', ios: '', android: '', app: '' },
       bugs: { count: 0, pc: '', ios: '', android: '', app: '' },
       youtube: { count: youtubeUrl ? 1 : 0, url: youtubeUrl, pc: youtubeUrl, ios: youtubeUrl, android: youtubeUrl },
@@ -103,6 +105,7 @@ export function generatePlatformLinks(songs, options = {}) {
   const melonJoinedIds = melonIds.join(',');
   const melonPcUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonJoinedIds}` : '';
   const melonIosUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonJoinedIds}` : '';
+  const melonIpadUri = melonIds.length > 0 ? `melonipad://play/?ctype=1&menuid=0&cid=${melonJoinedIds}` : '';
   const melonAndroidUri = melonIds.length > 0 ? `melonapp://play?menuid=0&ctype=1&cid=${melonJoinedIds}` : '';
 
   return {
@@ -115,6 +118,7 @@ export function generatePlatformLinks(songs, options = {}) {
       full: melonPcUri,
       pc: melonPcUri,
       ios: melonIosUri,
+      ipad: melonIpadUri,
       android: melonAndroidUri
     },
     genie: {
