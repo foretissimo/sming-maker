@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "pull": "git pull origin main",
+    "sync": "git pull origin main",
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",

@@ -1,0 +1,5 @@
+# AI Assistant Rules for sming-maker
+
+CRITICAL: The sound team actively deploys updates to src/data/songs.json, src/data/recommendedPlaylist.json, and src/data/backups/ directly to origin/main.
+Before performing ANY code or data modifications, you MUST run:
+git pull origin main

@@ -6,6 +6,19 @@
 
 ---
 
+## 🚨 [필독] 로컬 개발 및 AI 작업 전 필수 수칙
+
+> **⚠️ 작업 시작 전 반드시 `git pull origin main`을 실행하세요!**
+> 
+> 음총팀이 웹 브라우저 편집기에서 `src/data/songs.json`, `src/data/recommendedPlaylist.json`, `src/data/backups/` 데이터를 GitHub `main` 브랜치로 **실시간 직접 배포**하고 있습니다.
+> 로컬에서 작업하거나 소스코드를 수정하기 전, **반드시 최신 원격 변경사항을 pull 받아온 후** 작업을 시작해야 데이터 덮어쓰기나 충돌을 방지할 수 있습니다.
+>
+> ```bash
+> git pull origin main
+> ```
+
+---
+
 ## ✨ 주요 기능
 
 - ⏱️ **1시간 최적화 자동 생성 알고리즘**
