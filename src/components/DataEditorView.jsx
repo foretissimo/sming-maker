@@ -30,7 +30,8 @@ import {
   AlertTriangle,
   RotateCw,
   Rocket,
-  Archive
+  Archive,
+  BookOpen
 } from 'lucide-react';
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
 import SongEditorModal from './SongEditorModal';
@@ -38,6 +39,7 @@ import ArtistEditorModal from './ArtistEditorModal';
 import RecommendedEditorView from './RecommendedEditorView';
 import BackupManagerTab from './BackupManagerTab';
 import DeployModal from './DeployModal';
+import EditorManualModal from './EditorManualModal';
 import { syncArtistTracks } from '../utils/platformSync';
 
 export default function DataEditorView({
@@ -52,6 +54,17 @@ export default function DataEditorView({
 }) {
   const [activeTab, setActiveTab] = useState('recommended'); // 'recommended' | 'artist_songs' | 'all_songs' | 'raw_json' | 'backup'
   const [isDeployModalOpen, setIsDeployModalOpen] = useState(false);
+  const [isManualModalOpen, setIsManualModalOpen] = useState(false);
+
+  // Auto-open manual if not acknowledged yet
+  useEffect(() => {
+    try {
+      const hasRead = localStorage.getItem('sming_editor_manual_read_v1');
+      if (!hasRead) {
+        setIsManualModalOpen(true);
+      }
+    } catch (e) {}
+  }, []);
   
   // Selected artist in artist-centric view (Default: '완전체' 우선 선택, LocalStorage 기억)
   const [selectedArtistId, setSelectedArtistId] = useState(() => {
@@ -568,6 +581,16 @@ export default function DataEditorView({
 
         {/* Global Action Buttons */}
         <div className="flex items-center gap-1.5 flex-wrap">
+          {/* Editor Manual Guide Button */}
+          <button
+            onClick={() => setIsManualModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 hover:text-amber-200 text-xs font-bold border border-amber-500/40 cursor-pointer shadow-sm transition-all"
+            title="음원 데이터 & 추천 편집기 상세 매뉴얼 및 주의사항을 확인합니다."
+          >
+            <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+            <span>📖 사용 매뉴얼</span>
+          </button>
+
           {/* Main GitHub Direct Deploy & Backup Button */}
           <button
             onClick={() => setIsDeployModalOpen(true)}
@@ -1380,6 +1403,12 @@ export default function DataEditorView({
         songs={songs}
         recommendedData={recommendedData}
         onShowToast={onShowToast}
+      />
+
+      <EditorManualModal
+        isOpen={isManualModalOpen}
+        onClose={() => setIsManualModalOpen(false)}
+        onAcknowledge={() => setIsManualModalOpen(false)}
       />
     </div>
   );
