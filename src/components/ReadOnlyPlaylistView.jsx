@@ -20,7 +20,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { formatSecondsToTime, formatTotalDuration, formatDate } from '../utils/formatters';
-import { generatePlatformLinks, generateTextPlaylist } from '../utils/platformLinks';
+import { generatePlatformLinks, generateTextPlaylist, generateAllUrlsText } from '../utils/platformLinks';
 
 function YoutubeIcon({ className = "w-4 h-4" }) {
   return (
@@ -209,7 +209,7 @@ export default function ReadOnlyPlaylistView({
 
         {/* Quick Action Buttons */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/60 text-xs">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => handleCopy(window.location.href, 'link', '스밍리스트 공유 링크가 복사되었습니다! 🔗')}
               className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
@@ -218,11 +218,18 @@ export default function ReadOnlyPlaylistView({
               <span>공유 링크 복사</span>
             </button>
             <button
-              onClick={() => handleCopy(generateTextPlaylist(playlist, totalDurationFormatted), 'text', '텍스트 리스트가 복사되었습니다! 📋')}
+              onClick={() => handleCopy(generateTextPlaylist(playlist, totalDurationFormatted), 'text', '전체 곡 목록 텍스트가 복사되었습니다! 📋')}
               className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
             >
               {copiedType === 'text' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>텍스트 복사</span>
+              <span>곡 리스트 복사</span>
+            </button>
+            <button
+              onClick={() => handleCopy(generateAllUrlsText(playlist, totalDurationFormatted, { title, youtubeUrl: youtubeInput.trim() }), 'urls', '모든 기기 원클릭 스밍 URL 모음이 복사되었습니다! 🔗')}
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-emerald-500/30 shadow-sm"
+            >
+              {copiedType === 'urls' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Link2 className="w-3.5 h-3.5 text-emerald-400" />}
+              <span>전체 URL 복사</span>
             </button>
           </div>
 

@@ -206,3 +206,103 @@ export function generateTextPlaylist(songs, totalDurationStr) {
 
   return lines.join('\n');
 }
+
+/**
+ * Copy all formatted 1-click platform URLs to clipboard for PC, Galaxy, iPhone, and iPad
+ */
+export function generateAllUrlsText(songs, totalDurationStr, options = {}) {
+  const links = generatePlatformLinks(songs, options);
+  const title = options.title || '포레스텔라 1시간 스밍리스트';
+
+  const lines = [
+    `🌲 [${title} - 원클릭 스밍 링크 모음]`,
+    `총 ${songs.length}곡 • ${totalDurationStr}`,
+    `========================================`,
+    ``,
+    `💻 [PC (플레이어 & 웹)]`,
+  ];
+
+  // Melon Windows
+  if (links.melon.parts.length > 1) {
+    lines.push(`• 멜론 (Windows) 분할 담기:`);
+    links.melon.parts.forEach(p => {
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.pc_win}`);
+    });
+    lines.push(`  - 전체 한 번에 담기: ${links.melon.pc_win}`);
+  } else if (links.melon.pc_win) {
+    lines.push(`• 멜론 (Windows): ${links.melon.pc_win}`);
+  }
+
+  // Melon Mac
+  if (links.melon.parts.length > 1) {
+    lines.push(`• 멜론 (Mac) 분할 담기:`);
+    links.melon.parts.forEach(p => {
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.pc_mac}`);
+    });
+    lines.push(`  - 전체 한 번에 담기: ${links.melon.pc_mac}`);
+  } else if (links.melon.pc_mac) {
+    lines.push(`• 멜론 (Mac): ${links.melon.pc_mac}`);
+  }
+
+  // Genie PC
+  if (links.genie.pc) lines.push(`• 지니 (PC 웹): ${links.genie.pc}`);
+  // Bugs PC
+  if (links.bugs.pc) lines.push(`• 벅스 (PC 웹): ${links.bugs.pc}`);
+  // YouTube
+  if (links.youtube.url) lines.push(`• 유튜브 (MV/음원): ${links.youtube.url}`);
+
+  lines.push(``);
+  lines.push(`🤖 [갤럭시 (Android 앱)]`);
+
+  // Melon Android
+  if (links.melon.parts.length > 1) {
+    lines.push(`• 멜론 (안드로이드) 분할 담기:`);
+    links.melon.parts.forEach(p => {
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.android}`);
+    });
+    lines.push(`  - 전체 한 번에 담기: ${links.melon.android}`);
+  } else if (links.melon.android) {
+    lines.push(`• 멜론 (안드로이드): ${links.melon.android}`);
+  }
+
+  // Genie Android
+  if (links.genie.android) lines.push(`• 지니: ${links.genie.android}`);
+  // Bugs Android
+  if (links.bugs.android) lines.push(`• 벅스: ${links.bugs.android}`);
+
+  lines.push(``);
+  lines.push(`🍎 [아이폰 • 아이패드 (iOS / iPadOS)]`);
+
+  // Melon iPhone
+  if (links.melon.parts.length > 1) {
+    lines.push(`• 멜론 (아이폰) 분할 담기:`);
+    links.melon.parts.forEach(p => {
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.ios}`);
+    });
+    lines.push(`  - 전체 한 번에 담기: ${links.melon.ios}`);
+  } else if (links.melon.ios) {
+    lines.push(`• 멜론 (아이폰): ${links.melon.ios}`);
+  }
+
+  // Melon iPad
+  if (links.melon.parts.length > 1) {
+    lines.push(`• 멜론 (아이패드) 분할 담기:`);
+    links.melon.parts.forEach(p => {
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.ipad}`);
+    });
+    lines.push(`  - 전체 한 번에 담기: ${links.melon.ipad}`);
+  } else if (links.melon.ipad) {
+    lines.push(`• 멜론 (아이패드): ${links.melon.ipad}`);
+  }
+
+  // Genie iOS
+  if (links.genie.ios) lines.push(`• 지니: ${links.genie.ios}`);
+  // Bugs iOS
+  if (links.bugs.ios) lines.push(`• 벅스: ${links.bugs.ios}`);
+
+  lines.push(``);
+  lines.push(`========================================`);
+  lines.push(`🌲 포레스텔라 스밍 메이커: https://foretissimo.github.io/sming-maker/`);
+
+  return lines.join('\n');
+}

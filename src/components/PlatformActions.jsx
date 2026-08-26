@@ -14,7 +14,8 @@ import {
 } from 'lucide-react';
 import { 
   generatePlatformLinks, 
-  generateTextPlaylist 
+  generateTextPlaylist,
+  generateAllUrlsText 
 } from '../utils/platformLinks';
 import { formatTotalDuration } from '../utils/formatters';
 
@@ -487,19 +488,29 @@ export default function PlatformActions({
         </div>
       </div>
 
-      {/* Copy Text Playlist Footer Action */}
+      {/* Copy Text Playlist & All URLs Footer Actions */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/60 text-xs">
         <span className="text-slate-400 font-mono">
           총 {playlist.length}곡 • {totalDurationFormatted}
         </span>
 
-        <button
-          onClick={() => handleCopy(generateTextPlaylist(playlist, totalDurationFormatted), 'text', '텍스트 리스트가 클립보드에 복사되었습니다! 📋')}
-          className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
-        >
-          {copiedType === 'text' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-          <span>스밍리스트 텍스트 복사 (카페/SNS용)</span>
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => handleCopy(generateTextPlaylist(playlist, totalDurationFormatted), 'text', '스밍리스트 곡 목록 텍스트가 클립보드에 복사되었습니다! 📋')}
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
+          >
+            {copiedType === 'text' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>전체 곡 리스트 복사</span>
+          </button>
+
+          <button
+            onClick={() => handleCopy(generateAllUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeInput.trim() }), 'urls', '모든 기기 원클릭 스밍 URL 모음이 클립보드에 복사되었습니다! 🔗')}
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-emerald-500/30 shadow-sm"
+          >
+            {copiedType === 'urls' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Link2 className="w-3.5 h-3.5 text-emerald-400" />}
+            <span>전체 URL 복사 (카페/SNS용)</span>
+          </button>
+        </div>
       </div>
     </div>
   );
