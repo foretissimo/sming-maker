@@ -22,17 +22,25 @@ export default function ShareModal({
   onClose,
   playlist = [],
   youtubeUrl = '',
+  onUpdateYoutubeUrl,
   onShowToast
 }) {
   const [title, setTitle] = useState('🌲 포레스텔라 1시간 추천 스밍리스트');
   const [creator, setCreator] = useState('숲별');
   const [desc, setDesc] = useState('');
-  const [customYoutubeUrl, setCustomYoutubeUrl] = useState(youtubeUrl);
+  const [customYoutubeUrl, setCustomYoutubeUrl] = useState(youtubeUrl || '');
   
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [isShortening, setIsShortening] = useState(false);
   const [copiedType, setCopiedType] = useState(null);
+
+  // Sync customYoutubeUrl when modal opens or prop changes
+  useEffect(() => {
+    if (isOpen) {
+      setCustomYoutubeUrl(youtubeUrl || '');
+    }
+  }, [isOpen, youtubeUrl]);
 
   // Calculate duration
   const totalDuration = playlist.reduce((sum, s) => sum + (s.duration || 0), 0);
@@ -45,12 +53,19 @@ export default function ShareModal({
       title,
       creator,
       desc,
-      youtubeUrl: customYoutubeUrl,
+      youtubeUrl: customYoutubeUrl.trim(),
       playlist
     });
     setGeneratedUrl(url);
     setShortUrl(''); // reset short URL until requested or auto-generated
   }, [isOpen, title, creator, desc, customYoutubeUrl, playlist]);
+
+  const handleYoutubeChange = (val) => {
+    setCustomYoutubeUrl(val);
+    if (onUpdateYoutubeUrl) {
+      onUpdateYoutubeUrl(val);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -174,7 +189,7 @@ export default function ShareModal({
               <input
                 type="text"
                 value={customYoutubeUrl}
-                onChange={(e) => setCustomYoutubeUrl(e.target.value)}
+                onChange={(e) => handleYoutubeChange(e.target.value)}
                 placeholder="https://youtu.be/..."
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-emerald-500 transition-colors"
               />

@@ -45,6 +45,13 @@ export default function PlatformActions({
     }
   });
 
+  // Sync when initialYoutubeUrl changes from parent (e.g. loading recommended list or shared list)
+  React.useEffect(() => {
+    if (initialYoutubeUrl !== undefined) {
+      setYoutubeInput(initialYoutubeUrl);
+    }
+  }, [initialYoutubeUrl]);
+
   const links = generatePlatformLinks(playlist, { youtubeUrl: youtubeInput.trim() });
   const totalSeconds = playlist.reduce((sum, s) => sum + (s.duration || 0), 0);
   const totalDurationFormatted = formatTotalDuration(totalSeconds);

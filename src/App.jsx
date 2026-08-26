@@ -127,6 +127,14 @@ export default function App() {
     }
   });
 
+  const handleUpdateYoutubeUrl = (newUrl) => {
+    const cleanUrl = (newUrl || '').trim();
+    setYoutubeUrl(cleanUrl);
+    try {
+      localStorage.setItem('sming_youtube_url', cleanUrl);
+    } catch (e) {}
+  };
+
   // Modals & Feedback
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
@@ -159,6 +167,9 @@ export default function App() {
   // Sync official recommended playlist to LocalStorage
   const handleUpdateRecommended = (newRec) => {
     setRecommendedData(newRec);
+    if (newRec && newRec.youtubeUrl !== undefined) {
+      handleUpdateYoutubeUrl(newRec.youtubeUrl);
+    }
     try {
       localStorage.setItem('sming_recommended_version', DATASET_VERSION);
       localStorage.setItem('sming_recommended', JSON.stringify(newRec));
@@ -173,6 +184,7 @@ export default function App() {
       localStorage.removeItem('sming_songs');
       localStorage.removeItem('sming_artists');
       localStorage.removeItem('sming_recommended');
+      localStorage.removeItem('sming_youtube_url');
       localStorage.removeItem('sming_selected_artists');
       localStorage.removeItem('sming_editor_selected_artist');
       localStorage.removeItem('sming_catalog_selected_artist');
@@ -183,6 +195,9 @@ export default function App() {
     const defaultGroup = initialRecommendedData?.selectedArtists || ['group'];
     setSelectedArtists(defaultGroup);
     setFocusSongId(null);
+    if (initialRecommendedData?.youtubeUrl) {
+      setYoutubeUrl(initialRecommendedData.youtubeUrl);
+    }
     if (initialRecommendedData?.songs && initialRecommendedData.songs.length > 0) {
       setPlaylist(hydratePlaylistWithMasterSongs(initialRecommendedData.songs, initialSongsData));
     } else {
@@ -202,8 +217,8 @@ export default function App() {
       if (recommendedData.selectedArtists && recommendedData.selectedArtists.length > 0) {
         setSelectedArtists(recommendedData.selectedArtists);
       }
-      if (recommendedData.youtubeUrl) {
-        setYoutubeUrl(recommendedData.youtubeUrl);
+      if (recommendedData.youtubeUrl !== undefined) {
+        handleUpdateYoutubeUrl(recommendedData.youtubeUrl);
       }
       showToast('🌲 음총팀 공식 추천 1시간 스밍리스트를 불러왔습니다! ⭐');
     } else {
@@ -223,6 +238,9 @@ export default function App() {
       if (decoded && decoded.playlist.length > 0) {
         setSharedData(decoded);
         setPlaylist(decoded.playlist);
+        if (decoded.youtubeUrl) {
+          setYoutubeUrl(decoded.youtubeUrl);
+        }
         setActiveView('readonly');
         return;
       }
@@ -516,7 +534,7 @@ export default function App() {
             <PlatformActions
               playlist={playlist}
               youtubeUrl={youtubeUrl}
-              onChangeYoutubeUrl={setYoutubeUrl}
+              onChangeYoutubeUrl={handleUpdateYoutubeUrl}
               onShowToast={showToast}
             />
           </>
@@ -554,6 +572,7 @@ export default function App() {
         onClose={() => setIsShareModalOpen(false)}
         playlist={playlist}
         youtubeUrl={youtubeUrl}
+        onUpdateYoutubeUrl={handleUpdateYoutubeUrl}
         onShowToast={showToast}
       />
 

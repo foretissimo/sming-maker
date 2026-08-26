@@ -50,10 +50,21 @@ export default function RecommendedEditorView({
     return hydratePlaylistWithMasterSongs(recommendedData?.songs || [], allSongs);
   });
 
-  // Re-hydrate whenever master songs (songs.json) change
+  // Re-hydrate metadata & songs whenever recommendedData changes
   React.useEffect(() => {
-    setPlaylist(prev => hydratePlaylistWithMasterSongs(prev, allSongs));
-  }, [allSongs]);
+    if (recommendedData) {
+      if (recommendedData.title) setTitle(recommendedData.title);
+      if (recommendedData.creator) setCreator(recommendedData.creator);
+      if (recommendedData.desc !== undefined) setDesc(recommendedData.desc);
+      if (recommendedData.youtubeUrl !== undefined) setYoutubeUrl(recommendedData.youtubeUrl);
+      if (recommendedData.selectedArtists && recommendedData.selectedArtists.length > 0) {
+        setSelectedArtists(recommendedData.selectedArtists);
+      }
+      if (recommendedData.songs) {
+        setPlaylist(hydratePlaylistWithMasterSongs(recommendedData.songs, allSongs));
+      }
+    }
+  }, [recommendedData, allSongs]);
 
   // Song catalog search & filters
   const [searchQuery, setSearchQuery] = useState('');

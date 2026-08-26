@@ -46,7 +46,14 @@ export default function ReadOnlyPlaylistView({
 }) {
   const [copiedType, setCopiedType] = useState(null);
   const [clickedMelonParts, setClickedMelonParts] = useState({});
-  const [youtubeInput, setYoutubeInput] = useState(initialYoutubeUrl);
+  const [youtubeInput, setYoutubeInput] = useState(initialYoutubeUrl || '');
+
+  // Sync when initialYoutubeUrl changes
+  React.useEffect(() => {
+    if (initialYoutubeUrl !== undefined) {
+      setYoutubeInput(initialYoutubeUrl || '');
+    }
+  }, [initialYoutubeUrl]);
 
   const totalSeconds = playlist.reduce((sum, s) => sum + (s.duration || 0), 0);
   const totalDurationFormatted = formatTotalDuration(totalSeconds);
