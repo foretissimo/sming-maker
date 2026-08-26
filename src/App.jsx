@@ -523,72 +523,15 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer - Credits */}
-      <footer className="mt-12 border-t border-slate-900 bg-slate-950/90 py-10 space-y-6">
-        <div className="max-w-2xl mx-auto px-4 space-y-4">
-          {/* Header Title */}
-          <div className="flex items-center gap-2 pb-2.5 border-b border-slate-800">
-            <Users className="w-4 h-4 text-indigo-400" />
-            <h3 className="text-sm font-bold text-indigo-300">
-              만든 사람들 (Credits)
-            </h3>
-          </div>
-
-          {/* Cards Container */}
-          <div className="p-3 sm:p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2.5">
-            {/* Card 1: Feedback & Error Report */}
-            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between gap-3">
-              <div>
-                <h4 className="text-xs sm:text-sm font-bold text-slate-100">
-                  오류 제보 및 피드백 문의
-                </h4>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Inquiry & Feedback
-                </p>
-              </div>
-
-              <a
-                href="https://spin-spin.com/live_in_fore?v=1787707988790"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-indigo-200 hover:text-white text-xs font-semibold border border-slate-700/80 flex items-center gap-1 cursor-pointer transition-colors whitespace-nowrap shadow-sm"
-              >
-                <span>스핀(Spin)</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-
-            {/* Card 2: Developer Credits */}
-            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between gap-3">
-              <div>
-                <h4 className="text-xs sm:text-sm font-bold text-slate-100">
-                  기획 및 제작
-                </h4>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Sming Maker Developer
-                </p>
-              </div>
-
-              <a
-                href="https://x.com/live_in_fore"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-indigo-200 hover:text-white text-xs font-semibold border border-slate-700/80 flex items-center gap-1 cursor-pointer transition-colors whitespace-nowrap shadow-sm"
-              >
-                <span>@live_in_fore</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-          </div>
-
-          {/* Copyright & Disclaimer */}
-          <div className="text-center text-xs text-slate-500 space-y-1 pt-2">
-            <p>포레스텔라 & 숲별을 위한 비영리 팬메이드 원클릭 스밍리스트 생성기입니다.</p>
-            <p className="text-slate-600 text-[11px]">
-              Made with 💚 for Forestella & Soopbyeol
-            </p>
-          </div>
-        </div>
+      {/* Footer */}
+      <footer className="mt-12 border-t border-slate-900 bg-slate-950/80 py-6 text-center text-xs text-slate-500">
+        <p className="max-w-md mx-auto px-4">
+          포레스텔라 & 숲별을 위한 비영리 팬메이드 원클릭 스밍리스트 생성기입니다.
+          <br />
+          <span className="text-slate-600 mt-1 inline-block">
+            Made with 💚 for Forestella & Soopbyeol
+          </span>
+        </p>
       </footer>
 
       {/* Modals */}
