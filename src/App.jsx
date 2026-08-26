@@ -12,10 +12,12 @@ import SongCatalogModal from './components/SongCatalogModal';
 import StreamingGuideModal from './components/StreamingGuideModal';
 import CreatorStudioModal from './components/CreatorStudioModal';
 import DataEditorView from './components/DataEditorView';
+import AdminLoginModal from './components/AdminLoginModal';
 import { generateStreamingList } from './utils/generator';
 import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
 import { hydratePlaylistWithMasterSongs } from './utils/platformLinks';
 import { isEditorEnabled } from './utils/env';
+import { isAdminLoggedIn, clearAdminSession } from './utils/auth';
 
 const DATASET_VERSION = '2026-08-26-v8-hydrate-master';
 
@@ -23,6 +25,24 @@ export default function App() {
   const showEditor = isEditorEnabled();
   // Main View Mode: 'generator' | 'editor' | 'readonly'
   const [activeView, setActiveView] = useState('generator');
+
+  // Sound Team Admin Mode state
+  const [isAdmin, setIsAdmin] = useState(() => isAdminLoggedIn());
+  const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
+
+  const handleAdminLogout = () => {
+    clearAdminSession();
+    setIsAdmin(false);
+    if (activeView === 'editor') {
+      setActiveView('generator');
+    }
+    showToast('음총팀 관리자 모드에서 로그아웃되었습니다.');
+  };
+
+  const handleLoginSuccess = (user) => {
+    setIsAdmin(true);
+    setActiveView('editor');
+  };
 
   // Artists State with LocalStorage persistence
   const [artists, setArtists] = useState(() => {
@@ -342,6 +362,9 @@ export default function App() {
         onOpenCreatorStudio={() => setIsCreatorStudioOpen(true)}
         onShare={handleShare}
         showEditor={showEditor}
+        isAdminLoggedIn={isAdmin}
+        onOpenAdminLogin={() => setIsAdminLoginModalOpen(true)}
+        onAdminLogout={handleAdminLogout}
       />
 
       {/* Main Content Area */}
@@ -358,7 +381,7 @@ export default function App() {
             onGoToGenerator={() => setActiveView('generator')}
             onShowToast={showToast}
           />
-        ) : activeView === 'editor' && showEditor ? (
+        ) : activeView === 'editor' && (showEditor || isAdmin) ? (
           /* Editor View */
           <DataEditorView
             songs={allSongs}
@@ -393,7 +416,7 @@ export default function App() {
                 >
                   👑 리스트 발행/보관함 &rarr;
                 </button>
-                {showEditor && (
+                {(showEditor || isAdmin) && (
                   <>
                     <span className="text-slate-700">|</span>
                     <button
@@ -494,6 +517,13 @@ export default function App() {
         currentPlaylist={playlist}
         allSongs={allSongs}
         onLoadPlaylist={handleLoadPlaylistFromStudio}
+        onShowToast={showToast}
+      />
+
+      <AdminLoginModal
+        isOpen={isAdminLoginModalOpen}
+        onClose={() => setIsAdminLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
         onShowToast={showToast}
       />
     </div>

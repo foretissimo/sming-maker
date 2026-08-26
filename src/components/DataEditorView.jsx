@@ -28,12 +28,16 @@ import {
   ListFilter,
   ShieldCheck,
   AlertTriangle,
-  RotateCw
+  RotateCw,
+  Rocket,
+  Archive
 } from 'lucide-react';
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
 import SongEditorModal from './SongEditorModal';
 import ArtistEditorModal from './ArtistEditorModal';
 import RecommendedEditorView from './RecommendedEditorView';
+import BackupManagerTab from './BackupManagerTab';
+import DeployModal from './DeployModal';
 import { syncArtistTracks } from '../utils/platformSync';
 
 export default function DataEditorView({
@@ -46,7 +50,8 @@ export default function DataEditorView({
   onResetToDefault,
   onShowToast
 }) {
-  const [activeTab, setActiveTab] = useState('recommended'); // 'recommended' | 'artist_songs' | 'all_songs' | 'raw_json' | 'sync'
+  const [activeTab, setActiveTab] = useState('recommended'); // 'recommended' | 'artist_songs' | 'all_songs' | 'raw_json' | 'backup'
+  const [isDeployModalOpen, setIsDeployModalOpen] = useState(false);
   
   // Selected artist in artist-centric view (Default: '완전체' 우선 선택, LocalStorage 기억)
   const [selectedArtistId, setSelectedArtistId] = useState(() => {
@@ -549,29 +554,28 @@ export default function DataEditorView({
           </button>
 
           <button
-            onClick={() => setActiveTab('sync')}
+            onClick={() => setActiveTab('backup')}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'sync'
+              activeTab === 'backup'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
-            <RefreshCw className="w-4 h-4" />
-            <span>백업 / 내보내기</span>
+            <Archive className="w-4 h-4 text-amber-400" />
+            <span>백업 & 복구 센터</span>
           </button>
         </div>
 
-        {/* Global Dual Sync & Direct File Save Buttons */}
+        {/* Global Action Buttons */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          {/* Direct File Save Button */}
+          {/* Main GitHub Direct Deploy & Backup Button */}
           <button
-            onClick={handleSaveSongsToFile}
-            disabled={isSavingFile}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-500 hover:from-violet-500 hover:to-indigo-400 text-white text-xs font-bold cursor-pointer shadow-md disabled:opacity-50 transition-all border border-violet-400/30"
-            title="현재 편집기에서 수정한 모든 음원 데이터를 프로젝트의 src/data/songs.json 파일에 직접 저장하여 영구 반영합니다."
+            onClick={() => setIsDeployModalOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-black cursor-pointer shadow-lg shadow-violet-950/60 transition-all border border-violet-400/40 transform active:scale-[0.99]"
+            title="수정한 음원 데이터와 추천 리스트를 GitHub에 실시간 커밋 및 자동 백업하고 사이트에 즉시 배포합니다."
           >
-            {isSavingFile ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5 text-violet-200" />}
-            <span>{isSavingFile ? '저장 중...' : '💾 songs.json에 직접 반영'}</span>
+            <Rocket className="w-3.5 h-3.5 text-white" />
+            <span>🚀 GitHub에 즉시 배포 & 백업</span>
           </button>
 
           {/* Mode 1: Smart Sync (Protects User Edits) */}
@@ -582,18 +586,18 @@ export default function DataEditorView({
             title="사용자가 직접 수정한 곡 정보를 보존하면서, 신곡 추가 및 미수정 곡의 발매일/길이를 동기화합니다."
           >
             {isSyncingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" /> : <ShieldCheck className="w-3.5 h-3.5 text-slate-950" />}
-            <span>{isSyncingAll ? '동기화 중...' : '⚡ 스마트 동기화'}</span>
+            <span>{isSyncingAll ? '동기화 중...' : '⚡ 음원사 동기화'}</span>
           </button>
 
-          {/* Mode 2: Overwrite All (Full Platform Reset) */}
+          {/* Direct File Save Button (Local Dev Fallback) */}
           <button
-            onClick={() => handleSyncAllArtists('overwrite')}
-            disabled={isSyncingAll}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-950 hover:bg-rose-950/60 border border-slate-700 hover:border-rose-500/50 text-slate-400 hover:text-rose-300 text-xs font-semibold cursor-pointer disabled:opacity-50 transition-all"
-            title="사용자 수정 내역을 무시하고 음원 사이트 원본 데이터로 전체 덮어씁니다."
+            onClick={handleSaveSongsToFile}
+            disabled={isSavingFile}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold cursor-pointer shadow-sm disabled:opacity-50 transition-all"
+            title="로컬 개발 서버 환경에서 src/data/songs.json 파일에 직접 저장합니다."
           >
-            <AlertTriangle className="w-3 h-3 text-rose-400" />
-            <span className="hidden sm:inline">전체 원본 덮어쓰기</span>
+            {isSavingFile ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3 text-slate-400" />}
+            <span className="hidden sm:inline">로컬 저장</span>
           </button>
         </div>
       </div>
@@ -1340,97 +1344,18 @@ export default function DataEditorView({
               </button>
             </div>
           </div>
-
-          {/* Remote Sync Panel */}
-          <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-            <div className="flex items-center gap-2">
-              <RefreshCw className="w-5 h-5 text-emerald-400" />
-              <h4 className="text-sm font-bold text-slate-100">GitHub 원격 최신 데이터 동기화</h4>
-            </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              GitHub 저장소(`foretissimo/sming-maker`)의 메인 브랜치에 업데이트된 최신 곡 목록을 웹 브라우저로 즉시 불러와 동기화합니다.
-            </p>
-            <button
-              onClick={handleSyncFromGithub}
-              disabled={isSyncing}
-              className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50 cursor-pointer disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>{isSyncing ? '동기화 진행 중...' : 'GitHub에서 최신 데이터 가져오기'}</span>
-            </button>
-          </div>
-
-          {/* Reset to Default */}
-          <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-            <div className="flex items-center gap-2">
-              <RotateCcw className="w-5 h-5 text-amber-400" />
-              <h4 className="text-sm font-bold text-slate-100">초기 기본 데이터셋 복원</h4>
-            </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              사용자 정의 수정 사항을 취소하고 웹앱에 내장된 원본 기본 포레스텔라 & 4인 솔로 데이터셋으로 되돌립니다.
-            </p>
-            <button
-              onClick={() => {
-                if (window.confirm('모든 사용자 수정 사항을 취소하고 기본 데이터셋으로 초기화하시겠습니까?')) {
-                  onResetToDefault();
-                  onShowToast('기본 데이터셋으로 초기화되었습니다.');
-                }
-              }}
-              className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 cursor-pointer"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>기본 데이터로 초기화</span>
-            </button>
-          </div>
-
-          {/* Export JSON (For committing back to Git) */}
-          <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-            <div className="flex items-center gap-2">
-              <Download className="w-5 h-5 text-sky-400" />
-              <h4 className="text-sm font-bold text-slate-100">JSON 파일 내보내기 & 복사</h4>
-            </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              편집기에서 수정한 최신 곡 목록 또는 아티스트 데이터를 JSON 파일로 다운로드하거나 복사하여 GitHub 저장소 파일로 덮어쓸 수 있습니다.
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => handleExportJson(songs, 'songs.json')}
-                className="py-2 px-3 rounded-xl bg-sky-950 hover:bg-sky-900 border border-sky-600/40 text-sky-300 text-xs font-semibold cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>songs.json 다운로드</span>
-              </button>
-              <button
-                onClick={() => handleCopyJson(songs, 'songs')}
-                className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                {copiedType === 'songs' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>곡 JSON 복사</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Import JSON File */}
-          <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-            <div className="flex items-center gap-2">
-              <Upload className="w-5 h-5 text-rose-400" />
-              <h4 className="text-sm font-bold text-slate-100">JSON 파일 직접 불러오기</h4>
-            </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              수정한 `songs.json` 또는 `artists.json` 파일을 선택하여 현재 브라우저에 즉시 로드합니다.
-            </p>
-            <label className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 cursor-pointer">
-              <Upload className="w-4 h-4 text-rose-400" />
-              <span>JSON 파일 선택하여 적용</span>
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleImportJsonFile}
-                className="hidden"
-              />
-            </label>
-          </div>
         </div>
+      )}
+
+      {/* TAB 4: BACKUP & RESTORE VAULT */}
+      {activeTab === 'backup' && (
+        <BackupManagerTab
+          songs={songs}
+          recommendedData={recommendedData}
+          onRestoreSongs={onUpdateSongs}
+          onRestoreRecommended={onSaveRecommended}
+          onShowToast={onShowToast}
+        />
       )}
 
       {/* Modals */}
@@ -1447,6 +1372,14 @@ export default function DataEditorView({
         onClose={() => setIsArtistModalOpen(false)}
         onSave={handleSaveArtist}
         artistToEdit={editingArtist}
+      />
+
+      <DeployModal
+        isOpen={isDeployModalOpen}
+        onClose={() => setIsDeployModalOpen(false)}
+        songs={songs}
+        recommendedData={recommendedData}
+        onShowToast={onShowToast}
       />
     </div>
   );

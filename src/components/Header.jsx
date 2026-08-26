@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, HelpCircle, Share2, Music2, Database, Key, SlidersHorizontal, Layers } from 'lucide-react';
+import { Sparkles, HelpCircle, Share2, Music2, Database, Key, Lock, LogOut, ShieldCheck } from 'lucide-react';
 import { getCurrentCreator } from '../utils/creatorStorage';
 
 export default function Header({
@@ -8,7 +8,10 @@ export default function Header({
   onOpenGuide,
   onOpenCreatorStudio,
   onShare,
-  showEditor = false
+  showEditor = false,
+  isAdminLoggedIn = false,
+  onOpenAdminLogin,
+  onAdminLogout
 }) {
   const creator = getCurrentCreator();
 
@@ -52,7 +55,7 @@ export default function Header({
             <span>스밍 생성기</span>
           </button>
 
-          {showEditor && (
+          {(showEditor || isAdminLoggedIn) && (
             <button
               onClick={() => onChangeView('editor')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
@@ -61,8 +64,8 @@ export default function Header({
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Database className="w-3.5 h-3.5" />
-              <span>음원 데이터 편집기</span>
+              <Database className="w-3.5 h-3.5 text-emerald-400" />
+              <span>음원 데이터 & 추천 편집기</span>
             </button>
           )}
 
@@ -77,8 +80,34 @@ export default function Header({
           )}
         </div>
 
-        {/* Right: Actions & Creator Studio */}
+        {/* Right: Actions & Creator Studio & Admin Mode */}
         <div className="flex items-center gap-1.5">
+          {/* Admin Mode Badge or Login Button */}
+          {isAdminLoggedIn ? (
+            <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/40 text-xs text-amber-300 font-bold">
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">음총팀 모드</span>
+              </div>
+              <button
+                onClick={onAdminLogout}
+                className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 transition-colors cursor-pointer"
+                title="음총팀 관리자 로그아웃"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onOpenAdminLogin}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs text-slate-400 hover:text-slate-200 font-medium transition-all cursor-pointer"
+              title="포레스텔라 음총팀 관리자 로그인"
+            >
+              <Lock className="w-3.5 h-3.5 text-slate-400" />
+              <span className="hidden sm:inline">음총팀</span>
+            </button>
+          )}
+
           <button
             onClick={onOpenCreatorStudio}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 border border-emerald-500/40 text-xs text-emerald-300 font-bold transition-all cursor-pointer shadow-sm shadow-emerald-950/50"
