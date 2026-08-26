@@ -12,6 +12,7 @@ import PlatformActions from './components/PlatformActions';
 import SongCatalogModal from './components/SongCatalogModal';
 import StreamingGuideModal from './components/StreamingGuideModal';
 import ShareModal from './components/ShareModal';
+import NoticeModal from './components/NoticeModal';
 import DataEditorView from './components/DataEditorView';
 import AdminLoginModal from './components/AdminLoginModal';
 import { generateStreamingList } from './utils/generator';
@@ -31,6 +32,7 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(() => isAdminLoggedIn());
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
 
   const handleAdminLogout = () => {
     clearAdminSession();
@@ -434,28 +436,43 @@ export default function App() {
 
             {/* Notice / Spin Feedback Banner */}
             <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/50 via-slate-900/80 to-teal-950/50 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
-              <div className="flex items-center gap-2.5">
-                <span className="text-xl flex-shrink-0">📢</span>
+              <div 
+                onClick={() => setIsNoticeOpen(true)}
+                className="flex items-center gap-2.5 cursor-pointer group flex-1"
+                title="클릭하여 공지사항 및 업데이트 상세 내용 확인"
+              >
+                <span className="text-xl flex-shrink-0 group-hover:scale-110 transition-transform">📢</span>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-100">스밍 메이커 오픈 안내 & 오류 제보</span>
+                    <span className="text-xs font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
+                      스밍 메이커 오픈 공지 & 음원 데이터 오류 제보 안내
+                    </span>
                     <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">NOTICE</span>
                   </div>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    스밍 메이커가 오픈되었습니다! 신곡/수록곡 데이터 오류나 기능 건의사항은 스핀(Spin)으로 편하게 제보해주세요.
+                    현재 음원사 데이터 연결 오류가 있을 수 있으니 양해 부탁드립니다. (클릭하여 공지 보기)
                   </p>
                 </div>
               </div>
 
-              <a
-                href="https://spin-spin.com/live_in_fore?v=1787707988790"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 hover:text-emerald-200 text-xs font-bold border border-emerald-500/40 cursor-pointer transition-all shadow-sm whitespace-nowrap flex-shrink-0"
-              >
-                <span>스핀(Spin) 오류 제보하기</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setIsNoticeOpen(true)}
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 cursor-pointer transition-all"
+                >
+                  공지 보기
+                </button>
+                <a
+                  href="https://spin-spin.com/live_in_fore?v=1787707988790"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 hover:text-emerald-200 text-xs font-bold border border-emerald-500/40 cursor-pointer transition-all shadow-sm whitespace-nowrap"
+                >
+                  <span>스핀(Spin) 제보</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
             </div>
 
             {/* 2-Column Section */}
@@ -602,6 +619,11 @@ export default function App() {
         onClose={() => setIsAdminLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
         onShowToast={showToast}
+      />
+
+      <NoticeModal
+        isOpen={isNoticeOpen}
+        onClose={() => setIsNoticeOpen(false)}
       />
     </div>
   );
