@@ -260,8 +260,12 @@ export default function ReadOnlyPlaylistView({
             </h4>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            {renderMelonBox('pc', 'PC 플레이어')}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+            {/* Melon Windows */}
+            {renderMelonBox('pc_win', 'Windows')}
+
+            {/* Melon Mac */}
+            {renderMelonBox('pc_mac', 'Mac')}
 
             <div className="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-sky-400/50 transition-colors shadow-sm">
               <div className="flex items-center justify-between">
