@@ -108,6 +108,9 @@ export function generatePlatformLinks(songs, options = {}) {
   const melonIpadUri = melonIds.length > 0 ? `melonipad://play/?ctype=1&menuid=0&cid=${melonJoinedIds}` : '';
   const melonAndroidUri = melonIds.length > 0 ? `melonapp://play?menuid=0&ctype=1&cid=${melonJoinedIds}` : '';
 
+  const genieJoined = genieIds.length > 0 ? `${genieIds.join(';')};` : '';
+  const bugsJoined = bugsIds.length > 0 ? `${bugsIds.join('|')}|` : '';
+
   return {
     melon: {
       name: '멜론 (Melon)',
@@ -126,18 +129,20 @@ export function generatePlatformLinks(songs, options = {}) {
       brandColor: '#0092fa',
       count: genieIds.length,
       pc: genieIds.length > 0 ? `https://www.genie.co.kr/player/shareProcessV2?xgnm=${genieIds.join(';')}` : '',
-      ios: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieIds.join(';')}` : '',
-      android: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieIds.join(';')}` : '',
-      app: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieIds.join(';')}` : ''
+      ios: genieIds.length > 0 ? `ktolleh00167://landing/?landing_type=31&landing_target=${genieJoined}` : '',
+      ipad: genieIds.length > 0 ? `ktolleh00167://landing/?landing_type=31&landing_target=${genieJoined}` : '',
+      android: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieJoined}` : '',
+      app: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieJoined}` : ''
     },
     bugs: {
       name: '벅스 (Bugs)',
       brandColor: '#f9423a',
       count: bugsIds.length,
       pc: bugsIds.length > 0 ? `https://music.bugs.co.kr/newPlayer?trackId=${bugsIds.join(',')}` : '',
-      ios: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=포레스텔라_스밍&miniplay=Y&track_ids=${bugsIds.join('|')}` : '',
-      android: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=포레스텔라_스밍&miniplay=Y&track_ids=${bugsIds.join('|')}` : '',
-      app: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=포레스텔라_스밍&miniplay=Y&track_ids=${bugsIds.join('|')}` : ''
+      ios: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '',
+      ipad: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '',
+      android: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '',
+      app: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : ''
     },
     youtube: {
       name: '유튜브 (YouTube)',
