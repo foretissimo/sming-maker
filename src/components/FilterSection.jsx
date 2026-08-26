@@ -320,28 +320,7 @@ export default function FilterSection({
 
       {/* 4. ⚡ GENERATOR BUTTON (Below All Filter & Mode Options) */}
       <div className="pt-2 border-t border-slate-800/80">
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-          {onLoadRecommended && (
-            <button
-              onClick={() => {
-                onLoadRecommended();
-                try {
-                  confetti({
-                    particleCount: 50,
-                    spread: 70,
-                    origin: { y: 0.8 },
-                    colors: ['#10b981', '#f59e0b', '#3b82f6', '#ec4899']
-                  });
-                } catch (e) {}
-              }}
-              className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-400/20 to-emerald-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 text-amber-300 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 border border-amber-500/50 shadow-md shadow-amber-950/40 cursor-pointer transition-all active:scale-[0.99] whitespace-nowrap flex-shrink-0"
-              title="포레스텔라 음원총공팀 공식 1시간 추천 스밍리스트 불러오기"
-            >
-              <span className="text-sm">⭐</span>
-              <span>음총팀 추천</span>
-            </button>
-          )}
-
+        <div className="flex items-center gap-2">
           {onGenerate && (
             <button
               onClick={() => {

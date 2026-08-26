@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Music, 
   Trash2, 
@@ -9,11 +9,10 @@ import {
   Clock, 
   CheckCircle2, 
   AlertCircle,
-  PlusCircle
+  PlusCircle,
+  AlertTriangle
 } from 'lucide-react';
 import { formatSecondsToTime, formatTotalDuration, formatDate } from '../utils/formatters';
-
-
 
 export default function PlaylistView({
   playlist,
@@ -21,9 +20,12 @@ export default function PlaylistView({
   onMoveDown,
   onRemove,
   onAddCustom,
+  onLoadRecommended,
   targetDurationSeconds = 3600,
   artists = []
 }) {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   const totalSeconds = playlist.reduce((sum, s) => sum + (s.duration || 0), 0);
   const totalDurationFormatted = formatTotalDuration(totalSeconds);
   const targetDurationFormatted = formatTotalDuration(targetDurationSeconds);
@@ -38,6 +40,12 @@ export default function PlaylistView({
     return found ? found.badgeColor : 'bg-slate-800 text-slate-300 border-slate-700';
   };
 
+  const handleConfirmLoad = () => {
+    setShowConfirmModal(false);
+    if (onLoadRecommended) {
+      onLoadRecommended();
+    }
+  };
 
   return (
     <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-4 md:p-5 shadow-xl space-y-4">
@@ -58,8 +66,8 @@ export default function PlaylistView({
           </p>
         </div>
 
-        {/* Optimal status indicator */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        {/* Optimal status indicator & Actions */}
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap sm:flex-nowrap">
           {isOptimal ? (
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-medium">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -72,12 +80,25 @@ export default function PlaylistView({
             </div>
           )}
 
+          {/* 음총팀 추천 버튼 (곡 추가 버튼 왼쪽 같은 크기) */}
+          {onLoadRecommended && (
+            <button
+              onClick={() => setShowConfirmModal(true)}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 hover:text-amber-200 text-xs font-medium border border-amber-500/40 cursor-pointer transition-colors"
+              title="음총팀 추천 리스트 불러오기"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>음총팀 추천</span>
+            </button>
+          )}
+
+          {/* 곡 추가 버튼 */}
           <button
             onClick={onAddCustom}
             className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium border border-slate-700 cursor-pointer transition-colors"
           >
             <PlusCircle className="w-3.5 h-3.5 text-emerald-400" />
-            곡 추가
+            <span>곡 추가</span>
           </button>
         </div>
       </div>
@@ -185,6 +206,51 @@ export default function PlaylistView({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+          <div className="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center flex-shrink-0 text-lg">
+                ⭐
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-100">
+                  음총팀 추천 리스트 불러오기
+                </h3>
+                <p className="text-xs text-amber-400 font-medium mt-0.5">
+                  포레스텔라 음원총공팀 공식 스밍
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed space-y-1">
+              <p className="font-semibold text-amber-300">
+                모든 리스트가 삭제되고 음총팀 추천 내역으로 변경됩니다.
+              </p>
+              <p className="text-slate-400 text-[11px]">
+                계속 진행하시겠습니까?
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer transition-colors"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleConfirmLoad}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 text-xs font-bold cursor-pointer shadow-lg shadow-amber-950/40 transition-all"
+              >
+                확인
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

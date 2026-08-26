@@ -432,7 +432,6 @@ export default function App() {
                   onGenerate={handleGenerate}
                   onOpenCatalog={() => setIsCatalogOpen(true)}
                   onReset={handleReset}
-                  onLoadRecommended={handleLoadRecommended}
                   playlistLength={playlist.length}
                 />
               </div>
@@ -445,6 +444,7 @@ export default function App() {
                   onMoveDown={handleMoveDown}
                   onRemove={handleRemove}
                   onAddCustom={() => setIsCatalogOpen(true)}
+                  onLoadRecommended={handleLoadRecommended}
                   targetDurationSeconds={targetDurationMinutes * 60}
                   artists={artists}
                 />
