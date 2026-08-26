@@ -77,11 +77,12 @@ export default function ReadOnlyPlaylistView({
     }
   };
 
-  const handleMelonPartClick = (part, deviceName) => {
-    handleOpenLink(part.url, `멜론(${deviceName}) Part ${part.partIndex}`);
+  const handleMelonPartClick = (part, deviceKey, deviceName) => {
+    const targetUrl = part[deviceKey] || part.url || part.pc;
+    handleOpenLink(targetUrl, `멜론(${deviceName}) Part ${part.partIndex}`);
     setClickedMelonParts(prev => ({
       ...prev,
-      [`${deviceName}-${part.partIndex}`]: true
+      [`${deviceKey}-${part.partIndex}`]: true
     }));
     if (onShowToast) {
       onShowToast(`멜론 ${part.partIndex}차 리스트(${part.count}곡) 담기를 실행했습니다.`);
@@ -95,6 +96,8 @@ export default function ReadOnlyPlaylistView({
 
   // Reusable Melon Buttons Box
   const renderMelonBox = (deviceKey, deviceLabel) => {
+    const melonDirectUrl = links.melon[deviceKey] || links.melon.full || links.melon.pc;
+
     return (
       <div className="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-3.5 flex flex-col justify-between space-y-2.5 hover:border-emerald-400/50 transition-colors shadow-sm">
         <div className="flex items-center justify-between">
@@ -129,7 +132,7 @@ export default function ReadOnlyPlaylistView({
                   return (
                     <button
                       key={part.partIndex}
-                      onClick={() => handleMelonPartClick(part, deviceKey)}
+                      onClick={() => handleMelonPartClick(part, deviceKey, deviceLabel)}
                       className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer border ${
                         isClicked
                           ? 'bg-emerald-950 text-emerald-400 border-emerald-500/40'
@@ -144,7 +147,7 @@ export default function ReadOnlyPlaylistView({
               </div>
 
               <button
-                onClick={() => handleOpenLink(links.melon.full, '멜론')}
+                onClick={() => handleOpenLink(melonDirectUrl, `멜론(${deviceLabel})`)}
                 className="w-full py-0.5 text-[9px] text-slate-400 hover:text-emerald-300 hover:underline text-center cursor-pointer transition-colors block"
               >
                 전체 한 번에 담기 (중복 1회만 반영)
@@ -152,7 +155,7 @@ export default function ReadOnlyPlaylistView({
             </div>
           ) : (
             <button
-              onClick={() => handleOpenLink(links.melon.full, '멜론')}
+              onClick={() => handleOpenLink(melonDirectUrl, `멜론(${deviceLabel})`)}
               disabled={playlist.length === 0}
               className="w-full py-2.5 px-3 rounded-xl bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-40"
             >

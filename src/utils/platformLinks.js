@@ -38,12 +38,16 @@ export function splitMelonPlaylistIntoParts(songs) {
     if (seenIds.has(melonId)) {
       if (currentPart.length > 0) {
         const ids = currentPart.map(s => s.platformIds.melon);
+        const joined = ids.join(',');
         parts.push({
           partIndex: parts.length + 1,
           songs: [...currentPart],
           ids,
           count: ids.length,
-          url: `melonapp://play?cType=1&cList=${ids.join(',')}`
+          pc: `melonapp://play?cType=1&cList=${joined}`,
+          ios: `melonapp://play?cType=1&cList=${joined}`,
+          android: `melonapp://play?menuid=0&ctype=1&cid=${joined}`,
+          url: `melonapp://play?cType=1&cList=${joined}`
         });
       }
       currentPart = [song];
@@ -56,12 +60,16 @@ export function splitMelonPlaylistIntoParts(songs) {
 
   if (currentPart.length > 0) {
     const ids = currentPart.map(s => s.platformIds.melon);
+    const joined = ids.join(',');
     parts.push({
       partIndex: parts.length + 1,
       songs: [...currentPart],
       ids,
       count: ids.length,
-      url: `melonapp://play?cType=1&cList=${ids.join(',')}`
+      pc: `melonapp://play?cType=1&cList=${joined}`,
+      ios: `melonapp://play?cType=1&cList=${joined}`,
+      android: `melonapp://play?menuid=0&ctype=1&cid=${joined}`,
+      url: `melonapp://play?cType=1&cList=${joined}`
     });
   }
 
@@ -92,7 +100,10 @@ export function generatePlatformLinks(songs, options = {}) {
   const vibeIds = songs.map(s => s.platformIds?.vibe).filter(Boolean);
 
   const melonParts = splitMelonPlaylistIntoParts(songs);
-  const melonFullUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonIds.join(',')}` : '';
+  const melonJoinedIds = melonIds.join(',');
+  const melonPcUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonJoinedIds}` : '';
+  const melonIosUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonJoinedIds}` : '';
+  const melonAndroidUri = melonIds.length > 0 ? `melonapp://play?menuid=0&ctype=1&cid=${melonJoinedIds}` : '';
 
   return {
     melon: {
@@ -101,10 +112,10 @@ export function generatePlatformLinks(songs, options = {}) {
       count: melonIds.length,
       parts: melonParts,
       hasDuplicates: melonParts.length > 1,
-      full: melonFullUri,
-      pc: melonFullUri,
-      ios: melonFullUri,
-      android: melonFullUri
+      full: melonPcUri,
+      pc: melonPcUri,
+      ios: melonIosUri,
+      android: melonAndroidUri
     },
     genie: {
       name: '지니 (Genie)',
