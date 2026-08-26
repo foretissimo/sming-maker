@@ -15,8 +15,10 @@ import {
   Plus, 
   Database,
   Calendar,
-  User
+  User,
+  GitCompare
 } from 'lucide-react';
+import BackupDiffModal from './BackupDiffModal';
 import { 
   getLocalBackupSnapshots, 
   saveLocalBackupSnapshot, 
@@ -39,6 +41,12 @@ export default function BackupManagerTab({
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const [manualMemo, setManualMemo] = useState('');
   const [isCreatingSnapshot, setIsCreatingSnapshot] = useState(false);
+  const [diffModalState, setDiffModalState] = useState({
+    isOpen: false,
+    name: '',
+    date: '',
+    data: null
+  });
 
   const token = getStoredGithubToken();
 
@@ -82,6 +90,47 @@ export default function BackupManagerTab({
       setIsCreatingSnapshot(false);
       onShowToast('📦 현재 상태의 백업 스냅샷이 성공적으로 생성되었습니다!');
     }
+  };
+
+  // Open Diff Modal for Local Snapshot
+  const handleOpenLocalDiff = (snap) => {
+    setDiffModalState({
+      isOpen: true,
+      name: snap.description || '로컬 스냅샷',
+      date: snap.dateFormatted || '',
+      data: {
+        songs: snap.songs || [],
+        recommended: snap.recommended || null
+      }
+    });
+  };
+
+  // Open Diff Modal for GitHub Cloud Backup
+  const handleOpenGithubDiff = async (item) => {
+    try {
+      onShowToast('GitHub 백업 내용을 불러오는 중...');
+      const data = await fetchGithubBackupContent(token, item.path);
+      setDiffModalState({
+        isOpen: true,
+        name: item.name,
+        date: 'GitHub Cloud Storage',
+        data
+      });
+    } catch (err) {
+      alert(`백업 파일 로드 실패: ${err.message}`);
+    }
+  };
+
+  // Restore directly from diff modal
+  const handleRestoreFromDiff = (backupDataToRestore) => {
+    if (!backupDataToRestore) return;
+    if (backupDataToRestore.songs && Array.isArray(backupDataToRestore.songs)) {
+      onRestoreSongs(backupDataToRestore.songs);
+    }
+    if (backupDataToRestore.recommended) {
+      onRestoreRecommended(backupDataToRestore.recommended);
+    }
+    onShowToast('↺ 선택한 백업 상태로 데이터가 복구되었습니다! ✨');
   };
 
   // Restore local snapshot
@@ -286,19 +335,30 @@ export default function BackupManagerTab({
                 className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 transition-all space-y-2.5 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-100">
+                  <div 
+                    onClick={() => handleOpenLocalDiff(snap)}
+                    className="cursor-pointer group flex-1"
+                    title="클릭하여 현재 버전과 변경점(Diff) 비교"
+                  >
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
                       <Clock className="w-3.5 h-3.5 text-emerald-400" />
                       <span>{snap.dateFormatted}</span>
+                      <span className="text-[10px] text-indigo-400 font-normal opacity-0 group-hover:opacity-100 transition-opacity">
+                        (Diff 보기)
+                      </span>
                     </div>
                     <p className="text-xs text-emerald-300/90 font-medium mt-0.5">
                       {snap.description || '자동 백업'}
                     </p>
                   </div>
 
-                  <span className="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700 font-mono">
-                    {snap.songCount}곡
-                  </span>
+                  <button
+                    onClick={() => handleOpenLocalDiff(snap)}
+                    className="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 border border-slate-700 font-mono cursor-pointer transition-colors"
+                    title="현재 데이터와 변경점 비교"
+                  >
+                    {snap.songCount}곡 (Diff)
+                  </button>
                 </div>
 
                 <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/80">
@@ -309,12 +369,21 @@ export default function BackupManagerTab({
 
                   <div className="flex items-center gap-1.5">
                     <button
+                      onClick={() => handleOpenLocalDiff(snap)}
+                      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-xs font-bold border border-indigo-500/40 cursor-pointer transition-colors"
+                      title="현재 적용된 버전과 변경점 비교"
+                    >
+                      <GitCompare className="w-3 h-3" />
+                      <span>Diff 비교</span>
+                    </button>
+
+                    <button
                       onClick={() => handleRestoreLocalSnapshot(snap)}
                       className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold border border-emerald-500/40 cursor-pointer transition-colors"
                       title="이 백업 시점으로 복원"
                     >
                       <RotateCcw className="w-3 h-3" />
-                      <span>이 버전으로 복구</span>
+                      <span>복구</span>
                     </button>
 
                     <button
@@ -361,29 +430,57 @@ export default function BackupManagerTab({
                   key={item.sha}
                   className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-violet-500/40 transition-all flex items-center justify-between gap-3 shadow-sm"
                 >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200 truncate">
+                  <div 
+                    onClick={() => handleOpenGithubDiff(item)}
+                    className="min-w-0 cursor-pointer group flex-1"
+                    title="클릭하여 변경점(Diff) 비교"
+                  >
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200 group-hover:text-violet-300 transition-colors truncate">
                       <FileJson className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
                       <span className="truncate">{item.name}</span>
                     </div>
                     <p className="text-[11px] text-slate-500 mt-0.5">
-                      GitHub Cloud Storage
+                      GitHub Cloud Storage (클릭 시 Diff 비교)
                     </p>
                   </div>
 
-                  <button
-                    onClick={() => handleRestoreGithubBackup(item)}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-xs font-bold border border-violet-500/40 cursor-pointer transition-colors whitespace-nowrap flex-shrink-0"
-                  >
-                    <RotateCcw className="w-3 h-3" />
-                    <span>클라우드 복원</span>
-                  </button>
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <button
+                      onClick={() => handleOpenGithubDiff(item)}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-xs font-bold border border-indigo-500/40 cursor-pointer transition-colors whitespace-nowrap"
+                      title="현재 데이터와 변경점 비교"
+                    >
+                      <GitCompare className="w-3 h-3" />
+                      <span>Diff</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleRestoreGithubBackup(item)}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-xs font-bold border border-violet-500/40 cursor-pointer transition-colors whitespace-nowrap"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      <span>복원</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </div>
       )}
+
+      {/* Diff Modal */}
+      <BackupDiffModal
+        isOpen={diffModalState.isOpen}
+        onClose={() => setDiffModalState(prev => ({ ...prev, isOpen: false }))}
+        snapshotName={diffModalState.name}
+        snapshotDate={diffModalState.date}
+        backupData={diffModalState.data}
+        currentSongs={songs}
+        currentRecommended={recommendedData}
+        onRestore={handleRestoreFromDiff}
+        onShowToast={onShowToast}
+      />
     </div>
   );
 }
