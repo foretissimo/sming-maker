@@ -29,7 +29,6 @@ export default function AdminLoginModal({
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [githubToken, setGithubToken] = useState(() => getStoredGithubToken());
-  const [showTokenHelp, setShowTokenHelp] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -145,42 +144,21 @@ export default function AdminLoginModal({
 
           {/* GitHub Token for Direct Commit (Optional / Saved) */}
           <div className="space-y-1.5 pt-2 border-t border-slate-800/80">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                <GitBranch className="w-3.5 h-3.5 text-slate-400" />
-                <span>GitHub Personal Token (선택)</span>
-              </label>
-              <button
-                type="button"
-                onClick={() => setShowTokenHelp(!showTokenHelp)}
-                className="text-[11px] text-emerald-400 hover:underline flex items-center gap-0.5 cursor-pointer"
-              >
-                <HelpCircle className="w-3 h-3" />
-                <span>토큰 안내</span>
-              </button>
-            </div>
+            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+              <GitBranch className="w-3.5 h-3.5 text-slate-400" />
+              <span>GitHub Personal Access Token</span>
+            </label>
 
             <input
               type="password"
               value={githubToken}
               onChange={(e) => setGithubToken(e.target.value)}
-              placeholder="ghp_... (웹에서 GitHub 즉시 자동 배포 시 필요)"
+              placeholder="ghp_..."
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:outline-none focus:border-emerald-500 font-mono transition-colors"
             />
             <p className="text-[10px] text-slate-500">
-              * 토큰을 입력해 두면 웹 편집기에서 [GitHub에 즉시 배포] 버튼 클릭 시 자동 커밋됩니다.
+              * 웹 편집기에서 [GitHub에 즉시 배포] 시 사용되는 토큰입니다.
             </p>
-
-            {showTokenHelp && (
-              <div className="p-3 rounded-xl bg-slate-950/90 border border-slate-700 text-[11px] text-slate-300 space-y-1.5 leading-relaxed">
-                <p className="font-semibold text-emerald-300">💡 GitHub Token 발급 방법:</p>
-                <ol className="list-decimal list-inside space-y-0.5 text-slate-400">
-                  <li>GitHub Settings &rarr; Developer Settings &rarr; Personal Access Tokens &rarr; Tokens (classic)</li>
-                  <li>권한 중 <strong className="text-slate-200">repo (또는 contents:write)</strong> 체크 후 생성</li>
-                  <li>발급된 토큰을 여기에 붙여넣으면 브라우저에 안전하게 저장됩니다.</li>
-                </ol>
-              </div>
-            )}
           </div>
 
           {/* Buttons */}

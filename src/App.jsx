@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ExternalLink, Users } from 'lucide-react';
 import initialSongsData from './data/songs.json';
 import initialArtistsData from './data/artists.json';
 import initialRecommendedData from './data/recommendedPlaylist.json';
@@ -437,6 +438,32 @@ export default function App() {
               </div>
             </div>
 
+            {/* Notice / Spin Feedback Banner */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/50 via-slate-900/80 to-teal-950/50 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl flex-shrink-0">📢</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-100">스밍 메이커 오픈 안내 & 오류 제보</span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">NOTICE</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    스밍 메이커가 오픈되었습니다! 신곡/수록곡 데이터 오류나 기능 건의사항은 스핀(Spin)으로 편하게 제보해주세요.
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href="https://spin-spin.com/live_in_fore?v=1787707988790"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 hover:text-emerald-200 text-xs font-bold border border-emerald-500/40 cursor-pointer transition-all shadow-sm whitespace-nowrap flex-shrink-0"
+              >
+                <span>스핀(Spin) 오류 제보하기</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
             {/* 2-Column Section */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left: Filter & Mode Config (5 cols) */}
@@ -485,15 +512,72 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="mt-12 border-t border-slate-900 bg-slate-950/80 py-6 text-center text-xs text-slate-500">
-        <p className="max-w-md mx-auto px-4">
-          포레스텔라 & 숲별을 위한 비영리 팬메이드 원클릭 스밍리스트 생성기입니다.
-          <br />
-          <span className="text-slate-600 mt-1 inline-block">
-            Made with 💚 for Forestella & Soopbyeol
-          </span>
-        </p>
+      {/* Footer - Credits */}
+      <footer className="mt-12 border-t border-slate-900 bg-slate-950/90 py-10 space-y-6">
+        <div className="max-w-2xl mx-auto px-4 space-y-4">
+          {/* Header Title */}
+          <div className="flex items-center gap-2 pb-2.5 border-b border-slate-800">
+            <Users className="w-4 h-4 text-indigo-400" />
+            <h3 className="text-sm font-bold text-indigo-300">
+              만든 사람들 (Credits)
+            </h3>
+          </div>
+
+          {/* Cards Container */}
+          <div className="p-3 sm:p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2.5">
+            {/* Card 1: Feedback & Error Report */}
+            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between gap-3">
+              <div>
+                <h4 className="text-xs sm:text-sm font-bold text-slate-100">
+                  오류 제보 및 피드백 문의
+                </h4>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Inquiry & Feedback
+                </p>
+              </div>
+
+              <a
+                href="https://spin-spin.com/live_in_fore?v=1787707988790"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-indigo-200 hover:text-white text-xs font-semibold border border-slate-700/80 flex items-center gap-1 cursor-pointer transition-colors whitespace-nowrap shadow-sm"
+              >
+                <span>스핀(Spin)</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+
+            {/* Card 2: Developer Credits */}
+            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between gap-3">
+              <div>
+                <h4 className="text-xs sm:text-sm font-bold text-slate-100">
+                  기획 및 제작
+                </h4>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Sming Maker Developer
+                </p>
+              </div>
+
+              <a
+                href="https://x.com/live_in_fore"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-indigo-200 hover:text-white text-xs font-semibold border border-slate-700/80 flex items-center gap-1 cursor-pointer transition-colors whitespace-nowrap shadow-sm"
+              >
+                <span>@live_in_fore</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+
+          {/* Copyright & Disclaimer */}
+          <div className="text-center text-xs text-slate-500 space-y-1 pt-2">
+            <p>포레스텔라 & 숲별을 위한 비영리 팬메이드 원클릭 스밍리스트 생성기입니다.</p>
+            <p className="text-slate-600 text-[11px]">
+              Made with 💚 for Forestella & Soopbyeol
+            </p>
+          </div>
+        </div>
       </footer>
 
       {/* Modals */}

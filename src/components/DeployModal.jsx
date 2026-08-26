@@ -28,7 +28,6 @@ export default function DeployModal({
   const [isDeploying, setIsDeploying] = useState(false);
   const [error, setError] = useState(null);
   const [deploySuccess, setDeploySuccess] = useState(null);
-  const [showTokenHelp, setShowTokenHelp] = useState(false);
 
   if (!isOpen) return null;
 
@@ -178,47 +177,37 @@ export default function DeployModal({
 
             {/* GitHub Token */}
             <div className="space-y-1.5 pt-2 border-t border-slate-800/80">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                  <GitBranch className="w-3.5 h-3.5 text-slate-400" />
-                  <span>GitHub Personal Access Token (PAT)</span>
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowTokenHelp(!showTokenHelp)}
-                  className="text-[11px] text-emerald-400 hover:underline flex items-center gap-0.5 cursor-pointer"
-                >
-                  <HelpCircle className="w-3 h-3" />
-                  <span>토큰 안내</span>
-                </button>
-              </div>
+              <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <GitBranch className="w-3.5 h-3.5 text-slate-400" />
+                <span>GitHub Personal Access Token</span>
+              </label>
 
               <input
                 type="password"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                placeholder="ghp_... (저장소 쓰기 권한이 있는 GitHub 토큰)"
+                placeholder="ghp_..."
                 required
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:outline-none focus:border-emerald-500 font-mono transition-colors"
               />
               <p className="text-[10px] text-slate-500">
                 * 한번 입력한 토큰은 브라우저에 안전하게 기억됩니다.
               </p>
-
-              {showTokenHelp && (
-                <div className="p-3 rounded-xl bg-slate-950/90 border border-slate-700 text-[11px] text-slate-300 space-y-1 leading-relaxed">
-                  <p className="font-semibold text-emerald-300">💡 GitHub Token 발급 안내:</p>
-                  <p className="text-slate-400">
-                    GitHub Settings &rarr; Developer Settings &rarr; Personal Access Tokens &rarr; Tokens (classic) 에서 <strong className="text-slate-200">repo (또는 contents:write)</strong> 권한으로 발급하여 입력하시면 됩니다.
-                  </p>
-                </div>
-              )}
             </div>
 
-            {/* Auto Backup Notice */}
-            <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-              <span>배포 시 <strong>로컬 보관함</strong> 및 <strong>GitHub src/data/backups/</strong>에 백업 스냅샷이 자동 생성되어 언제든 복구할 수 있습니다.</span>
+            {/* Deploy & Time Notice Alert */}
+            <div className="p-3.5 rounded-2xl bg-violet-950/40 border border-violet-500/30 text-xs text-violet-200 space-y-2 leading-relaxed">
+              <div className="flex items-center gap-2 font-bold text-violet-300">
+                <Rocket className="w-4 h-4 text-violet-400 flex-shrink-0" />
+                <span>배포 및 사이트 반영 시간 안내</span>
+              </div>
+              <p className="text-slate-300 text-[11px] leading-relaxed">
+                배포 버튼을 누르면 GitHub에 즉시 커밋 및 자동 백업되며, <strong>GitHub Actions 빌드 완료 후 실제 웹사이트에 전 세계 반영되기까지 약 1~2분 정도 소요</strong>됩니다.
+              </p>
+              <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium pt-1 border-t border-violet-500/20">
+                <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0" />
+                <span>배포 시점의 데이터는 로컬 보관함 및 클라우드에 자동 백업됩니다.</span>
+              </div>
             </div>
 
             {/* Actions */}
