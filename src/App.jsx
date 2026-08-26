@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import initialSongsData from './data/songs.json';
 import initialArtistsData from './data/artists.json';
+import initialRecommendedData from './data/recommendedPlaylist.json';
 import Header from './components/Header';
 import FilterSection from './components/FilterSection';
 import GeneratorControl from './components/GeneratorControl';
@@ -15,7 +16,7 @@ import { generateStreamingList } from './utils/generator';
 import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
 import { isEditorEnabled } from './utils/env';
 
-const DATASET_VERSION = '2026-08-26-v6-changgwi-title';
+const DATASET_VERSION = '2026-08-26-v7-recommended-playlist';
 
 export default function App() {
   const showEditor = isEditorEnabled();
@@ -58,26 +59,26 @@ export default function App() {
     }
   });
 
-  // Generator Options with LocalStorage persistence (Default: '완전체' 우선 선택)
-  const [selectedArtists, setSelectedArtists] = useState(() => {
+  // Official Recommended Playlist State with LocalStorage persistence & version upgrade
+  const [recommendedData, setRecommendedData] = useState(() => {
     try {
-      const saved = localStorage.getItem('sming_selected_artists');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      const savedVersion = localStorage.getItem('sming_recommended_version');
+      const saved = localStorage.getItem('sming_recommended');
+      if (saved && savedVersion === DATASET_VERSION) {
+        return JSON.parse(saved);
       }
-    } catch (e) {}
-    // Default: '완전체' 우선 선택
-    const groupArtist = artists.find(a => a.category === 'group' || a.id === 'group');
-    return groupArtist ? [groupArtist.id] : ['group'];
+      localStorage.setItem('sming_recommended_version', DATASET_VERSION);
+      localStorage.setItem('sming_recommended', JSON.stringify(initialRecommendedData));
+      return initialRecommendedData;
+    } catch (e) {
+      return initialRecommendedData;
+    }
   });
 
-  // Persist selectedArtists to LocalStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem('sming_selected_artists', JSON.stringify(selectedArtists));
-    } catch (e) {}
-  }, [selectedArtists]);
+  // Selected Artists in Generator: Default to '완전체' (localStorage 제거됨)
+  const [selectedArtists, setSelectedArtists] = useState(() => {
+    return initialRecommendedData?.selectedArtists || ['group'];
+  });
 
   const [mode, setMode] = useState('title_focus');
   const [targetDurationMinutes, setTargetDurationMinutes] = useState(60);
@@ -129,26 +130,65 @@ export default function App() {
     }
   };
 
-  // Reset to default bundled dataset (완전체 우선 복구)
+  // Sync official recommended playlist to LocalStorage
+  const handleUpdateRecommended = (newRec) => {
+    setRecommendedData(newRec);
+    try {
+      localStorage.setItem('sming_recommended_version', DATASET_VERSION);
+      localStorage.setItem('sming_recommended', JSON.stringify(newRec));
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  // Reset to default bundled dataset (음총팀 추천곡 우선 복구)
   const handleResetToDefault = () => {
     try {
       localStorage.removeItem('sming_songs');
       localStorage.removeItem('sming_artists');
+      localStorage.removeItem('sming_recommended');
       localStorage.removeItem('sming_selected_artists');
       localStorage.removeItem('sming_editor_selected_artist');
       localStorage.removeItem('sming_catalog_selected_artist');
     } catch (e) {}
     setAllSongs(initialSongsData);
     setArtists(initialArtistsData);
-    const groupArtist = initialArtistsData.find(a => a.category === 'group' || a.id === 'group');
-    const defaultGroup = groupArtist ? [groupArtist.id] : ['group'];
+    setRecommendedData(initialRecommendedData);
+    const defaultGroup = initialRecommendedData?.selectedArtists || ['group'];
     setSelectedArtists(defaultGroup);
     setFocusSongId(null);
-    setPlaylist(generateStreamingList(initialSongsData, {
-      targetSeconds: 3600,
-      mode: 'title_focus',
-      selectedArtistTypes: defaultGroup
-    }));
+    if (initialRecommendedData?.songs && initialRecommendedData.songs.length > 0) {
+      setPlaylist(initialRecommendedData.songs.map(s => ({
+        ...s,
+        uniqueKey: `${s.id}-${Math.random().toString(36).substr(2, 9)}`
+      })));
+    } else {
+      setPlaylist(generateStreamingList(initialSongsData, {
+        targetSeconds: 3600,
+        mode: 'title_focus',
+        selectedArtistTypes: defaultGroup
+      }));
+    }
+  };
+
+  // Load official recommended playlist on demand
+  const handleLoadRecommended = () => {
+    if (recommendedData && Array.isArray(recommendedData.songs) && recommendedData.songs.length > 0) {
+      const freshSongs = recommendedData.songs.map(s => ({
+        ...s,
+        uniqueKey: `${s.id}-${Math.random().toString(36).substr(2, 9)}`
+      }));
+      setPlaylist(freshSongs);
+      if (recommendedData.selectedArtists && recommendedData.selectedArtists.length > 0) {
+        setSelectedArtists(recommendedData.selectedArtists);
+      }
+      if (recommendedData.youtubeUrl) {
+        setYoutubeUrl(recommendedData.youtubeUrl);
+      }
+      showToast('🌲 음총팀 공식 추천 1시간 스밍리스트를 불러왔습니다! ⭐');
+    } else {
+      showToast('음총팀 추천 리스트 데이터가 없습니다.');
+    }
   };
 
   // Initialize playlist on mount or from URL params (?share= or ?songs=)
@@ -191,7 +231,23 @@ export default function App() {
       }
     }
 
-    // 3. Default initial generation based on selectedArtists (group by default or LocalStorage)
+    // 3. Default on first visit: Load Official Recommended Playlist!
+    if (recommendedData && Array.isArray(recommendedData.songs) && recommendedData.songs.length > 0) {
+      const recSongs = recommendedData.songs.map(s => ({
+        ...s,
+        uniqueKey: `${s.id}-${Math.random().toString(36).substr(2, 9)}`
+      }));
+      setPlaylist(recSongs);
+      if (recommendedData.selectedArtists) {
+        setSelectedArtists(recommendedData.selectedArtists);
+      }
+      if (recommendedData.youtubeUrl) {
+        setYoutubeUrl(recommendedData.youtubeUrl);
+      }
+      return;
+    }
+
+    // Fallback: Automatic generation
     const initialList = generateStreamingList(allSongs, {
       targetSeconds: 3600,
       mode: 'title_focus',
@@ -316,6 +372,8 @@ export default function App() {
             onUpdateSongs={handleUpdateSongs}
             artists={artists}
             onUpdateArtists={handleUpdateArtists}
+            recommendedData={recommendedData}
+            onSaveRecommended={handleUpdateRecommended}
             onResetToDefault={handleResetToDefault}
             onShowToast={showToast}
           />
@@ -381,6 +439,7 @@ export default function App() {
                   onGenerate={handleGenerate}
                   onOpenCatalog={() => setIsCatalogOpen(true)}
                   onReset={handleReset}
+                  onLoadRecommended={handleLoadRecommended}
                   playlistLength={playlist.length}
                 />
               </div>

@@ -33,6 +33,7 @@ import {
 import { formatSecondsToTime, formatDate } from '../utils/formatters';
 import SongEditorModal from './SongEditorModal';
 import ArtistEditorModal from './ArtistEditorModal';
+import RecommendedEditorView from './RecommendedEditorView';
 import { syncArtistTracks } from '../utils/platformSync';
 
 export default function DataEditorView({
@@ -40,10 +41,12 @@ export default function DataEditorView({
   onUpdateSongs,
   artists,
   onUpdateArtists,
+  recommendedData,
+  onSaveRecommended,
   onResetToDefault,
   onShowToast
 }) {
-  const [activeTab, setActiveTab] = useState('artist_songs'); // 'artist_songs' | 'all_songs' | 'raw_json' | 'sync'
+  const [activeTab, setActiveTab] = useState('recommended'); // 'recommended' | 'artist_songs' | 'all_songs' | 'raw_json' | 'sync'
   
   // Selected artist in artist-centric view (Default: '완전체' 우선 선택, LocalStorage 기억)
   const [selectedArtistId, setSelectedArtistId] = useState(() => {
@@ -493,6 +496,18 @@ export default function DataEditorView({
       <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-lg">
         <div className="flex gap-1.5 overflow-x-auto">
           <button
+            onClick={() => setActiveTab('recommended')}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'recommended'
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+            }`}
+          >
+            <span className="text-sm">🌲</span>
+            <span>음총팀 추천 리스트 편집</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('artist_songs')}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'artist_songs'
@@ -589,6 +604,17 @@ export default function DataEditorView({
           <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-400 flex-shrink-0" />
           <span>{syncProgressText}</span>
         </div>
+      )}
+
+      {/* TAB 0: RECOMMENDED PLAYLIST EDITOR (OFFICIAL) */}
+      {activeTab === 'recommended' && (
+        <RecommendedEditorView
+          allSongs={songs}
+          artists={artists}
+          recommendedData={recommendedData}
+          onSaveRecommended={onSaveRecommended}
+          onShowToast={onShowToast}
+        />
       )}
 
       {/* TAB 1: ARTIST-CENTRIC SONG VIEW & EDITING */}

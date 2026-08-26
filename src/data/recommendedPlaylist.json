@@ -1,0 +1,281 @@
+{
+  "id": "official-recommended-1",
+  "title": "🌲 포레스텔라 음총팀 공식 1시간 스밍리스트",
+  "creator": "포레스텔라 음원총공팀",
+  "desc": "신곡 '창귀' 중심 1시간 권장 스밍리스트입니다. 중복곡이 순차 분할되어 있어 멜론, 지니, 벅스 등 전 플랫폼에서 바로 담아 들으실 수 있습니다.",
+  "youtubeUrl": "",
+  "selectedArtists": [
+    "group"
+  ],
+  "updatedAt": "2026-08-26",
+  "songs": [
+    {
+      "id": "auto-group-602793545",
+      "title": "창귀",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "창귀",
+      "releaseDate": "2026-08-25",
+      "isTitle": true,
+      "platformIds": {
+        "melon": "602793545",
+        "genie": "116376883",
+        "bugs": "133584374",
+        "vibe": "",
+        "flo": ""
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "duration": 208,
+      "userEdited": true,
+      "uniqueKey": "auto-group-602793545-7tciuy499"
+    },
+    {
+      "id": "fore-027",
+      "title": "My Eden",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "Evolution",
+      "releaseDate": "2018-03-14",
+      "duration": 227,
+      "isTitle": false,
+      "platformIds": {
+        "melon": "30949470",
+        "genie": "87826612",
+        "bugs": "5150346"
+      },
+      "tags": [
+        "regular1"
+      ],
+      "userEdited": false,
+      "uniqueKey": "fore-027-3usf0h0st"
+    },
+    {
+      "id": "auto-group-601812669",
+      "title": "In un'altra vita",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "duration": 371,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "601812669",
+        "genie": "114676430",
+        "bugs": "131827087"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-601812669-56pwlfp4m"
+    },
+    {
+      "id": "auto-group-601812670",
+      "title": "Still Here",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "duration": 277,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "601812670",
+        "genie": "114676431",
+        "bugs": "129306885"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-601812670-cq9qhs58u"
+    },
+    {
+      "id": "auto-group-602793545",
+      "title": "창귀",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "창귀",
+      "releaseDate": "2026-08-25",
+      "isTitle": true,
+      "platformIds": {
+        "melon": "602793545",
+        "genie": "116376883",
+        "bugs": "133584374",
+        "vibe": "",
+        "flo": ""
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "duration": 208,
+      "userEdited": true,
+      "uniqueKey": "auto-group-602793545-zkat5ikp9"
+    },
+    {
+      "id": "auto-group-601812671",
+      "title": "Nella Notte",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "duration": 267,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "601812671",
+        "genie": "114676432",
+        "bugs": "130151972"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-601812671-rl10ewq3c"
+    },
+    {
+      "id": "auto-group-601812672",
+      "title": "Etude",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "isTitle": true,
+      "platformIds": {
+        "melon": "601812672",
+        "genie": "114676433",
+        "bugs": "130659988",
+        "vibe": "",
+        "flo": ""
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "duration": 277,
+      "userEdited": false,
+      "uniqueKey": "auto-group-601812672-95sbycpuv"
+    },
+    {
+      "id": "auto-group-601812673",
+      "title": "그리고 봄",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "duration": 321,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "601812673",
+        "genie": "114676434",
+        "bugs": "6278669"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-601812673-uamjnwadu"
+    },
+    {
+      "id": "auto-group-602793545",
+      "title": "창귀",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "창귀",
+      "releaseDate": "2026-08-25",
+      "isTitle": true,
+      "platformIds": {
+        "melon": "602793545",
+        "genie": "116376883",
+        "bugs": "133584374",
+        "vibe": "",
+        "flo": ""
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "duration": 208,
+      "userEdited": true,
+      "uniqueKey": "auto-group-602793545-kkcedw7wa"
+    },
+    {
+      "id": "auto-group-601812674",
+      "title": "꽃병",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "duration": 303,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "601812674",
+        "genie": "114676435",
+        "bugs": "131827275"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-601812674-gqdpcv2vw"
+    },
+    {
+      "id": "auto-group-30949476",
+      "title": "시간여행",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "Evolution",
+      "releaseDate": "2018-03-14",
+      "duration": 272,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "30949476",
+        "genie": "87826618",
+        "bugs": "5150352"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-30949476-w6d4ccp90"
+    },
+    {
+      "id": "auto-group-601812676",
+      "title": "Scarborough Fair",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "duration": 301,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "601812676",
+        "genie": "114676437",
+        "bugs": "131827313"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-601812676-npp4vhcqh"
+    },
+    {
+      "id": "auto-group-601812677",
+      "title": "Now We Are Free",
+      "artist": "포레스텔라",
+      "artistType": "group",
+      "album": "THE LEGACY",
+      "releaseDate": "2026-04-23",
+      "duration": 360,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "601812677",
+        "genie": "114676438",
+        "bugs": "131827329"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-group-601812677-yktg2zi0b"
+    }
+  ]
+}

@@ -85,6 +85,7 @@ export default function FilterSection({
   onGenerate,
   onOpenCatalog,
   onReset,
+  onLoadRecommended,
   playlistLength = 0
 }) {
   const [isFocusModalOpen, setIsFocusModalOpen] = useState(false);
@@ -318,9 +319,30 @@ export default function FilterSection({
       </div>
 
       {/* 4. ⚡ GENERATOR BUTTON (Below All Filter & Mode Options) */}
-      {onGenerate && (
-        <div className="pt-2 border-t border-slate-800/80">
-          <div className="flex items-center gap-2">
+      <div className="pt-2 border-t border-slate-800/80">
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          {onLoadRecommended && (
+            <button
+              onClick={() => {
+                onLoadRecommended();
+                try {
+                  confetti({
+                    particleCount: 50,
+                    spread: 70,
+                    origin: { y: 0.8 },
+                    colors: ['#10b981', '#f59e0b', '#3b82f6', '#ec4899']
+                  });
+                } catch (e) {}
+              }}
+              className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-400/20 to-emerald-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 text-amber-300 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 border border-amber-500/50 shadow-md shadow-amber-950/40 cursor-pointer transition-all active:scale-[0.99] whitespace-nowrap flex-shrink-0"
+              title="포레스텔라 음원총공팀 공식 1시간 추천 스밍리스트 불러오기"
+            >
+              <span className="text-sm">⭐</span>
+              <span>음총팀 추천</span>
+            </button>
+          )}
+
+          {onGenerate && (
             <button
               onClick={() => {
                 onGenerate();
@@ -339,31 +361,31 @@ export default function FilterSection({
               <span>1시간 스밍리스트 자동 생성</span>
               <Sparkles className="w-3.5 h-3.5 text-emerald-950" />
             </button>
+          )}
 
-            {onOpenCatalog && (
-              <button
-                onClick={onOpenCatalog}
-                className="py-3 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-1 border border-slate-700 transition-colors cursor-pointer flex-shrink-0"
-                title="곡 검색 및 직접 추가"
-              >
-                <Plus className="w-4 h-4 text-emerald-400" />
-                <span className="hidden sm:inline">직접 추가</span>
-              </button>
-            )}
+          {onOpenCatalog && (
+            <button
+              onClick={onOpenCatalog}
+              className="py-3 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-1 border border-slate-700 transition-colors cursor-pointer flex-shrink-0"
+              title="곡 검색 및 직접 추가"
+            >
+              <Plus className="w-4 h-4 text-emerald-400" />
+              <span className="hidden sm:inline">직접 추가</span>
+            </button>
+          )}
 
-            {onReset && (
-              <button
-                onClick={onReset}
-                disabled={playlistLength === 0}
-                className="py-3 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-rose-400 border border-slate-800 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
-                title="재생목록 초기화"
-              >
-                <RotateCcw className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+          {onReset && (
+            <button
+              onClick={onReset}
+              disabled={playlistLength === 0}
+              className="py-3 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-rose-400 border border-slate-800 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
+              title="재생목록 초기화"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      )}
+      </div>
 
 
       {/* Focus Song Search Modal */}

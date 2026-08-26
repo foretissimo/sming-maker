@@ -61,6 +61,28 @@ function filePersistencePlugin() {
           return
         }
 
+        if (req.url === '/api/save-recommended' && req.method === 'POST') {
+          let body = ''
+          req.on('data', chunk => { body += chunk })
+          req.on('end', () => {
+            try {
+              const data = JSON.parse(body)
+              const filePath = path.resolve(__dirname, 'src/data/recommendedPlaylist.json')
+              fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8')
+              res.writeHead(200, { 'Content-Type': 'application/json' })
+              res.end(JSON.stringify({ 
+                success: true, 
+                count: data.songs ? data.songs.length : 0, 
+                message: `음총팀 추천 리스트가 src/data/recommendedPlaylist.json에 직접 반영되었습니다!` 
+              }))
+            } catch (err) {
+              res.writeHead(500, { 'Content-Type': 'application/json' })
+              res.end(JSON.stringify({ success: false, error: err.message }))
+            }
+          })
+          return
+        }
+
         next()
       })
     }
