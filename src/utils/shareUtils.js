@@ -7,6 +7,9 @@
 /**
  * Pure UTF-8 safe Base64URL encoder for browser & node
  */
+/**
+ * Pure UTF-8 safe Base64URL encoder for browser & node
+ */
 export function utf8ToBase64Url(str) {
   const bytes = new TextEncoder().encode(str);
   let binary = '';
@@ -34,49 +37,57 @@ export function base64UrlToUtf8(str) {
 }
 
 /**
- * Encode a full playlist package into a URL-safe sharing token
+ * Encode a playlist package into an ultra-compact URL-safe sharing token (v2)
  *
  * @param {Object} data
  * @param {string} data.title - Playlist title
  * @param {string} data.creator - Creator name / fanbase team
  * @param {string} data.desc - Description / instructions
+ * @param {string} data.youtubeUrl - YouTube link
  * @param {Array} data.playlist - Array of song objects
  */
 export function encodeShareablePlaylist({ title = '', creator = '', desc = '', youtubeUrl = '', playlist = [] }) {
-  // If songs already have IDs, store compact representation
+  // Ultra-compact song representation
   const compactSongs = playlist.map(s => {
-    // If it is a standard library song with an ID, we only need basic fields
+    // Standard library songs only need their ID string
+    if (s.id && !s.id.startsWith('custom-')) {
+      return s.id;
+    }
+    // Custom non-library songs
     return {
-      id: s.id,
-      title: s.title,
-      artist: s.artist,
-      artistType: s.artistType,
-      album: s.album,
-      duration: s.duration,
-      releaseDate: s.releaseDate,
-      isTitle: s.isTitle,
-      platformIds: s.platformIds
+      t: s.title,
+      a: s.artist,
+      d: s.duration,
+      m: s.platformIds?.melon || '',
+      g: s.platformIds?.genie || '',
+      b: s.platformIds?.bugs || '',
+      isTitle: s.isTitle ? 1 : 0
     };
   });
 
+  const now = new Date();
+  const createdStr = now.toISOString().split('T')[0];
+
   const payload = {
-    v: 1, // version
+    v: 2, // ultra-compact v2 format
     t: title || '포레스텔라 1시간 스밍리스트',
     c: creator || '숲별',
     d: desc || '',
     y: youtubeUrl || '',
     s: compactSongs,
-    created: new Date().toISOString().split('T')[0]
+    created: createdStr
   };
 
   return utf8ToBase64Url(JSON.stringify(payload));
 }
 
 /**
- * Decode a sharing token from URL into playlist and metadata
+ * Decode a sharing token from URL into playlist and metadata with expiration check
+ * - Recommended retention: 6 months (180 days)
+ * - Maximum hard retention: 1 year (365 days)
  *
  * @param {string} token - Base64URL encoded string
- * @param {Array} allKnownSongs - Optional master song catalog to supplement metadata
+ * @param {Array} allKnownSongs - Master song catalog to supplement metadata
  */
 export function decodeShareablePlaylist(token, allKnownSongs = []) {
   try {
@@ -86,24 +97,76 @@ export function decodeShareablePlaylist(token, allKnownSongs = []) {
     let restoredPlaylist = [];
 
     if (Array.isArray(payload.s)) {
-      restoredPlaylist = payload.s.map((compact, idx) => {
-        // Find matching master song if exists to enrich missing fields
-        const master = allKnownSongs.find(s => s.id === compact.id);
+      restoredPlaylist = payload.s.map((item, idx) => {
+        // v2 string ID representation
+        if (typeof item === 'string') {
+          const master = allKnownSongs.find(s => s.id === item);
+          if (master) {
+            return {
+              ...master,
+              uniqueKey: `${master.id}-${idx}-${Math.random().toString(36).substr(2, 6)}`
+            };
+          }
+          return {
+            id: item,
+            title: '포레스텔라 곡',
+            artist: '포레스텔라',
+            artistType: 'group',
+            album: '',
+            duration: 225,
+            releaseDate: '',
+            isTitle: false,
+            platformIds: { melon: '', genie: '', bugs: '' },
+            uniqueKey: `${item}-${idx}-${Math.random().toString(36).substr(2, 6)}`
+          };
+        }
+
+        // v2 custom object representation: { t, a, d, m, g, b, isTitle }
+        if (item.t) {
+          return {
+            id: `custom-${idx}`,
+            title: item.t,
+            artist: item.a || '포레스텔라',
+            artistType: 'group',
+            album: '',
+            duration: item.d || 225,
+            releaseDate: '',
+            isTitle: !!item.isTitle,
+            platformIds: {
+              melon: item.m || '',
+              genie: item.g || '',
+              bugs: item.b || ''
+            },
+            uniqueKey: `custom-${idx}-${Math.random().toString(36).substr(2, 6)}`
+          };
+        }
+
+        // v1 legacy compact object representation
+        const master = allKnownSongs.find(s => s.id === item.id);
         return {
-          id: compact.id || `custom-${idx}`,
-          title: compact.title || master?.title || '무제',
-          artist: compact.artist || master?.artist || '포레스텔라',
-          artistType: compact.artistType || master?.artistType || 'group',
-          album: compact.album || master?.album || '',
-          duration: compact.duration || master?.duration || 225,
-          releaseDate: compact.releaseDate || master?.releaseDate || '',
-          isTitle: compact.isTitle || master?.isTitle || false,
-          platformIds: compact.platformIds || master?.platformIds || { melon: '', genie: '', bugs: '' },
-          tags: compact.tags || master?.tags || [],
-          uniqueKey: `${compact.id || 'song'}-${idx}-${Math.random().toString(36).substr(2, 6)}`
+          id: item.id || `custom-${idx}`,
+          title: item.title || master?.title || '무제',
+          artist: item.artist || master?.artist || '포레스텔라',
+          artistType: item.artistType || master?.artistType || 'group',
+          album: item.album || master?.album || '',
+          duration: item.duration || master?.duration || 225,
+          releaseDate: item.releaseDate || master?.releaseDate || '',
+          isTitle: item.isTitle || master?.isTitle || false,
+          platformIds: item.platformIds || master?.platformIds || { melon: '', genie: '', bugs: '' },
+          tags: item.tags || master?.tags || [],
+          uniqueKey: `${item.id || 'song'}-${idx}-${Math.random().toString(36).substr(2, 6)}`
         };
       });
     }
+
+    // Expiration calculations
+    const createdDate = payload.created ? new Date(payload.created) : new Date();
+    const now = new Date();
+    const diffMs = now.getTime() - createdDate.getTime();
+    const diffDays = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+
+    const isExpired = diffDays > 365; // Hard cutoff: 1 year (365 days)
+    const isOld = diffDays > 180 && !isExpired; // Recommendation warning: 6 months (180 days)
 
     return {
       title: payload.t || '공유된 스밍리스트',
@@ -111,6 +174,9 @@ export function decodeShareablePlaylist(token, allKnownSongs = []) {
       desc: payload.d || '',
       youtubeUrl: payload.y || '',
       created: payload.created || '',
+      daysElapsed: diffDays,
+      isExpired,
+      isOld,
       playlist: restoredPlaylist
     };
   } catch (err) {
@@ -120,13 +186,39 @@ export function decodeShareablePlaylist(token, allKnownSongs = []) {
 }
 
 /**
- * Generate full share URL
+ * Generate full compact share URL
  */
 export function generateShareUrl({ title, creator, desc, youtubeUrl = '', playlist }) {
   const token = encodeShareablePlaylist({ title, creator, desc, youtubeUrl, playlist });
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
-  return `${origin}${pathname}?share=${token}`;
+  return `${origin}${pathname}?s=${token}`;
+}
+
+/**
+ * Shorten URL via public TinyURL API with timeout
+ */
+export async function createShortUrl(longUrl) {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+    const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`;
+    const res = await fetch(apiUrl, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const shortUrl = await res.text();
+      if (shortUrl && shortUrl.startsWith('http')) {
+        return shortUrl.trim();
+      }
+    }
+  } catch (err) {
+    console.warn('TinyURL shortener failed or timed out, fallback to native compact URL:', err);
+  }
+  return longUrl;
 }
 
 /**

@@ -11,7 +11,7 @@ import ReadOnlyPlaylistView from './components/ReadOnlyPlaylistView';
 import PlatformActions from './components/PlatformActions';
 import SongCatalogModal from './components/SongCatalogModal';
 import StreamingGuideModal from './components/StreamingGuideModal';
-import CreatorStudioModal from './components/CreatorStudioModal';
+import ShareModal from './components/ShareModal';
 import DataEditorView from './components/DataEditorView';
 import AdminLoginModal from './components/AdminLoginModal';
 import { generateStreamingList } from './utils/generator';
@@ -30,6 +30,7 @@ export default function App() {
   // Sound Team Admin Mode state
   const [isAdmin, setIsAdmin] = useState(() => isAdminLoggedIn());
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const handleAdminLogout = () => {
     clearAdminSession();
@@ -208,13 +209,13 @@ export default function App() {
     }
   };
 
-  // Initialize playlist on mount or from URL params (?share= or ?songs=)
+  // Initialize playlist on mount or from URL params (?s=, ?share=, or ?songs=)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const shareToken = params.get('share');
+    const shareToken = params.get('s') || params.get('share');
     const songIdsParam = params.get('songs');
 
-    // 1. Check for Base64 encoded share token (?share=...)
+    // 1. Check for Base64 encoded share token (?s=... or ?share=...)
     if (shareToken) {
       const decoded = decodeShareablePlaylist(shareToken, allSongs);
       if (decoded && decoded.playlist.length > 0) {
@@ -333,17 +334,7 @@ export default function App() {
       showToast('공유할 곡이 없습니다.');
       return;
     }
-    const shareUrl = generateShareUrl({
-      title: '🌲 포레스텔라 1시간 스밍리스트',
-      creator: '숲별',
-      desc: '매시 정각 재생 시작 권장 💚',
-      playlist
-    });
-    
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareUrl);
-      showToast('스밍리스트 Read-Only 공유 링크가 복사되었습니다! 🔗');
-    }
+    setIsShareModalOpen(true);
   };
 
   return (
@@ -360,7 +351,6 @@ export default function App() {
         activeView={activeView}
         onChangeView={setActiveView}
         onOpenGuide={() => setIsGuideOpen(true)}
-        onOpenCreatorStudio={() => setIsCreatorStudioOpen(true)}
         onShare={handleShare}
         showEditor={showEditor}
         isAdminLoggedIn={isAdmin}
@@ -377,6 +367,10 @@ export default function App() {
             creator={sharedData.creator}
             desc={sharedData.desc}
             youtubeUrl={sharedData.youtubeUrl || youtubeUrl}
+            created={sharedData.created}
+            daysElapsed={sharedData.daysElapsed}
+            isExpired={sharedData.isExpired}
+            isOld={sharedData.isOld}
             playlist={playlist}
             artists={artists}
             onGoToGenerator={() => setActiveView('generator')}
@@ -412,10 +406,10 @@ export default function App() {
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
                 <button
-                  onClick={() => setIsCreatorStudioOpen(true)}
+                  onClick={() => setIsShareModalOpen(true)}
                   className="text-xs text-emerald-300 hover:text-emerald-200 font-bold underline cursor-pointer"
                 >
-                  👑 리스트 발행/보관함 &rarr;
+                  🔗 1회성 리스트 공유 &rarr;
                 </button>
                 {(showEditor || isAdmin) && (
                   <>
@@ -595,12 +589,11 @@ export default function App() {
         onClose={() => setIsGuideOpen(false)}
       />
 
-      <CreatorStudioModal
-        isOpen={isCreatorStudioOpen}
-        onClose={() => setIsCreatorStudioOpen(false)}
-        currentPlaylist={playlist}
-        allSongs={allSongs}
-        onLoadPlaylist={handleLoadPlaylistFromStudio}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        playlist={playlist}
+        youtubeUrl={youtubeUrl}
         onShowToast={showToast}
       />
 

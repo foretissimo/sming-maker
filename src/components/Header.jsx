@@ -80,7 +80,7 @@ export default function Header({
           )}
         </div>
 
-        {/* Right: Actions & Creator Studio & Admin Mode */}
+        {/* Right: Actions & Admin Mode & 1-Click Share */}
         <div className="flex items-center gap-1.5">
           {/* Admin Mode Badge or Login Button */}
           {isAdminLoggedIn ? (
@@ -108,37 +108,25 @@ export default function Header({
             </button>
           )}
 
+          {/* 1-Click Share Button */}
           <button
-            onClick={onOpenCreatorStudio}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 border border-emerald-500/40 text-xs text-emerald-300 font-bold transition-all cursor-pointer shadow-sm shadow-emerald-950/50"
-            title="크리에이터 스튜디오 & 스밍리스트 발행"
+            onClick={onShare}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-black text-xs transition-all cursor-pointer shadow-md shadow-emerald-950/60"
+            title="1회성 스밍리스트 단축 공유 링크 생성"
           >
-            <Key className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="hidden sm:inline">
-              {creator ? `👑 ${creator.name}` : '리스트 발행'}
-            </span>
+            <Share2 className="w-3.5 h-3.5 text-slate-950" />
+            <span>리스트 공유</span>
           </button>
 
           {activeView === 'generator' && (
-            <>
-              <button
-                onClick={onOpenGuide}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-emerald-300 font-medium transition-all cursor-pointer shadow-sm hover:border-emerald-500/30"
-                title="스밍 가이드 보기"
-              >
-                <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="hidden md:inline">가이드</span>
-              </button>
-
-              <button
-                onClick={onShare}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/40 text-xs text-emerald-200 font-medium transition-all cursor-pointer shadow-sm"
-                title="리스트 링크 공유"
-              >
-                <Share2 className="w-3.5 h-3.5 text-emerald-300" />
-                <span className="hidden md:inline">공유</span>
-              </button>
-            </>
+            <button
+              onClick={onOpenGuide}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-emerald-300 font-medium transition-all cursor-pointer shadow-sm hover:border-emerald-500/30"
+              title="스밍 가이드 보기"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden md:inline">가이드</span>
+            </button>
           )}
 
           <a

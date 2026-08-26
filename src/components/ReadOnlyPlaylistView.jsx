@@ -37,6 +37,10 @@ export default function ReadOnlyPlaylistView({
   playlist = [],
   artists = [],
   youtubeUrl: initialYoutubeUrl = '',
+  created = '',
+  daysElapsed = 0,
+  isExpired = false,
+  isOld = false,
   onGoToGenerator,
   onShowToast
 }) {
@@ -242,6 +246,44 @@ export default function ReadOnlyPlaylistView({
           </button>
         </div>
       </div>
+
+      {/* Expiration Hard Block Warning */}
+      {isExpired && (
+        <div className="p-4 rounded-2xl bg-rose-950/60 border-2 border-rose-500/60 text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl flex-shrink-0">⚠️</span>
+            <div>
+              <h3 className="text-sm font-bold text-rose-300">
+                공유 리스트 유효기간 만료 (최대 1년 경과)
+              </h3>
+              <p className="text-xs text-rose-200/90 mt-0.5">
+                이 공유 리스트는 보관 유효기간(최대 1년)이 만료되었습니다. 최신 곡 데이터로 새로운 1시간 스밍리스트를 생성해주세요.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onGoToGenerator}
+            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex-shrink-0 cursor-pointer shadow-md transition-all whitespace-nowrap"
+          >
+            새 리스트 생성하기 &rarr;
+          </button>
+        </div>
+      )}
+
+      {/* 6-Month Retention Caution Banner */}
+      {isOld && !isExpired && (
+        <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs flex items-center justify-between gap-3 shadow-md">
+          <div className="flex items-center gap-2.5">
+            <Clock className="w-4 h-4 text-amber-400 flex-shrink-0" />
+            <span>
+              이 공유 리스트는 생성된 지 <strong className="text-amber-300">6개월이 경과</strong>했습니다. (생성일: {created || '이전 생성'})
+            </span>
+          </div>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 whitespace-nowrap font-mono">
+            최대 1년 후 만료
+          </span>
+        </div>
+      )}
 
       {/* 2. ONE-CLICK PLATFORM ACTION CARDS (3 SECTIONS ALL AT ONCE) */}
       <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-6 shadow-2xl space-y-6">
