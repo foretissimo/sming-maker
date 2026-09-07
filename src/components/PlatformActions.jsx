@@ -6,20 +6,17 @@ import {
   ExternalLink, 
   Smartphone, 
   Monitor, 
-  Sparkles,
+  Sparkles, 
   Layers, 
-  Link2,
-  Trash2,
-  Apple,
-  Radio
+  Link2, 
+  Apple, 
+  Radio 
 } from 'lucide-react';
 import { 
   generatePlatformLinks, 
-  generateTextPlaylist,
-  generateAllUrlsText,
-  generateProxyUrlsText,
-  generateOriginalUrlsText,
-  toProxyUrl
+  generateTextPlaylist, 
+  generateProxyUrlsText, 
+  generateOriginalUrlsText 
 } from '../utils/platformLinks';
 import { formatTotalDuration } from '../utils/formatters';
 
@@ -33,41 +30,16 @@ function YoutubeIcon({ className = "w-4 h-4" }) {
 
 export default function PlatformActions({ 
   playlist, 
-  youtubeUrl: initialYoutubeUrl = '', 
-  onChangeYoutubeUrl,
+  youtubeUrl = '', 
   onShowToast 
 }) {
   const [copiedType, setCopiedType] = useState(null);
   const [clickedMelonParts, setClickedMelonParts] = useState({});
 
-  // YouTube input state (persisted to LocalStorage if onChangeYoutubeUrl not passed)
-  const [youtubeInput, setYoutubeInput] = useState(() => {
-    try {
-      return initialYoutubeUrl || localStorage.getItem('sming_youtube_url') || '';
-    } catch (e) {
-      return '';
-    }
-  });
-
-  // Sync when initialYoutubeUrl changes from parent (e.g. loading recommended list or shared list)
-  React.useEffect(() => {
-    if (initialYoutubeUrl !== undefined) {
-      setYoutubeInput(initialYoutubeUrl);
-    }
-  }, [initialYoutubeUrl]);
-
-  const links = generatePlatformLinks(playlist, { youtubeUrl: youtubeInput.trim() });
+  const youtubeTrimmed = (youtubeUrl || '').trim();
+  const links = generatePlatformLinks(playlist, { youtubeUrl: youtubeTrimmed });
   const totalSeconds = playlist.reduce((sum, s) => sum + (s.duration || 0), 0);
   const totalDurationFormatted = formatTotalDuration(totalSeconds);
-
-  // Sync YouTube URL
-  const handleSaveYoutube = (val) => {
-    setYoutubeInput(val);
-    try {
-      localStorage.setItem('sming_youtube_url', val);
-    } catch (e) {}
-    if (onChangeYoutubeUrl) onChangeYoutubeUrl(val);
-  };
 
   const handleCopy = (text, type, successMsg) => {
     if (!navigator.clipboard) return;
@@ -218,16 +190,29 @@ export default function PlatformActions({
           </div>
         </div>
 
-        <a
-          href="https://into.melon.com/bridge/kakaotalk/musicwave/VvseWVazR3I9q3Kuzn_eFA?type=channel&t=1751896537993"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2.5 rounded-xl bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-950/50 cursor-pointer flex-shrink-0 whitespace-nowrap active:scale-[0.98]"
-        >
-          <Radio className="w-3.5 h-3.5" />
-          <span>뮤직웨이브 입장하기</span>
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
+        <div className="flex items-center gap-2 flex-shrink-0 flex-wrap sm:flex-nowrap">
+          <a
+            href="http://forestellastream.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-emerald-300 hover:text-emerald-200 border border-emerald-500/30 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer whitespace-nowrap active:scale-[0.98]"
+            title="포레스텔라 음원총공팀 공식 홈페이지"
+          >
+            <span>🌲 음총팀 홈</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+
+          <a
+            href="https://into.melon.com/bridge/kakaotalk/musicwave/VvseWVazR3I9q3Kuzn_eFA?type=channel&t=1751896537993"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2.5 rounded-xl bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-950/50 cursor-pointer whitespace-nowrap active:scale-[0.98]"
+          >
+            <Radio className="w-3.5 h-3.5" />
+            <span>뮤직웨이브 입장하기</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
       </div>
 
       {/* ========================================================================= */}
@@ -486,52 +471,6 @@ export default function PlatformActions({
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 4. YOUTUBE URL INPUT FORM AT BOTTOM */}
-      {/* ========================================================================= */}
-      <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800/90 space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-            <YoutubeIcon className="w-4 h-4 text-red-400" />
-            <span>유튜브 (YouTube / YouTube Music) 링크 등록</span>
-          </label>
-
-          {youtubeInput && (
-            <button
-              onClick={() => handleSaveYoutube('')}
-              className="text-[11px] text-slate-500 hover:text-rose-400 flex items-center gap-0.5 cursor-pointer"
-            >
-              <Trash2 className="w-3 h-3" />
-              <span>링크 지우기</span>
-            </button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Link2 className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="url"
-              value={youtubeInput}
-              onChange={(e) => handleSaveYoutube(e.target.value)}
-              placeholder="유튜브 MV 또는 재생목록 링크를 입력하면 PC 섹션에 바로가기 버튼이 나타납니다 (예: https://youtu.be/...)"
-              className="w-full pl-8 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-red-500 transition-colors font-mono"
-            />
-          </div>
-
-          {youtubeInput && (
-            <button
-              onClick={() => handleOpenLink(youtubeInput, '유튜브')}
-              className="px-3 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors flex-shrink-0"
-              title="입력한 링크 테스트 열기"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>열기</span>
-            </button>
-          )}
-        </div>
-      </div>
-
       {/* Copy Text Playlist & All URLs Footer Actions */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/60 text-xs">
         <span className="text-slate-400 font-mono">
@@ -548,7 +487,7 @@ export default function PlatformActions({
           </button>
 
           <button
-            onClick={() => handleCopy(generateProxyUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeInput.trim() }), 'proxy_urls', '🌐 SNS/카페 공유용 웹 프록시(HTTPS) 전체 URL 모음이 복사되었습니다! 🔗')}
+            onClick={() => handleCopy(generateProxyUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeTrimmed }), 'proxy_urls', '🌐 SNS/카페 공유용 웹 프록시(HTTPS) 전체 URL 모음이 복사되었습니다! 🔗')}
             className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-emerald-500/30 shadow-sm"
             title="트위터, 다음/네이버 카페, 카카오톡 어디서나 클릭 시 앱이 즉시 실행되는 HTTPS 링크 모음"
           >
@@ -557,7 +496,7 @@ export default function PlatformActions({
           </button>
 
           <button
-            onClick={() => handleCopy(generateOriginalUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeInput.trim() }), 'orig_urls', '📱 앱 직접 실행용 원본 스키마 URL 모음이 복사되었습니다! 📱')}
+            onClick={() => handleCopy(generateOriginalUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeTrimmed }), 'orig_urls', '📱 앱 직접 실행용 원본 스키마 URL 모음이 복사되었습니다! 📱')}
             className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700 shadow-sm"
             title="기기 단축어 또는 앱 직접 실행용 원본 스키마 URI 링크 모음"
           >

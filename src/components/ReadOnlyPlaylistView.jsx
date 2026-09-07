@@ -342,16 +342,29 @@ export default function ReadOnlyPlaylistView({
             </div>
           </div>
 
-          <a
-            href="https://into.melon.com/bridge/kakaotalk/musicwave/VvseWVazR3I9q3Kuzn_eFA?type=channel&t=1751896537993"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2.5 rounded-xl bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-950/50 cursor-pointer flex-shrink-0 whitespace-nowrap active:scale-[0.98]"
-          >
-            <Radio className="w-3.5 h-3.5" />
-            <span>뮤직웨이브 입장하기</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap sm:flex-nowrap">
+            <a
+              href="http://forestellastream.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-emerald-300 hover:text-emerald-200 border border-emerald-500/30 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer whitespace-nowrap active:scale-[0.98]"
+              title="포레스텔라 음원총공팀 공식 홈페이지"
+            >
+              <span>🌲 음총팀 홈</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            <a
+              href="https://into.melon.com/bridge/kakaotalk/musicwave/VvseWVazR3I9q3Kuzn_eFA?type=channel&t=1751896537993"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2.5 rounded-xl bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-950/50 cursor-pointer whitespace-nowrap active:scale-[0.98]"
+            >
+              <Radio className="w-3.5 h-3.5" />
+              <span>뮤직웨이브 입장하기</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
 
         {/* ---------------- PC SECTION ---------------- */}

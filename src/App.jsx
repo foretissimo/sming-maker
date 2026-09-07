@@ -7,6 +7,7 @@ import Header from './components/Header';
 import FilterSection from './components/FilterSection';
 import GeneratorControl from './components/GeneratorControl';
 import PlaylistView from './components/PlaylistView';
+import YoutubeInputSection from './components/YoutubeInputSection';
 import ReadOnlyPlaylistView from './components/ReadOnlyPlaylistView';
 import PlatformActions from './components/PlatformActions';
 import SongCatalogModal from './components/SongCatalogModal';
@@ -568,6 +569,13 @@ export default function App() {
                   onLoadRecommended={handleLoadRecommended}
                   targetDurationSeconds={targetDurationMinutes * 60}
                   artists={artists}
+                />
+
+                {/* YouTube Link Registration Card */}
+                <YoutubeInputSection
+                  youtubeUrl={youtubeUrl}
+                  onChangeYoutubeUrl={handleUpdateYoutubeUrl}
+                  onShowToast={showToast}
                 />
               </div>
             </div>
