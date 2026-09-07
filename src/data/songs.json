@@ -1,5 +1,24 @@
 [
   {
+    "id": "song-1788801513054",
+    "title": "새야 새야 파랑새야 (사본)",
+    "artist": "포레스텔라",
+    "artistType": "group",
+    "album": "녹두꽃 OST Part.1",
+    "releaseDate": "2019-04-26",
+    "duration": 262,
+    "isTitle": false,
+    "userEdited": true,
+    "platformIds": {
+      "melon": "31764905",
+      "genie": "89210308",
+      "bugs": "31566813"
+    },
+    "tags": [
+      "auto-synced"
+    ]
+  },
+  {
     "id": "fore-001",
     "title": "White Night (백야)",
     "artist": "포레스텔라",
@@ -977,17 +996,19 @@
     "artistType": "group",
     "album": "THE LEGACY",
     "releaseDate": "2026-04-23",
-    "duration": 277,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "601812670",
       "genie": "114676431",
-      "bugs": "129306885"
+      "bugs": "131827183",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 277,
+    "userEdited": true
   },
   {
     "id": "auto-group-601812671",
@@ -996,17 +1017,19 @@
     "artistType": "group",
     "album": "THE LEGACY",
     "releaseDate": "2026-04-23",
-    "duration": 267,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "601812671",
       "genie": "114676432",
-      "bugs": "130151972"
+      "bugs": "131827209",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 267,
+    "userEdited": true
   },
   {
     "id": "auto-group-601812672",
@@ -1019,7 +1042,7 @@
     "platformIds": {
       "melon": "601812672",
       "genie": "114676433",
-      "bugs": "130659988",
+      "bugs": "131827232",
       "vibe": "",
       "flo": ""
     },
@@ -1027,7 +1050,7 @@
       "auto-synced"
     ],
     "duration": 277,
-    "userEdited": false
+    "userEdited": true
   },
   {
     "id": "auto-group-601812673",
@@ -1036,17 +1059,19 @@
     "artistType": "group",
     "album": "THE LEGACY",
     "releaseDate": "2026-04-23",
-    "duration": 321,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "601812673",
       "genie": "114676434",
-      "bugs": "6278669"
+      "bugs": "131827254",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 321,
+    "userEdited": true
   },
   {
     "id": "auto-group-601812674",
@@ -1131,17 +1156,19 @@
     "artistType": "group",
     "album": "THE LEGACY",
     "releaseDate": "2026-04-23",
-    "duration": 321,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "601812678",
       "genie": "114676439",
-      "bugs": "6221644"
+      "bugs": "131827345",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 321,
+    "userEdited": true
   },
   {
     "id": "auto-group-601812679",
@@ -1228,17 +1255,19 @@
     "artistType": "group",
     "album": "Nella Notte",
     "releaseDate": "2026-01-19",
-    "duration": 267,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "600931028",
       "genie": "113446278",
-      "bugs": "131827209"
+      "bugs": "130151972",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 267,
+    "userEdited": true
   },
   {
     "id": "auto-group-600656344",
@@ -1247,17 +1276,19 @@
     "artistType": "group",
     "album": "Still Here",
     "releaseDate": "2025-12-15",
-    "duration": 276,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "600656344",
       "genie": "112995732",
-      "bugs": "131827183"
+      "bugs": "129306885",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 276,
+    "userEdited": true
   },
   {
     "id": "auto-group-39273787",
@@ -1285,17 +1316,19 @@
     "artistType": "group",
     "album": "그리고 봄",
     "releaseDate": "2024-12-25",
-    "duration": 305,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "38390502",
       "genie": "108776870",
-      "bugs": "131827254"
+      "bugs": "6278669",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 305,
+    "userEdited": true
   },
   {
     "id": "auto-group-38147121",
@@ -1479,7 +1512,7 @@
     "platformIds": {
       "melon": "36892290",
       "genie": "103994875",
-      "bugs": "32966067",
+      "bugs": "32999156",
       "vibe": "",
       "flo": ""
     },
@@ -2275,17 +2308,19 @@
     "artistType": "group",
     "album": "Mystique",
     "releaseDate": "2019-05-22",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "31814751",
-      "genie": "",
-      "bugs": "31594802"
+      "genie": "88953596",
+      "bugs": "31594802",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 272,
+    "userEdited": true
   },
   {
     "id": "auto-group-31814754",
@@ -2332,17 +2367,19 @@
     "artistType": "group",
     "album": "녹두꽃 OST Part.1",
     "releaseDate": "2019-04-26",
-    "duration": 262,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "31764905",
-      "genie": "89210308",
-      "bugs": "31566813"
+      "genie": "88857213",
+      "bugs": "31566812",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 262,
+    "userEdited": true
   },
   {
     "id": "auto-group-31764906",
@@ -2351,17 +2388,19 @@
     "artistType": "group",
     "album": "녹두꽃 OST Part.1",
     "releaseDate": "2019-04-26",
-    "duration": 262,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "31764906",
       "genie": "88857214",
-      "bugs": ""
+      "bugs": "31566813",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 262,
+    "userEdited": true
   },
   {
     "id": "auto-group-31068548",
@@ -2427,17 +2466,19 @@
     "artistType": "group",
     "album": "Evolution",
     "releaseDate": "2018-03-14",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30949471",
-      "genie": "",
-      "bugs": "5150347"
+      "genie": "87826613",
+      "bugs": "5150347",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 265,
+    "userEdited": true
   },
   {
     "id": "auto-group-30949472",
@@ -2787,18 +2828,20 @@
     "artist": "조민규",
     "artistType": "jomingyu",
     "album": "내 귀에 띵곡 Part.12",
-    "releaseDate": "",
-    "duration": 259,
+    "releaseDate": "2024-02-03",
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "37174625",
       "genie": "105403608",
-      "bugs": "33089751"
+      "bugs": "33089751",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 259,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-34360562",
