@@ -4,9 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "vite --open --host",
+    "dev": "vite",
+    "dev:open": "vite --open",
     "pull": "git pull origin main",
     "sync": "git pull origin main",
-    "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
