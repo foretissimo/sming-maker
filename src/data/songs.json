@@ -27,19 +27,21 @@
     "artistType": "group",
     "album": "Unfinished",
     "releaseDate": "2023-11-08",
-    "duration": 321,
     "isTitle": true,
     "platformIds": {
       "melon": "36944762",
       "genie": "104244848",
-      "bugs": "33124567"
+      "bugs": "6221644",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "title",
       "mini2",
       "winter"
     ],
-    "userEdited": false
+    "duration": 321,
+    "userEdited": true
   },
   {
     "id": "fore-003",
@@ -91,19 +93,21 @@
     "artistType": "group",
     "album": "[The Bloom : UTOPIA] The Borders of Utopia",
     "releaseDate": "2022-12-22",
-    "duration": 312,
     "isTitle": true,
     "platformIds": {
       "melon": "35955149",
       "genie": "99603282",
-      "bugs": "32671928"
+      "bugs": "6185248",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "title",
       "single",
       "rock-opera"
     ],
-    "userEdited": false
+    "duration": 312,
+    "userEdited": true
   },
   {
     "id": "fore-006",
@@ -112,19 +116,21 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 265,
     "isTitle": true,
     "platformIds": {
       "melon": "35222075",
       "genie": "96886491",
-      "bugs": "32451920"
+      "bugs": "6163565",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "title",
       "mini1",
       "crossover"
     ],
-    "userEdited": false
+    "duration": 265,
+    "userEdited": true
   },
   {
     "id": "fore-007",
@@ -133,18 +139,20 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 316,
     "isTitle": false,
     "platformIds": {
       "melon": "35222076",
       "genie": "96886492",
-      "bugs": "32451921"
+      "bugs": "6163566",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "bside",
       "mini1"
     ],
-    "userEdited": false
+    "duration": 316,
+    "userEdited": true
   },
   {
     "id": "fore-008",
@@ -153,19 +161,21 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 210,
     "isTitle": false,
     "platformIds": {
       "melon": "35222077",
-      "genie": "98127393",
-      "bugs": "32451922"
+      "genie": "96886493",
+      "bugs": "6163567",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "bside",
       "mini1",
       "ballad"
     ],
-    "userEdited": false
+    "duration": 210,
+    "userEdited": true
   },
   {
     "id": "fore-009",
@@ -174,17 +184,20 @@
     "artistType": "group",
     "album": "The Beginning : World Tree",
     "releaseDate": "2022-05-30",
-    "duration": 230,
     "isTitle": false,
     "platformIds": {
-      "melon": "35073915",
-      "genie": "98127394",
-      "bugs": "32451923"
+      "melon": "35222078",
+      "genie": "96886494",
+      "bugs": "6163568",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "bside",
       "mini1"
-    ]
+    ],
+    "duration": 230,
+    "userEdited": true
   },
   {
     "id": "fore-010",
@@ -249,23 +262,25 @@
   },
   {
     "id": "fore-013",
-    "title": "눈물 속에 홀로 (Je Suis Malade)",
+    "title": "Je Suis Malade",
     "artist": "포레스텔라",
     "artistType": "group",
     "album": "팬텀싱어 올스타전 Episode.3",
     "releaseDate": "2021-02-10",
-    "duration": 185,
     "isTitle": false,
     "platformIds": {
       "melon": "33273523",
-      "genie": "94192836",
-      "bugs": "31948203"
+      "genie": "92266457",
+      "bugs": "32148756",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "regular3",
       "chanson"
     ],
-    "userEdited": false
+    "duration": 382,
+    "userEdited": true
   },
   {
     "id": "fore-014",
@@ -334,16 +349,19 @@
     "artistType": "group",
     "album": "The Forestella",
     "releaseDate": "2021-04-19",
-    "duration": 195,
     "isTitle": false,
     "platformIds": {
-      "melon": "33419289",
-      "genie": "94192840",
-      "bugs": "31948207"
+      "melon": "33421789",
+      "genie": "93042984",
+      "bugs": "32211285",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "regular3"
-    ]
+    ],
+    "duration": 197,
+    "userEdited": true
   },
   {
     "id": "fore-018",
@@ -555,7 +573,7 @@
     "platformIds": {
       "melon": "36800785",
       "genie": "100471844",
-      "bugs": "33019283",
+      "bugs": "32999156",
       "vibe": "",
       "flo": ""
     },
@@ -563,27 +581,8 @@
       "ost",
       "epic"
     ],
-    "duration": 215,
+    "duration": 250,
     "userEdited": true
-  },
-  {
-    "id": "fore-030",
-    "title": "바람의 계절 (바람과 구름과 비 OST)",
-    "artist": "포레스텔라",
-    "artistType": "group",
-    "album": "바람과 구름과 비 OST Part.3",
-    "releaseDate": "2020-06-14",
-    "duration": 141,
-    "isTitle": true,
-    "platformIds": {
-      "melon": "32671829",
-      "genie": "92182940",
-      "bugs": "31681920"
-    },
-    "tags": [
-      "ost",
-      "ballad"
-    ]
   },
   {
     "id": "cho-001",
@@ -607,45 +606,27 @@
     "userEdited": false
   },
   {
-    "id": "cho-002",
-    "title": "라 케 serenade",
-    "artist": "조민규",
-    "artistType": "jomingyu",
-    "album": "신세계 : NEW WAVE",
-    "releaseDate": "2020-02-16",
-    "duration": 163,
-    "isTitle": true,
-    "platformIds": {
-      "melon": "32378192",
-      "genie": "91283940",
-      "bugs": "31482910"
-    },
-    "tags": [
-      "solo",
-      "title",
-      "serenade"
-    ]
-  },
-  {
     "id": "cho-003",
-    "title": "바람 (Wish)",
+    "title": "바람",
     "artist": "조민규",
     "artistType": "jomingyu",
     "album": "바람",
     "releaseDate": "2021-04-06",
-    "duration": 234,
     "isTitle": false,
     "platformIds": {
       "melon": "33391059",
-      "genie": "96128491",
-      "bugs": "32182941"
+      "genie": "92884593",
+      "bugs": "32199256",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "solo",
       "parana",
       "emotional"
     ],
-    "userEdited": false
+    "duration": 168,
+    "userEdited": true
   },
   {
     "id": "cho-004",
@@ -773,23 +754,25 @@
   },
   {
     "id": "kang-004",
-    "title": "Prayer",
-    "artist": "강형호 (PITTA)",
+    "title": "Prayer in the Night",
+    "artist": "PITTA (강형호) 외 3인",
     "artistType": "kanghyungho",
     "album": "팬텀싱어2 Episode 6",
     "releaseDate": "2017-09-30",
-    "duration": 250,
     "isTitle": false,
     "platformIds": {
       "melon": "30659881",
-      "genie": "95819207",
-      "bugs": "32118195"
+      "genie": "87465297",
+      "bugs": "",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "solo",
       "pitta"
     ],
-    "userEdited": false
+    "duration": 254,
+    "userEdited": true
   },
   {
     "id": "kang-005",
@@ -820,19 +803,21 @@
     "artistType": "kanghyungho",
     "album": "CARPE DIEM",
     "releaseDate": "2023-03-08",
-    "duration": 252,
     "isTitle": true,
     "platformIds": {
       "melon": "36255707",
       "genie": "100761748",
-      "bugs": "32751829"
+      "bugs": "32794929",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "solo",
       "pitta",
       "single"
     ],
-    "userEdited": false
+    "duration": 252,
+    "userEdited": true
   },
   {
     "id": "kang-007",
@@ -862,12 +847,13 @@
     "artistType": "gowoorim",
     "album": "디 엠파이어: 법의 제국 OST Part.3",
     "releaseDate": "2022-10-16",
-    "duration": 201,
     "isTitle": true,
     "platformIds": {
       "melon": "35723911",
-      "genie": "99719284",
-      "bugs": "32571928"
+      "genie": "98619153",
+      "bugs": "6178889",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "solo",
@@ -875,7 +861,8 @@
       "basso",
       "tango"
     ],
-    "userEdited": false
+    "duration": 241,
+    "userEdited": true
   },
   {
     "id": "ko-002",
@@ -884,12 +871,13 @@
     "artistType": "gowoorim",
     "album": "나의 아저씨 OST Part.5",
     "releaseDate": "2018-04-19",
-    "duration": 112,
     "isTitle": true,
     "platformIds": {
       "melon": "31031208",
-      "genie": "88129384",
-      "bugs": "30918204"
+      "genie": "87927462",
+      "bugs": "31038819",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "solo",
@@ -897,7 +885,8 @@
       "basso",
       "deep"
     ],
-    "userEdited": false
+    "duration": 279,
+    "userEdited": true
   },
   {
     "id": "ko-003",
@@ -906,58 +895,20 @@
     "artistType": "gowoorim",
     "album": "동네앨범 단양 Part.1",
     "releaseDate": "2019-07-28",
-    "duration": 321,
     "isTitle": true,
     "platformIds": {
       "melon": "31438775",
-      "genie": "89819284",
-      "bugs": "31192840"
+      "genie": "88398288",
+      "bugs": "31324713",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "duet",
       "warm"
     ],
-    "userEdited": false
-  },
-  {
-    "id": "bae-001",
-    "title": "가슴으로",
-    "artist": "배두훈",
-    "artistType": "baedoohun",
-    "album": "가슴으로",
-    "releaseDate": "2009-11-12",
-    "duration": 230,
-    "isTitle": true,
-    "platformIds": {
-      "melon": "23918204",
-      "genie": "79182049",
-      "bugs": "21948201"
-    },
-    "tags": [
-      "solo",
-      "single",
-      "ballad"
-    ]
-  },
-  {
-    "id": "bae-002",
-    "title": "연후애",
-    "artist": "배두훈",
-    "artistType": "baedoohun",
-    "album": "연후애",
-    "releaseDate": "2010-08-05",
-    "duration": 218,
-    "isTitle": true,
-    "platformIds": {
-      "melon": "28192840",
-      "genie": "81928401",
-      "bugs": "24918204"
-    },
-    "tags": [
-      "solo",
-      "single",
-      "ballad"
-    ]
+    "duration": 240,
+    "userEdited": true
   },
   {
     "id": "bae-003",
