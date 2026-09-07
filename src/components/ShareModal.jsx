@@ -102,7 +102,9 @@ export default function ShareModal({
 
   const handleTwitterShare = () => {
     const shareLink = shortUrl || generatedUrl;
-    const tweetText = `[스밍 메이커] ${title} (${formattedTime})\n\n포레스텔라 원클릭 스트리밍 리스트를 확인해보세요! 🌲🎧\n`;
+    const cleanTitle = (title || '').trim() || '포레스텔라 1시간 스밍리스트';
+    const truncatedTitle = cleanTitle.length > 30 ? cleanTitle.slice(0, 30) : cleanTitle;
+    const tweetText = `${truncatedTitle} (${formattedTime})\n\n포레스텔라 원클릭 스트리밍 리스트를 확인해보세요! 🌲🎧\n\n#포레스밍메이커`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareLink)}`;
     window.open(twitterUrl, '_blank');
   };
@@ -257,7 +259,7 @@ export default function ShareModal({
                 onClick={handleTwitterShare}
                 className="px-3 py-1.5 rounded-lg bg-sky-950/80 hover:bg-sky-900/80 border border-sky-500/40 text-sky-300 font-bold text-[11px] flex items-center gap-1.5 cursor-pointer transition-all"
               >
-                <span>🐦 X(트위터) 공유</span>
+                <span>🐦 트위터 공유</span>
               </button>
 
               <button

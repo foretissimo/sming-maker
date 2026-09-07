@@ -161,7 +161,7 @@ export default function ProxyRedirectView({ targetUrl = '', onGoHome, onShowToas
         <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-left space-y-2 text-xs text-slate-300">
           <div className="flex items-center gap-1.5 font-bold text-amber-300">
             <Info className="w-4 h-4 text-amber-400 flex-shrink-0" />
-            <span>카카오톡 · X(트위터) · 인스타그램 인앱 브라우저 팁</span>
+            <span>카카오톡 · 트위터 · 인스타그램 인앱 브라우저 팁</span>
           </div>
           <ul className="list-disc list-inside space-y-1 text-[11px] text-slate-400 leading-relaxed">
             <li>일부 SNS 인앱 브라우저는 보안상 앱 자동 전환을 제한할 수 있습니다.</li>
