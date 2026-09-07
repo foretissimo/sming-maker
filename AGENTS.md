@@ -49,3 +49,12 @@ All platform deep links are managed in `src/utils/platformLinks.js`. Whenever mo
 - **플로 (iOS)**: `flomobile://play?trackId=${ids.join(',')}`
 - **바이브 (iOS)**: `vibe://listen?version=3&trackIds=${ids.join(',')}`
 
+---
+
+## 🌐 Official Channels & External Links (공식 채널 및 외부 연동 URL)
+- **멜론 뮤직웨이브 (Music Wave)**:
+  `https://into.melon.com/bridge/kakaotalk/musicwave/VvseWVazR3I9q3Kuzn_eFA?type=channel&t=1751896537993`
+- **포레스텔라 음원총공팀 공식 홈페이지**:
+  `https://www.forestellastream.com/`
+
+
