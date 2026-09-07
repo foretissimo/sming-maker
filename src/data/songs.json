@@ -551,18 +551,20 @@
     "artistType": "group",
     "album": "아라문의 검 OST Part 1",
     "releaseDate": "2023-09-16",
-    "duration": 215,
     "isTitle": true,
     "platformIds": {
       "melon": "36800785",
-      "genie": "10381923",
-      "bugs": "33019283"
+      "genie": "100471844",
+      "bugs": "33019283",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "ost",
       "epic"
     ],
-    "userEdited": false
+    "duration": 215,
+    "userEdited": true
   },
   {
     "id": "fore-030",
@@ -1522,17 +1524,19 @@
     "artistType": "group",
     "album": "아라문의 검 OST",
     "releaseDate": "2023-10-23",
-    "duration": 250,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "36892290",
-      "genie": "100471844",
-      "bugs": "32966067"
+      "genie": "103994875",
+      "bugs": "32966067",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 250,
+    "userEdited": true
   },
   {
     "id": "auto-group-36800786",
