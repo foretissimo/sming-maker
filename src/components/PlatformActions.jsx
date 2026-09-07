@@ -56,14 +56,15 @@ export default function PlatformActions({
       return;
     }
     const target = toProxyUrl(url);
-    if (target.startsWith('http://') || target.startsWith('https://')) {
-      const opened = window.open(target, '_blank', 'noopener,noreferrer');
-      if (!opened || opened.closed || typeof opened.closed === 'undefined') {
-        window.location.href = target;
-      }
-    } else {
-      window.location.href = target;
+    window.location.href = target;
+  };
+
+  const handleOpenExternal = (url, platformName) => {
+    if (!url) {
+      if (onShowToast) onShowToast(`${platformName} 링크가 없습니다.`);
+      return;
     }
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleMelonPartClick = (part, deviceKey, deviceName) => {
@@ -305,7 +306,7 @@ export default function PlatformActions({
               </div>
 
               <button
-                onClick={() => handleOpenLink(links.youtube.url, '유튜브')}
+                onClick={() => handleOpenExternal(links.youtube.url, '유튜브')}
                 className="w-full py-2.5 px-3 rounded-xl bg-[#ff0000] hover:bg-[#e60000] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
