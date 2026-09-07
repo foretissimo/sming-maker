@@ -412,14 +412,8 @@ export function generateAllUrlsText(songs, totalDurationStr, options = {}) {
     lines.push(`• 멜론 (아이폰): ${resolve(links.melon.ios)}`);
   }
 
-  // Melon iPad
-  if (links.melon.parts.length > 1) {
-    lines.push(`• 멜론 (아이패드) 분할 담기:`);
-    links.melon.parts.forEach(p => {
-      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${resolve(p.ipad)}`);
-    });
-    lines.push(`  - 전체 한 번에 담기: ${resolve(links.melon.ipad)}`);
-  } else if (links.melon.ipad) {
+  // Melon iPad (중복곡 포함 전체 1회 담기 지원)
+  if (links.melon.ipad) {
     lines.push(`• 멜론 (아이패드): ${resolve(links.melon.ipad)}`);
   }
 

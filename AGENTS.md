@@ -34,6 +34,7 @@ All platform deep links are managed in `src/utils/platformLinks.js`. Whenever mo
   `melonplayer://play?menuid=0&cflag=1&cid=${joinedIds}`
 - **아이패드 (iPadOS Melon iPad App)**:
   `melonipad://play/?ctype=1&menuid=0&cid=${joinedIds}`
+  > 💡 **특징**: 아이패드 멜론앱은 중복곡이 포함된 전체 리스트를 분할 없이 한 번의 URL 호출로 모두 담을 수 있어 단일 버튼 및 단일 URL로 처리합니다.
 
 ### 2. 지니 (Genie)
 - **아이폰 (iOS)**: `ktolleh00167://landing/?landing_type=31&landing_target=${ids.join(';')};`

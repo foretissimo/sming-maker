@@ -64,6 +64,8 @@
 | **플로 (FLO)** | **모바일 (iOS)** | `flomobile://play?trackId=ID1,ID2` |
 | **바이브 (VIBE)** | **모바일 (iOS)** | `vibe://listen?version=3&trackIds=ID1,ID2` |
 
+> 💡 **아이패드 멜론 안내**: 아이패드 멜론앱(`melonipad://`)은 중복곡이 포함된 리스트도 분할 없이 한 번의 URL 호출로 모두 담을 수 있어 단일 버튼으로 동작합니다.
+> 
 > 💡 **웹 프록시 (HTTPS) 기능**: SNS(트위터, 인스타그램, 카카오톡, 다음/네이버 팬카페 등)에서 직접 URI 스키마(`melonapp://` 등)를 차단하거나 링크로 인식하지 못하는 문제를 해결하기 위해, `https://foretissimo.github.io/sming-maker/?target=melonapp%3A...` 형태의 트램펄린 HTTPS 프록시 링크를 제공합니다.
 
 

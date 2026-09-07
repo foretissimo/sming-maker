@@ -135,7 +135,7 @@ export default function ReadOnlyPlaylistView({
         </div>
 
         <div className="space-y-1.5">
-          {links.melon.hasDuplicates ? (
+          {links.melon.hasDuplicates && deviceKey !== 'ipad' ? (
             <div className="space-y-1.5 p-2 rounded-xl bg-slate-950/80 border border-emerald-500/20">
               <div className="flex items-center justify-between text-[10px] text-emerald-300 font-semibold">
                 <span className="flex items-center gap-1">
