@@ -339,7 +339,7 @@ export default function ReadOnlyPlaylistView({
 
           <div className="flex items-center gap-2 flex-shrink-0 flex-wrap sm:flex-nowrap">
             <a
-              href="http://forestellastream.com/"
+              href="https://www.forestellastream.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-emerald-300 hover:text-emerald-200 border border-emerald-500/30 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer whitespace-nowrap active:scale-[0.98]"
