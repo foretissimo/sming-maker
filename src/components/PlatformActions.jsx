@@ -16,7 +16,8 @@ import {
   generatePlatformLinks, 
   generateTextPlaylist, 
   generateProxyUrlsText, 
-  generateOriginalUrlsText 
+  generateOriginalUrlsText,
+  toProxyUrl
 } from '../utils/platformLinks';
 import { formatTotalDuration } from '../utils/formatters';
 
@@ -54,19 +55,14 @@ export default function PlatformActions({
       if (onShowToast) onShowToast(`${platformName} 곡 정보 또는 링크가 없습니다.`);
       return;
     }
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      window.open(url, '_blank', 'noopener,noreferrer');
+    const target = toProxyUrl(url);
+    if (target.startsWith('http://') || target.startsWith('https://')) {
+      const opened = window.open(target, '_blank', 'noopener,noreferrer');
+      if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+        window.location.href = target;
+      }
     } else {
-      const a = document.createElement('a');
-      a.href = url;
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        if (document.body.contains(a)) {
-          document.body.removeChild(a);
-        }
-      }, 300);
+      window.location.href = target;
     }
   };
 
