@@ -45,6 +45,30 @@
 
 ---
 
+## 📱 플랫폼별 딥링크 및 URI 스키마 규격
+
+음원 플랫폼별 1클릭 바로가기 및 공유 URL 생성을 위한 딥링크 규격입니다 (`src/utils/platformLinks.js` 참조).
+
+| 플랫폼 | 기기/환경 | URI 스키마 / 랜딩 URL 형식 |
+| :--- | :--- | :--- |
+| **멜론 (Melon)** | **아이폰 (iOS)** | `melonapp://play?menuid=0&ctype=1&cid=ID1,ID2,ID3` |
+| | **갤럭시 (Android)** | `melonapp://play?menuid=0&ctype=1&cid=ID1,ID2,ID3` |
+| | **PC (Windows)** | `melonapp://play?cType=1&cList=ID1,ID2,ID3` |
+| | **PC (Mac)** | `melonplayer://play?menuid=0&cflag=1&cid=ID1,ID2,ID3` |
+| | **아이패드 (iPadOS)** | `melonipad://play/?ctype=1&menuid=0&cid=ID1,ID2,ID3` |
+| **지니 (Genie)** | **아이폰 (iOS)** | `ktolleh00167://landing/?landing_type=31&landing_target=ID1;ID2;` |
+| | **안드로이드 (Android)** | `cromegenie://scan/?landing_type=31&landing_target=ID1;ID2;` |
+| | **PC (웹 플레이어)** | `https://www.genie.co.kr/player/shareProcessV2?xgnm=ID1;ID2;` |
+| **벅스 (Bugs)** | **모바일 (iOS / Android)** | `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=ID1\|ID2\|` |
+| | **PC (웹 플레이어)** | `https://music.bugs.co.kr/newPlayer?trackId=ID1,ID2` |
+| **플로 (FLO)** | **모바일 (iOS)** | `flomobile://play?trackId=ID1,ID2` |
+| **바이브 (VIBE)** | **모바일 (iOS)** | `vibe://listen?version=3&trackIds=ID1,ID2` |
+
+> 💡 **웹 프록시 (HTTPS) 기능**: SNS(트위터, 인스타그램, 카카오톡, 다음/네이버 팬카페 등)에서 직접 URI 스키마(`melonapp://` 등)를 차단하거나 링크로 인식하지 못하는 문제를 해결하기 위해, `https://foretissimo.github.io/sming-maker/?target=melonapp%3A...` 형태의 트램펄린 HTTPS 프록시 링크를 제공합니다.
+
+
+---
+
 ## 🛠️ 기술 스택
 
 - **Frontend:** React 19, Vite, Tailwind CSS v4, Lucide React, Canvas Confetti

@@ -15,3 +15,36 @@ The Sound Team (음총팀) continuously edits and commits data directly to the G
 2. **Never overwrite sound team data** without merging their latest commits first.
 3. **Verify build** with `npm run build` after changes.
 4. **Push commits** to `origin/main`.
+
+---
+
+## 📱 Platform Deep Link & URI Scheme Standards (플랫폼별 랜딩 URL 규격)
+
+All platform deep links are managed in `src/utils/platformLinks.js`. Whenever modifying link generation logic, ALWAYS follow these exact scheme formats:
+
+### 1. 멜론 (Melon)
+- **아이폰 (iOS Melon App)**:
+  `melonapp://play?menuid=0&ctype=1&cid=${joinedIds}`
+  > 🚨 **주의**: 아이폰 멜론앱 랜딩 URL은 반드시 `menuid=0&ctype=1&cid=ID1,ID2...` 형식이어야 합니다 (`cType=1&cList=` 사용 금지).
+- **갤럭시 / 안드로이드 (Android Melon App)**:
+  `melonapp://play?menuid=0&ctype=1&cid=${joinedIds}`
+- **PC Windows (Melon Windows Player)**:
+  `melonapp://play?cType=1&cList=${joinedIds}`
+- **PC Mac (Melon Mac Player)**:
+  `melonplayer://play?menuid=0&cflag=1&cid=${joinedIds}`
+- **아이패드 (iPadOS Melon iPad App)**:
+  `melonipad://play/?ctype=1&menuid=0&cid=${joinedIds}`
+
+### 2. 지니 (Genie)
+- **아이폰 (iOS)**: `ktolleh00167://landing/?landing_type=31&landing_target=${ids.join(';')};`
+- **안드로이드 (Android)**: `cromegenie://scan/?landing_type=31&landing_target=${ids.join(';')};`
+- **PC (Web Player)**: `https://www.genie.co.kr/player/shareProcessV2?xgnm=${ids.join(';')}`
+
+### 3. 벅스 (Bugs)
+- **아이폰 / 안드로이드 (iOS & Android)**: `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${ids.join('|')}|`
+- **PC (Web Player)**: `https://music.bugs.co.kr/newPlayer?trackId=${ids.join(',')}`
+
+### 4. 플로 (FLO) & 바이브 (VIBE)
+- **플로 (iOS)**: `flomobile://play?trackId=${ids.join(',')}`
+- **바이브 (iOS)**: `vibe://listen?version=3&trackIds=${ids.join(',')}`
+

@@ -95,7 +95,7 @@ export function splitMelonPlaylistIntoParts(songs) {
         const joined = ids.join(',');
         const winUri = `melonapp://play?cType=1&cList=${joined}`;
         const macUri = `melonplayer://play?menuid=0&cflag=1&cid=${joined}`;
-        const iosUri = `melonapp://play?cType=1&cList=${joined}`;
+        const iosUri = `melonapp://play?menuid=0&ctype=1&cid=${joined}`;
         const ipadUri = `melonipad://play/?ctype=1&menuid=0&cid=${joined}`;
         const androidUri = `melonapp://play?menuid=0&ctype=1&cid=${joined}`;
 
@@ -134,7 +134,7 @@ export function splitMelonPlaylistIntoParts(songs) {
     const joined = ids.join(',');
     const winUri = `melonapp://play?cType=1&cList=${joined}`;
     const macUri = `melonplayer://play?menuid=0&cflag=1&cid=${joined}`;
-    const iosUri = `melonapp://play?cType=1&cList=${joined}`;
+    const iosUri = `melonapp://play?menuid=0&ctype=1&cid=${joined}`;
     const ipadUri = `melonipad://play/?ctype=1&menuid=0&cid=${joined}`;
     const androidUri = `melonapp://play?menuid=0&ctype=1&cid=${joined}`;
 
@@ -191,7 +191,7 @@ export function generatePlatformLinks(songs, options = {}) {
   const melonJoinedIds = melonIds.join(',');
   const melonWinUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonJoinedIds}` : '';
   const melonMacUri = melonIds.length > 0 ? `melonplayer://play?menuid=0&cflag=1&cid=${melonJoinedIds}` : '';
-  const melonIosUri = melonIds.length > 0 ? `melonapp://play?cType=1&cList=${melonJoinedIds}` : '';
+  const melonIosUri = melonIds.length > 0 ? `melonapp://play?menuid=0&ctype=1&cid=${melonJoinedIds}` : '';
   const melonIpadUri = melonIds.length > 0 ? `melonipad://play/?ctype=1&menuid=0&cid=${melonJoinedIds}` : '';
   const melonAndroidUri = melonIds.length > 0 ? `melonapp://play?menuid=0&ctype=1&cid=${melonJoinedIds}` : '';
 
