@@ -46,6 +46,35 @@ export function hydratePlaylistWithMasterSongs(playlist, masterSongs) {
 }
 
 /**
+ * Get base URL of current deployment or fallback to GitHub Pages domain
+ */
+export function getSiteBaseUrl() {
+  if (typeof window !== 'undefined' && window.location) {
+    const origin = window.location.origin;
+    let pathname = window.location.pathname;
+    if (!pathname.endsWith('/')) {
+      pathname = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+    }
+    return `${origin}${pathname}`;
+  }
+  return 'https://foretissimo.github.io/sming-maker/';
+}
+
+/**
+ * Convert custom URI scheme (melonapp://, ktolleh00167://, bugs3://, flomobile://, vibe:// etc.)
+ * into an HTTPS GitHub Pages proxy/trampoline URL.
+ * Already HTTP/HTTPS links are preserved as-is.
+ */
+export function toProxyUrl(targetUrl, baseUrl = getSiteBaseUrl()) {
+  if (!targetUrl) return '';
+  if (targetUrl.startsWith('http://') || targetUrl.startsWith('https://')) {
+    return targetUrl;
+  }
+  const base = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${base}?target=${encodeURIComponent(targetUrl)}`;
+}
+
+/**
  * Split playlist into non-duplicate sequential parts for Melon
  * Melon player de-duplicates songs within a single cList parameter.
  */
@@ -64,20 +93,32 @@ export function splitMelonPlaylistIntoParts(songs) {
       if (currentPart.length > 0) {
         const ids = currentPart.map(s => s.platformIds.melon);
         const joined = ids.join(',');
+        const winUri = `melonapp://play?cType=1&cList=${joined}`;
+        const macUri = `melonplayer://play?menuid=0&cflag=1&cid=${joined}`;
+        const iosUri = `melonapp://play?cType=1&cList=${joined}`;
+        const ipadUri = `melonipad://play/?ctype=1&menuid=0&cid=${joined}`;
+        const androidUri = `melonapp://play?menuid=0&ctype=1&cid=${joined}`;
+
         parts.push({
           partIndex: parts.length + 1,
           songs: [...currentPart],
           ids,
           count: ids.length,
-          pc: `melonapp://play?cType=1&cList=${joined}`,
-          pc_win: `melonapp://play?cType=1&cList=${joined}`,
-          pc_mac: `melonplayer://play?menuid=0&cflag=1&cid=${joined}`,
-          win: `melonapp://play?cType=1&cList=${joined}`,
-          mac: `melonplayer://play?menuid=0&cflag=1&cid=${joined}`,
-          ios: `melonapp://play?cType=1&cList=${joined}`,
-          ipad: `melonipad://play/?ctype=1&menuid=0&cid=${joined}`,
-          android: `melonapp://play?menuid=0&ctype=1&cid=${joined}`,
-          url: `melonapp://play?cType=1&cList=${joined}`
+          pc: winUri,
+          pc_win: winUri,
+          pc_mac: macUri,
+          win: winUri,
+          mac: macUri,
+          ios: iosUri,
+          ipad: ipadUri,
+          android: androidUri,
+          url: winUri,
+          // Proxy versions
+          proxy_win: toProxyUrl(winUri),
+          proxy_mac: toProxyUrl(macUri),
+          proxy_ios: toProxyUrl(iosUri),
+          proxy_ipad: toProxyUrl(ipadUri),
+          proxy_android: toProxyUrl(androidUri)
         });
       }
       currentPart = [song];
@@ -91,20 +132,32 @@ export function splitMelonPlaylistIntoParts(songs) {
   if (currentPart.length > 0) {
     const ids = currentPart.map(s => s.platformIds.melon);
     const joined = ids.join(',');
+    const winUri = `melonapp://play?cType=1&cList=${joined}`;
+    const macUri = `melonplayer://play?menuid=0&cflag=1&cid=${joined}`;
+    const iosUri = `melonapp://play?cType=1&cList=${joined}`;
+    const ipadUri = `melonipad://play/?ctype=1&menuid=0&cid=${joined}`;
+    const androidUri = `melonapp://play?menuid=0&ctype=1&cid=${joined}`;
+
     parts.push({
       partIndex: parts.length + 1,
       songs: [...currentPart],
       ids,
       count: ids.length,
-      pc: `melonapp://play?cType=1&cList=${joined}`,
-      pc_win: `melonapp://play?cType=1&cList=${joined}`,
-      pc_mac: `melonplayer://play?menuid=0&cflag=1&cid=${joined}`,
-      win: `melonapp://play?cType=1&cList=${joined}`,
-      mac: `melonplayer://play?menuid=0&cflag=1&cid=${joined}`,
-      ios: `melonapp://play?cType=1&cList=${joined}`,
-      ipad: `melonipad://play/?ctype=1&menuid=0&cid=${joined}`,
-      android: `melonapp://play?menuid=0&ctype=1&cid=${joined}`,
-      url: `melonapp://play?cType=1&cList=${joined}`
+      pc: winUri,
+      pc_win: winUri,
+      pc_mac: macUri,
+      win: winUri,
+      mac: macUri,
+      ios: iosUri,
+      ipad: ipadUri,
+      android: androidUri,
+      url: winUri,
+      // Proxy versions
+      proxy_win: toProxyUrl(winUri),
+      proxy_mac: toProxyUrl(macUri),
+      proxy_ios: toProxyUrl(iosUri),
+      proxy_ipad: toProxyUrl(ipadUri),
+      proxy_android: toProxyUrl(androidUri)
     });
   }
 
@@ -119,12 +172,12 @@ export function generatePlatformLinks(songs, options = {}) {
 
   if (!songs || songs.length === 0) {
     return {
-      melon: { count: 0, parts: [], hasDuplicates: false, pc: '', pc_win: '', pc_mac: '', win: '', mac: '', ios: '', ipad: '', android: '', full: '' },
-      genie: { count: 0, pc: '', ios: '', android: '', app: '' },
-      bugs: { count: 0, pc: '', ios: '', android: '', app: '' },
-      youtube: { count: youtubeUrl ? 1 : 0, url: youtubeUrl, pc: youtubeUrl, ios: youtubeUrl, android: youtubeUrl },
-      flo: { count: 0, pc: '', ios: '', android: '' },
-      vibe: { count: 0, pc: '', ios: '', android: '' }
+      melon: { count: 0, parts: [], hasDuplicates: false, pc: '', pc_win: '', pc_mac: '', win: '', mac: '', ios: '', ipad: '', android: '', full: '', proxy_win: '', proxy_mac: '', proxy_ios: '', proxy_ipad: '', proxy_android: '' },
+      genie: { count: 0, pc: '', ios: '', android: '', app: '', proxy_pc: '', proxy_ios: '', proxy_android: '' },
+      bugs: { count: 0, pc: '', ios: '', android: '', app: '', proxy_pc: '', proxy_ios: '', proxy_android: '' },
+      youtube: { count: youtubeUrl ? 1 : 0, url: youtubeUrl, pc: youtubeUrl, ios: youtubeUrl, android: youtubeUrl, proxy: youtubeUrl },
+      flo: { count: 0, pc: '', ios: '', android: '', proxy_ios: '', proxy_android: '' },
+      vibe: { count: 0, pc: '', ios: '', android: '', proxy_ios: '', proxy_android: '' }
     };
   }
 
@@ -143,7 +196,17 @@ export function generatePlatformLinks(songs, options = {}) {
   const melonAndroidUri = melonIds.length > 0 ? `melonapp://play?menuid=0&ctype=1&cid=${melonJoinedIds}` : '';
 
   const genieJoined = genieIds.length > 0 ? `${genieIds.join(';')};` : '';
+  const geniePcUri = genieIds.length > 0 ? `https://www.genie.co.kr/player/shareProcessV2?xgnm=${genieIds.join(';')}` : '';
+  const genieIosUri = genieIds.length > 0 ? `ktolleh00167://landing/?landing_type=31&landing_target=${genieJoined}` : '';
+  const genieAndroidUri = genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieJoined}` : '';
+
   const bugsJoined = bugsIds.length > 0 ? `${bugsIds.join('|')}|` : '';
+  const bugsPcUri = bugsIds.length > 0 ? `https://music.bugs.co.kr/newPlayer?trackId=${bugsIds.join(',')}` : '';
+  const bugsIosUri = bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '';
+  const bugsAndroidUri = bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '';
+
+  const floIosUri = floIds.length > 0 ? `flomobile://play?trackId=${floIds.join(',')}` : '';
+  const vibeIosUri = vibeIds.length > 0 ? `vibe://listen?version=3&trackIds=${vibeIds.join(',')}` : '';
 
   return {
     melon: {
@@ -160,27 +223,43 @@ export function generatePlatformLinks(songs, options = {}) {
       mac: melonMacUri,
       ios: melonIosUri,
       ipad: melonIpadUri,
-      android: melonAndroidUri
+      android: melonAndroidUri,
+      // Proxy versions
+      proxy_win: toProxyUrl(melonWinUri),
+      proxy_mac: toProxyUrl(melonMacUri),
+      proxy_ios: toProxyUrl(melonIosUri),
+      proxy_ipad: toProxyUrl(melonIpadUri),
+      proxy_android: toProxyUrl(melonAndroidUri)
     },
     genie: {
       name: '지니 (Genie)',
       brandColor: '#0092fa',
       count: genieIds.length,
-      pc: genieIds.length > 0 ? `https://www.genie.co.kr/player/shareProcessV2?xgnm=${genieIds.join(';')}` : '',
-      ios: genieIds.length > 0 ? `ktolleh00167://landing/?landing_type=31&landing_target=${genieJoined}` : '',
-      ipad: genieIds.length > 0 ? `ktolleh00167://landing/?landing_type=31&landing_target=${genieJoined}` : '',
-      android: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieJoined}` : '',
-      app: genieIds.length > 0 ? `cromegenie://scan/?landing_type=31&landing_target=${genieJoined}` : ''
+      pc: geniePcUri,
+      ios: genieIosUri,
+      ipad: genieIosUri,
+      android: genieAndroidUri,
+      app: genieAndroidUri,
+      // Proxy versions
+      proxy_pc: toProxyUrl(geniePcUri),
+      proxy_ios: toProxyUrl(genieIosUri),
+      proxy_ipad: toProxyUrl(genieIosUri),
+      proxy_android: toProxyUrl(genieAndroidUri)
     },
     bugs: {
       name: '벅스 (Bugs)',
       brandColor: '#f9423a',
       count: bugsIds.length,
-      pc: bugsIds.length > 0 ? `https://music.bugs.co.kr/newPlayer?trackId=${bugsIds.join(',')}` : '',
-      ios: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '',
-      ipad: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '',
-      android: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : '',
-      app: bugsIds.length > 0 ? `bugs3://app/tracks/lists?title=%EC%A0%84%EC%B2%B4%EB%93%A3%EA%B8%B0&miniplay=y&track_ids=${bugsJoined}` : ''
+      pc: bugsPcUri,
+      ios: bugsIosUri,
+      ipad: bugsIosUri,
+      android: bugsAndroidUri,
+      app: bugsAndroidUri,
+      // Proxy versions
+      proxy_pc: toProxyUrl(bugsPcUri),
+      proxy_ios: toProxyUrl(bugsIosUri),
+      proxy_ipad: toProxyUrl(bugsIosUri),
+      proxy_android: toProxyUrl(bugsAndroidUri)
     },
     youtube: {
       name: '유튜브 (YouTube)',
@@ -189,23 +268,28 @@ export function generatePlatformLinks(songs, options = {}) {
       url: youtubeUrl,
       pc: youtubeUrl,
       ios: youtubeUrl,
-      android: youtubeUrl
+      android: youtubeUrl,
+      proxy: youtubeUrl
     },
     flo: {
       name: '플로 (FLO)',
       brandColor: '#3c3df5',
       count: floIds.length,
       pc: 'https://www.music-flo.com',
-      ios: floIds.length > 0 ? `flomobile://play?trackId=${floIds.join(',')}` : '',
-      android: floIds.length > 0 ? `flomobile://play?trackId=${floIds.join(',')}` : ''
+      ios: floIosUri,
+      android: floIosUri,
+      proxy_ios: toProxyUrl(floIosUri),
+      proxy_android: toProxyUrl(floIosUri)
     },
     vibe: {
       name: '바이브 (VIBE)',
       brandColor: '#ff1493',
       count: vibeIds.length,
       pc: 'https://vibe.naver.com',
-      ios: vibeIds.length > 0 ? `vibe://listen?version=3&trackIds=${vibeIds.join(',')}` : '',
-      android: vibeIds.length > 0 ? `vibe://listen?version=3&trackIds=${vibeIds.join(',')}` : ''
+      ios: vibeIosUri,
+      android: vibeIosUri,
+      proxy_ios: toProxyUrl(vibeIosUri),
+      proxy_android: toProxyUrl(vibeIosUri)
     }
   };
 }
@@ -227,21 +311,40 @@ export function generateTextPlaylist(songs, totalDurationStr) {
   });
 
   lines.push(`----------------------------------------`);
-  lines.push(`생성기: https://foretissimo.github.io/sming-maker/`);
+  lines.push(`생성기: ${getSiteBaseUrl()}`);
 
   return lines.join('\n');
 }
 
 /**
- * Copy all formatted 1-click platform URLs to clipboard for PC, Galaxy, iPhone, and iPad
+ * Copy all formatted 1-click platform URLs to clipboard for PC, Galaxy, iPhone, and iPad.
+ * Supports dual-mode URL output:
+ * - options.urlType === 'proxy': HTTPS web links that trampoline into music apps anywhere (SNS/Cafe friendly)
+ * - options.urlType === 'original': Raw app scheme URIs (melonapp://, ktolleh00167://, bugs3:// etc.)
  */
 export function generateAllUrlsText(songs, totalDurationStr, options = {}) {
+  const urlType = options.urlType || 'proxy';
+  const isProxy = urlType === 'proxy';
   const links = generatePlatformLinks(songs, options);
   const title = options.title || '포레스텔라 1시간 스밍리스트';
 
+  const resolve = (originalUrl) => {
+    if (!originalUrl) return '';
+    return isProxy ? toProxyUrl(originalUrl) : originalUrl;
+  };
+
+  const headerLabel = isProxy
+    ? '원클릭 웹 프록시(HTTPS) 링크 모음 (SNS/카페 공유용)'
+    : '앱 원본(스키마) 링크 모음 (기기 직접 실행용)';
+
+  const noticeLabel = isProxy
+    ? '※ SNS/카페/메신저 어디서나 클릭 시 해당 음악 앱이 즉시 실행되는 웹 링크입니다.'
+    : '※ 기기 단축어 또는 앱 직접 호출용 원본 URI 스키마 링크입니다.';
+
   const lines = [
-    `🌲 [${title} - 원클릭 스밍 링크 모음]`,
+    `🌲 [${title} - ${headerLabel}]`,
     `총 ${songs.length}곡 • ${totalDurationStr}`,
+    noticeLabel,
     `========================================`,
     ``,
     `💻 [PC (플레이어 & 웹)]`,
@@ -251,28 +354,28 @@ export function generateAllUrlsText(songs, totalDurationStr, options = {}) {
   if (links.melon.parts.length > 1) {
     lines.push(`• 멜론 (Windows) 분할 담기:`);
     links.melon.parts.forEach(p => {
-      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.pc_win}`);
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${resolve(p.pc_win)}`);
     });
-    lines.push(`  - 전체 한 번에 담기: ${links.melon.pc_win}`);
+    lines.push(`  - 전체 한 번에 담기: ${resolve(links.melon.pc_win)}`);
   } else if (links.melon.pc_win) {
-    lines.push(`• 멜론 (Windows): ${links.melon.pc_win}`);
+    lines.push(`• 멜론 (Windows): ${resolve(links.melon.pc_win)}`);
   }
 
   // Melon Mac
   if (links.melon.parts.length > 1) {
     lines.push(`• 멜론 (Mac) 분할 담기:`);
     links.melon.parts.forEach(p => {
-      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.pc_mac}`);
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${resolve(p.pc_mac)}`);
     });
-    lines.push(`  - 전체 한 번에 담기: ${links.melon.pc_mac}`);
+    lines.push(`  - 전체 한 번에 담기: ${resolve(links.melon.pc_mac)}`);
   } else if (links.melon.pc_mac) {
-    lines.push(`• 멜론 (Mac): ${links.melon.pc_mac}`);
+    lines.push(`• 멜론 (Mac): ${resolve(links.melon.pc_mac)}`);
   }
 
   // Genie PC
-  if (links.genie.pc) lines.push(`• 지니 (PC 웹): ${links.genie.pc}`);
+  if (links.genie.pc) lines.push(`• 지니 (PC 웹): ${resolve(links.genie.pc)}`);
   // Bugs PC
-  if (links.bugs.pc) lines.push(`• 벅스 (PC 웹): ${links.bugs.pc}`);
+  if (links.bugs.pc) lines.push(`• 벅스 (PC 웹): ${resolve(links.bugs.pc)}`);
   // YouTube
   if (links.youtube.url) lines.push(`• 유튜브 (MV/음원): ${links.youtube.url}`);
 
@@ -283,17 +386,17 @@ export function generateAllUrlsText(songs, totalDurationStr, options = {}) {
   if (links.melon.parts.length > 1) {
     lines.push(`• 멜론 (안드로이드) 분할 담기:`);
     links.melon.parts.forEach(p => {
-      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.android}`);
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${resolve(p.android)}`);
     });
-    lines.push(`  - 전체 한 번에 담기: ${links.melon.android}`);
+    lines.push(`  - 전체 한 번에 담기: ${resolve(links.melon.android)}`);
   } else if (links.melon.android) {
-    lines.push(`• 멜론 (안드로이드): ${links.melon.android}`);
+    lines.push(`• 멜론 (안드로이드): ${resolve(links.melon.android)}`);
   }
 
   // Genie Android
-  if (links.genie.android) lines.push(`• 지니: ${links.genie.android}`);
+  if (links.genie.android) lines.push(`• 지니: ${resolve(links.genie.android)}`);
   // Bugs Android
-  if (links.bugs.android) lines.push(`• 벅스: ${links.bugs.android}`);
+  if (links.bugs.android) lines.push(`• 벅스: ${resolve(links.bugs.android)}`);
 
   lines.push(``);
   lines.push(`🍎 [아이폰 • 아이패드 (iOS / iPadOS)]`);
@@ -302,32 +405,46 @@ export function generateAllUrlsText(songs, totalDurationStr, options = {}) {
   if (links.melon.parts.length > 1) {
     lines.push(`• 멜론 (아이폰) 분할 담기:`);
     links.melon.parts.forEach(p => {
-      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.ios}`);
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${resolve(p.ios)}`);
     });
-    lines.push(`  - 전체 한 번에 담기: ${links.melon.ios}`);
+    lines.push(`  - 전체 한 번에 담기: ${resolve(links.melon.ios)}`);
   } else if (links.melon.ios) {
-    lines.push(`• 멜론 (아이폰): ${links.melon.ios}`);
+    lines.push(`• 멜론 (아이폰): ${resolve(links.melon.ios)}`);
   }
 
   // Melon iPad
   if (links.melon.parts.length > 1) {
     lines.push(`• 멜론 (아이패드) 분할 담기:`);
     links.melon.parts.forEach(p => {
-      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${p.ipad}`);
+      lines.push(`  - ${p.partIndex}차 (${p.count}곡): ${resolve(p.ipad)}`);
     });
-    lines.push(`  - 전체 한 번에 담기: ${links.melon.ipad}`);
+    lines.push(`  - 전체 한 번에 담기: ${resolve(links.melon.ipad)}`);
   } else if (links.melon.ipad) {
-    lines.push(`• 멜론 (아이패드): ${links.melon.ipad}`);
+    lines.push(`• 멜론 (아이패드): ${resolve(links.melon.ipad)}`);
   }
 
   // Genie iOS
-  if (links.genie.ios) lines.push(`• 지니: ${links.genie.ios}`);
+  if (links.genie.ios) lines.push(`• 지니: ${resolve(links.genie.ios)}`);
   // Bugs iOS
-  if (links.bugs.ios) lines.push(`• 벅스: ${links.bugs.ios}`);
+  if (links.bugs.ios) lines.push(`• 벅스: ${resolve(links.bugs.ios)}`);
 
   lines.push(``);
   lines.push(`========================================`);
-  lines.push(`🌲 포레스텔라 스밍 메이커: https://foretissimo.github.io/sming-maker/`);
+  lines.push(`🌲 포레스텔라 스밍 메이커: ${getSiteBaseUrl()}`);
 
   return lines.join('\n');
+}
+
+/**
+ * Convenient shortcut for generating Web HTTPS Proxy URLs
+ */
+export function generateProxyUrlsText(songs, totalDurationStr, options = {}) {
+  return generateAllUrlsText(songs, totalDurationStr, { ...options, urlType: 'proxy' });
+}
+
+/**
+ * Convenient shortcut for generating App Scheme Original URLs
+ */
+export function generateOriginalUrlsText(songs, totalDurationStr, options = {}) {
+  return generateAllUrlsText(songs, totalDurationStr, { ...options, urlType: 'original' });
 }

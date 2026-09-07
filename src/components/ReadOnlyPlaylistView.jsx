@@ -20,7 +20,14 @@ import {
   Trash2
 } from 'lucide-react';
 import { formatSecondsToTime, formatTotalDuration, formatDate } from '../utils/formatters';
-import { generatePlatformLinks, generateTextPlaylist, generateAllUrlsText } from '../utils/platformLinks';
+import { 
+  generatePlatformLinks, 
+  generateTextPlaylist, 
+  generateAllUrlsText,
+  generateProxyUrlsText,
+  generateOriginalUrlsText,
+  toProxyUrl 
+} from '../utils/platformLinks';
 
 function YoutubeIcon({ className = "w-4 h-4" }) {
   return (
@@ -236,11 +243,20 @@ export default function ReadOnlyPlaylistView({
               <span>곡 리스트 복사</span>
             </button>
             <button
-              onClick={() => handleCopy(generateAllUrlsText(playlist, totalDurationFormatted, { title, youtubeUrl: youtubeInput.trim() }), 'urls', '모든 기기 원클릭 스밍 URL 모음이 복사되었습니다! 🔗')}
+              onClick={() => handleCopy(generateProxyUrlsText(playlist, totalDurationFormatted, { title, youtubeUrl: youtubeInput.trim() }), 'proxy_urls', '🌐 SNS/카페 공유용 웹 프록시(HTTPS) 전체 URL 모음이 복사되었습니다! 🔗')}
               className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-emerald-500/30 shadow-sm"
+              title="SNS/카페 어디서나 클릭 시 음악 앱이 즉시 실행되는 웹 프록시 링크 모음"
             >
-              {copiedType === 'urls' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Link2 className="w-3.5 h-3.5 text-emerald-400" />}
-              <span>전체 URL 복사</span>
+              {copiedType === 'proxy_urls' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Link2 className="w-3.5 h-3.5 text-emerald-400" />}
+              <span>🌐 웹 프록시 URL 복사 (SNS용)</span>
+            </button>
+            <button
+              onClick={() => handleCopy(generateOriginalUrlsText(playlist, totalDurationFormatted, { title, youtubeUrl: youtubeInput.trim() }), 'orig_urls', '📱 앱 직접 실행용 원본 스키마 URL 모음이 복사되었습니다! 📱')}
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700 shadow-sm"
+              title="단축어 또는 앱 직접 실행용 원본 스키마 URI 모음"
+            >
+              {copiedType === 'orig_urls' ? <Check className="w-3.5 h-3.5 text-slate-100" /> : <Smartphone className="w-3.5 h-3.5 text-slate-400" />}
+              <span>📱 앱 원본 URL 복사</span>
             </button>
           </div>
 

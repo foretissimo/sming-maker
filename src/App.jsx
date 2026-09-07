@@ -15,6 +15,7 @@ import ShareModal from './components/ShareModal';
 import NoticeModal from './components/NoticeModal';
 import DataEditorView from './components/DataEditorView';
 import AdminLoginModal from './components/AdminLoginModal';
+import ProxyRedirectView from './components/ProxyRedirectView';
 import { generateStreamingList } from './utils/generator';
 import { decodeShareablePlaylist, generateShareUrl } from './utils/shareUtils';
 import { hydratePlaylistWithMasterSongs } from './utils/platformLinks';
@@ -25,8 +26,9 @@ const DATASET_VERSION = '2026-08-26-v8-hydrate-master';
 
 export default function App() {
   const showEditor = isEditorEnabled();
-  // Main View Mode: 'generator' | 'editor' | 'readonly'
+  // Main View Mode: 'generator' | 'editor' | 'readonly' | 'redirect'
   const [activeView, setActiveView] = useState('generator');
+  const [targetProxyUrl, setTargetProxyUrl] = useState('');
 
   // Sound Team Admin Mode state
   const [isAdmin, setIsAdmin] = useState(() => isAdminLoggedIn());
@@ -226,11 +228,20 @@ export default function App() {
     }
   };
 
-  // Initialize playlist on mount or from URL params (?s=, ?share=, or ?songs=)
+  // Initialize playlist on mount or from URL params (?target=, ?s=, ?share=, or ?songs=)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const targetParam = params.get('target') || params.get('go') || params.get('redirect') || params.get('proxy');
     const shareToken = params.get('s') || params.get('share');
     const songIdsParam = params.get('songs');
+
+    // 0. Check for Proxy Redirection Target (?target=... or ?go=...)
+    if (targetParam) {
+      const decoded = decodeURIComponent(targetParam);
+      setTargetProxyUrl(decoded);
+      setActiveView('redirect');
+      return;
+    }
 
     // 1. Check for Base64 encoded share token (?s=... or ?share=...)
     if (shareToken) {
@@ -369,7 +380,14 @@ export default function App() {
       {/* Navigation Header */}
       <Header
         activeView={activeView}
-        onChangeView={setActiveView}
+        onChangeView={(v) => {
+          if (activeView === 'redirect') {
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+            setTargetProxyUrl('');
+          }
+          setActiveView(v);
+        }}
         onOpenGuide={() => setIsGuideOpen(true)}
         onShare={handleShare}
         showEditor={showEditor}
@@ -380,7 +398,19 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
-        {activeView === 'readonly' ? (
+        {activeView === 'redirect' ? (
+          /* PROXY TRAMPOLINE REDIRECT VIEW (For SNS/web proxy links) */
+          <ProxyRedirectView
+            targetUrl={targetProxyUrl}
+            onGoHome={() => {
+              const newUrl = window.location.pathname;
+              window.history.replaceState({}, '', newUrl);
+              setTargetProxyUrl('');
+              setActiveView('generator');
+            }}
+            onShowToast={showToast}
+          />
+        ) : activeView === 'readonly' ? (
           /* READ-ONLY VIEWER VIEW (For shared links & fans) */
           <ReadOnlyPlaylistView
             title={sharedData.title}

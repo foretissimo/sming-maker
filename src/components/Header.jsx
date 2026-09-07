@@ -78,6 +78,16 @@ export default function Header({
               <span>공유 뷰어 (Read-Only)</span>
             </button>
           )}
+
+          {activeView === 'redirect' && (
+            <button
+              onClick={() => onChangeView('redirect')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/30 text-emerald-200 border border-emerald-400/50 shadow-sm whitespace-nowrap"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <span>앱 연결 (Gateway)</span>
+            </button>
+          )}
         </div>
 
         {/* Right: Actions & Admin Mode & 1-Click Share */}
@@ -87,12 +97,12 @@ export default function Header({
             <div className="flex items-center gap-1">
               <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/40 text-xs text-amber-300 font-bold">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-                <span className="hidden sm:inline">음총팀 모드</span>
+                <span className="hidden sm:inline">관리자 모드</span>
               </div>
               <button
                 onClick={onAdminLogout}
                 className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 transition-colors cursor-pointer"
-                title="음총팀 관리자 로그아웃"
+                title="관리자 로그아웃"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -101,10 +111,10 @@ export default function Header({
             <button
               onClick={onOpenAdminLogin}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs text-slate-400 hover:text-slate-200 font-medium transition-all cursor-pointer"
-              title="포레스텔라 음총팀 관리자 로그인"
+              title="관리자 로그인"
             >
               <Lock className="w-3.5 h-3.5 text-slate-400" />
-              <span className="hidden sm:inline">음총팀</span>
+              <span className="hidden sm:inline">관리자</span>
             </button>
           )}
 

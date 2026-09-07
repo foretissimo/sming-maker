@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>음악 앱으로 연결 중... | 스밍 메이커</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌲</text></svg>">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", Roboto, "Noto Sans KR", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(6, 78, 59, 0.4) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 24px;
+      max-width: 480px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(51, 65, 85, 1);
+      font-size: 11px;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 12px;
+    }
+    .icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: #00cd3c;
+      color: #020617;
+      font-size: 28px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 205, 60, 0.4);
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #f1f5f9;
+    }
+    p.desc {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      background: #00cd3c;
+      color: #020617;
+      font-size: 15px;
+      font-weight: 900;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 10px 20px -5px rgba(0, 205, 60, 0.5);
+      transition: transform 0.1s ease;
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+    .guide-box {
+      margin-top: 24px;
+      padding: 14px;
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid rgba(51, 65, 85, 0.8);
+      border-radius: 16px;
+      text-align: left;
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .guide-box strong { color: #34d399; }
+    .footer-actions {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-secondary {
+      padding: 8px 14px;
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">원클릭 프록시 게이트웨이 🔗</div>
+    <div class="icon" id="brand-icon">M</div>
+    <h1 id="title-text">음악 앱으로 연결 중...</h1>
+    <p class="desc">음악 앱이 설치되어 있으면 자동으로 플레이리스트가 전송됩니다.</p>
+    
+    <a href="#" id="launch-btn" class="btn-primary">음악 앱 바로 열기 (실행)</a>
+
+    <div class="guide-box">
+      <div style="font-weight: 700; color: #fbbf24; margin-bottom: 4px;">💡 인앱 브라우저 안내</div>
+      카카오톡, X(트위터), 인스타그램 등 인앱 브라우저에서 바로 열리지 않는 경우 상단/하단 메뉴에서 <strong>[다른 브라우저로 열기(Safari, Chrome)]</strong>를 선택해주세요.
+    </div>
+
+    <div class="footer-actions">
+      <button id="copy-btn" class="btn-secondary">📋 앱 원본 링크 복사</button>
+      <a href="./" class="btn-secondary" style="color: #6ee7b7;">🌲 스밍 메이커 홈으로</a>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var target = params.get('target') || params.get('go') || params.get('url') || params.get('redirect');
+      if (!target) {
+        document.getElementById('title-text').innerText = '스밍 메이커';
+        document.getElementById('launch-btn').innerText = '스밍 메이커 홈으로 이동';
+        document.getElementById('launch-btn').href = './';
+        return;
+      }
+
+      var decoded = decodeURIComponent(target);
+      var launchBtn = document.getElementById('launch-btn');
+      launchBtn.href = decoded;
+
+      // Platform customization
+      var brandIcon = document.getElementById('brand-icon');
+      var lower = decoded.toLowerCase();
+      if (lower.indexOf('melon') === 0 || lower.indexOf('melonplayer') === 0) {
+        brandIcon.innerText = 'M';
+        brandIcon.style.backgroundColor = '#00cd3c';
+        document.getElementById('title-text').innerText = '멜론 (Melon) 앱으로 연결 중';
+        launchBtn.innerText = '멜론 앱 바로 열기 (실행)';
+      } else if (lower.indexOf('ktolleh') === 0 || lower.indexOf('cromegenie') === 0 || lower.indexOf('genie') !== -1) {
+        brandIcon.innerText = 'G';
+        brandIcon.style.backgroundColor = '#0092fa';
+        brandIcon.style.color = '#fff';
+        document.getElementById('title-text').innerText = '지니 (Genie) 앱으로 연결 중';
+        launchBtn.innerText = '지니 앱 바로 열기 (실행)';
+        launchBtn.style.backgroundColor = '#0092fa';
+        launchBtn.style.color = '#fff';
+      } else if (lower.indexOf('bugs') === 0 || lower.indexOf('bugs.co.kr') !== -1) {
+        brandIcon.innerText = 'B';
+        brandIcon.style.backgroundColor = '#f9423a';
+        brandIcon.style.color = '#fff';
+        document.getElementById('title-text').innerText = '벅스 (Bugs) 앱으로 연결 중';
+        launchBtn.innerText = '벅스 앱 바로 열기 (실행)';
+        launchBtn.style.backgroundColor = '#f9423a';
+        launchBtn.style.color = '#fff';
+      }
+
+      // Auto launch
+      setTimeout(function() {
+        try {
+          window.location.href = decoded;
+        } catch(e) {}
+      }, 100);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(decoded).then(function() {
+            alert('앱 원본 링크가 복사되었습니다!');
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

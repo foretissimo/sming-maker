@@ -15,7 +15,10 @@ import {
 import { 
   generatePlatformLinks, 
   generateTextPlaylist,
-  generateAllUrlsText 
+  generateAllUrlsText,
+  generateProxyUrlsText,
+  generateOriginalUrlsText,
+  toProxyUrl
 } from '../utils/platformLinks';
 import { formatTotalDuration } from '../utils/formatters';
 
@@ -511,11 +514,21 @@ export default function PlatformActions({
           </button>
 
           <button
-            onClick={() => handleCopy(generateAllUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeInput.trim() }), 'urls', '모든 기기 원클릭 스밍 URL 모음이 클립보드에 복사되었습니다! 🔗')}
+            onClick={() => handleCopy(generateProxyUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeInput.trim() }), 'proxy_urls', '🌐 SNS/카페 공유용 웹 프록시(HTTPS) 전체 URL 모음이 복사되었습니다! 🔗')}
             className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-emerald-500/30 shadow-sm"
+            title="트위터, 다음/네이버 카페, 카카오톡 어디서나 클릭 시 앱이 즉시 실행되는 HTTPS 링크 모음"
           >
-            {copiedType === 'urls' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Link2 className="w-3.5 h-3.5 text-emerald-400" />}
-            <span>전체 URL 복사 (카페/SNS용)</span>
+            {copiedType === 'proxy_urls' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Link2 className="w-3.5 h-3.5 text-emerald-400" />}
+            <span>🌐 웹 프록시 전체 URL 복사 (SNS/카페용)</span>
+          </button>
+
+          <button
+            onClick={() => handleCopy(generateOriginalUrlsText(playlist, totalDurationFormatted, { youtubeUrl: youtubeInput.trim() }), 'orig_urls', '📱 앱 직접 실행용 원본 스키마 URL 모음이 복사되었습니다! 📱')}
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700 shadow-sm"
+            title="기기 단축어 또는 앱 직접 실행용 원본 스키마 URI 링크 모음"
+          >
+            {copiedType === 'orig_urls' ? <Check className="w-3.5 h-3.5 text-slate-100" /> : <Smartphone className="w-3.5 h-3.5 text-slate-400" />}
+            <span>📱 앱 원본 전체 URL 복사</span>
           </button>
         </div>
       </div>
