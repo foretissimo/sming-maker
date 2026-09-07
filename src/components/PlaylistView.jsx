@@ -55,7 +55,7 @@ export default function PlaylistView({
           <div className="flex items-center gap-2">
             <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
               <Music className="w-4 h-4 text-emerald-400" />
-              현재 생성된 스밍리스트
+              스밍리스트
             </h2>
             <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
               {playlist.length}곡

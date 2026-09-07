@@ -17,7 +17,8 @@ import {
   Plus,
   Apple,
   Link2,
-  Trash2
+  Trash2,
+  Radio
 } from 'lucide-react';
 import { formatSecondsToTime, formatTotalDuration, formatDate } from '../utils/formatters';
 import { 
@@ -318,6 +319,39 @@ export default function ReadOnlyPlaylistView({
           <p className="text-xs text-slate-400 mt-0.5">
             사용하시는 기기 환경에 맞는 바로가기 버튼을 누르면 해당 플레이어나 앱으로 전송됩니다.
           </p>
+        </div>
+
+        {/* 🌊 멜론 뮤직웨이브 (상시 운영) */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-950 to-teal-950/60 border border-emerald-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg hover:border-emerald-400/60 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#00cd3c] text-slate-950 flex items-center justify-center font-black text-lg shadow-md flex-shrink-0">
+              🌊
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="text-xs sm:text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                  <span>멜론 뮤직웨이브 (Music Wave)</span>
+                </h4>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#00cd3c]/20 text-[#00cd3c] border border-[#00cd3c]/40 animate-pulse">
+                  상시 운영 🟢
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                포레스텔라 공식 멜론 뮤직웨이브 채널에서 24시간 실시간 함께 듣기 & 채팅에 참여하세요!
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://into.melon.com/bridge/kakaotalk/musicwave/VvseWVazR3I9q3Kuzn_eFA?type=channel&t=1751896537993"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2.5 rounded-xl bg-[#00cd3c] hover:bg-[#00b835] text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-950/50 cursor-pointer flex-shrink-0 whitespace-nowrap active:scale-[0.98]"
+          >
+            <Radio className="w-3.5 h-3.5" />
+            <span>뮤직웨이브 입장하기</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
         </div>
 
         {/* ---------------- PC SECTION ---------------- */}
