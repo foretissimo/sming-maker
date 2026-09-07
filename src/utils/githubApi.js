@@ -28,8 +28,9 @@ export function base64ToUnicode(b64) {
  * Get file SHA from GitHub repository
  */
 export async function getRepoFileSha(token, filePath, branch = DEFAULT_BRANCH) {
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}?ref=${branch}`;
+  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}?ref=${branch}&_t=${Date.now()}`;
   const res = await fetch(url, {
+    cache: 'no-store',
     headers: {
       'Authorization': `token ${token.trim()}`,
       'Accept': 'application/vnd.github.v3+json'
@@ -234,8 +235,9 @@ export async function deployToGithubWithBackup({
  */
 export async function listGithubBackups(token) {
   if (!token) return [];
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/backups?ref=${DEFAULT_BRANCH}`;
+  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/backups?ref=${DEFAULT_BRANCH}&_t=${Date.now()}`;
   const res = await fetch(url, {
+    cache: 'no-store',
     headers: {
       'Authorization': `token ${token.trim()}`,
       'Accept': 'application/vnd.github.v3+json'

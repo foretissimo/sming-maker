@@ -22,7 +22,19 @@ import { hydratePlaylistWithMasterSongs } from './utils/platformLinks';
 import { isEditorEnabled } from './utils/env';
 import { isAdminLoggedIn, clearAdminSession } from './utils/auth';
 
-const DATASET_VERSION = '2026-08-26-v8-hydrate-master';
+// Dynamic dataset fingerprint for automatic cache invalidation on any dataset edit
+function computeDatasetFingerprint(songs, artists, recommended) {
+  const songsCount = songs?.length || 0;
+  const firstSongId = songs?.[0]?.id || '';
+  const lastSongId = songs?.[songsCount - 1]?.id || '';
+  const artistsCount = artists?.length || 0;
+  const recTitle = recommended?.title || '';
+  const recCount = recommended?.songs?.length || 0;
+  const recYoutube = recommended?.youtubeUrl || '';
+  return `v9_${songsCount}_${firstSongId}_${lastSongId}_${artistsCount}_${recCount}_${encodeURIComponent(recTitle)}_${encodeURIComponent(recYoutube)}`;
+}
+
+const DATASET_VERSION = computeDatasetFingerprint(initialSongsData, initialArtistsData, initialRecommendedData);
 
 export default function App() {
   const showEditor = isEditorEnabled();
