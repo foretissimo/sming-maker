@@ -2983,17 +2983,19 @@
     "artistType": "jomingyu",
     "album": "팬텀싱어 올스타전 Episode.5",
     "releaseDate": "2021-02-24",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "33310705",
-      "genie": "",
-      "bugs": ""
+      "genie": "92412122",
+      "bugs": "32161253",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-33290829",
@@ -3021,17 +3023,19 @@
     "artistType": "jomingyu",
     "album": "친구",
     "releaseDate": "",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "32911822",
-      "genie": "",
-      "bugs": ""
+      "genie": "90802294",
+      "bugs": "32013519",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-32911823",
@@ -3040,17 +3044,19 @@
     "artistType": "jomingyu",
     "album": "친구",
     "releaseDate": "",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "32911823",
-      "genie": "",
-      "bugs": ""
+      "genie": "90802295",
+      "bugs": "32013520",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-31438775",
@@ -3059,17 +3065,19 @@
     "artistType": "jomingyu",
     "album": "동네앨범 단양 Part.1",
     "releaseDate": "",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "31438775",
-      "genie": "",
-      "bugs": ""
+      "genie": "88398288",
+      "bugs": "31324713",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 240,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-31438776",
@@ -3078,17 +3086,19 @@
     "artistType": "jomingyu",
     "album": "동네앨범 단양 Part.1",
     "releaseDate": "",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "31438776",
-      "genie": "",
-      "bugs": ""
+      "genie": "88398289",
+      "bugs": "31324714",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 148,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-31438777",
@@ -3097,17 +3107,19 @@
     "artistType": "jomingyu",
     "album": "동네앨범 단양 Part.1",
     "releaseDate": "",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "31438777",
-      "genie": "",
-      "bugs": ""
+      "genie": "88398290",
+      "bugs": "31324715",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-31438778",
@@ -3116,74 +3128,82 @@
     "artistType": "jomingyu",
     "album": "동네앨범 단양 Part.1",
     "releaseDate": "",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "31438778",
-      "genie": "",
-      "bugs": ""
+      "genie": "88398291",
+      "bugs": "31324716",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30712681",
     "title": "Come Un Eterno Addio",
-    "artist": "조민규",
-    "artistType": "jomingyu",
+    "artist": "포레스텔라",
+    "artistType": "group",
     "album": "팬텀싱어2 Episode 10",
     "releaseDate": "2017-11-06",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30712681",
-      "genie": "",
-      "bugs": ""
+      "genie": "87529249",
+      "bugs": "30836378",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30712684",
     "title": "Il Mirto E La Rosa",
-    "artist": "조민규",
-    "artistType": "jomingyu",
+    "artist": "포레스텔라",
+    "artistType": "group",
     "album": "팬텀싱어2 Episode 10",
     "releaseDate": "2017-11-06",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30712684",
       "genie": "",
-      "bugs": ""
+      "bugs": "",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30698044",
     "title": "In Un'altra Vita",
-    "artist": "조민규",
-    "artistType": "jomingyu",
+    "artist": "포레스텔라",
+    "artistType": "group",
     "album": "팬텀싱어2 Episode 9",
     "releaseDate": "2017-10-28",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30698044",
-      "genie": "",
-      "bugs": ""
+      "genie": "87512950",
+      "bugs": "30825115",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30698045",
@@ -3192,17 +3212,19 @@
     "artistType": "jomingyu",
     "album": "팬텀싱어2 Episode 9",
     "releaseDate": "2017-10-28",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30698045",
-      "genie": "",
-      "bugs": ""
+      "genie": "87512951",
+      "bugs": "30825116",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30646280",
@@ -3211,17 +3233,19 @@
     "artistType": "jomingyu",
     "album": "팬텀싱어2 Episode 5",
     "releaseDate": "2017-09-23",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30646280",
-      "genie": "",
-      "bugs": ""
+      "genie": "87452430",
+      "bugs": "30791435",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30622760",
@@ -3230,17 +3254,19 @@
     "artistType": "jomingyu",
     "album": "팬텀싱어2 Episode 3",
     "releaseDate": "2017-09-09",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30622760",
-      "genie": "",
-      "bugs": ""
+      "genie": "87420759",
+      "bugs": "30775115",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30668879",
@@ -3249,17 +3275,19 @@
     "artistType": "jomingyu",
     "album": "팬텀싱어2 Episode 8",
     "releaseDate": "2017-10-14",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30668879",
-      "genie": "",
-      "bugs": ""
+      "genie": "87475509",
+      "bugs": "",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30661581",
@@ -3268,17 +3296,19 @@
     "artistType": "jomingyu",
     "album": "팬텀싱어2 Episode 7",
     "releaseDate": "2017-10-10",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30661581",
-      "genie": "",
-      "bugs": ""
+      "genie": "87467315",
+      "bugs": "",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-jomingyu-30600577",
@@ -3287,17 +3317,19 @@
     "artistType": "jomingyu",
     "album": "팬텀싱어2 Episode 1",
     "releaseDate": "2017-08-26",
-    "duration": 225,
     "isTitle": false,
-    "userEdited": false,
     "platformIds": {
       "melon": "30600577",
-      "genie": "",
-      "bugs": ""
+      "genie": "87393438",
+      "bugs": "",
+      "vibe": "",
+      "flo": ""
     },
     "tags": [
       "auto-synced"
-    ]
+    ],
+    "duration": 225,
+    "userEdited": true
   },
   {
     "id": "auto-baedoohun-37917792",
