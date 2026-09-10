@@ -1,308 +1,345 @@
 {
   "id": "official-recommended-1",
-  "title": "🌲 포레스텔라 음총팀 공식 1시간 스밍리스트",
-  "creator": "포레스텔라 음원총공팀",
-  "desc": "신곡 '창귀' 중심 1시간 권장 스밍리스트입니다. 중복곡이 순차 분할되어 있어 멜론, 지니, 벅스 등 전 플랫폼에서 바로 담아 들으실 수 있습니다.",
-  "youtubeUrl": "https://youtu.be/rmTO6HBSWH0?si=qQiLPbRsZRzFcwie",
+  "title": "🌲 포레스텔라 조민규 1시간 스밍리스트",
+  "creator": "맆 / 관리자",
+  "desc": "포레스텔라 조민규 1시간 스밍리스트입니다. (2집 앨범 발매전)",
+  "youtubeUrl": "https://www.youtube.com/watch?v=b7zdyFDfu7M",
   "selectedArtists": [
-    "group"
+    "jomingyu"
   ],
-  "updatedAt": "2026-09-07",
+  "updatedAt": "2026-09-10",
   "songs": [
     {
-      "id": "auto-group-602793545",
-      "title": "창귀",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "창귀",
-      "releaseDate": "2026-08-25",
-      "isTitle": true,
+      "id": "auto-jomingyu-31438776",
+      "title": "Funiculi Funicula",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "동네앨범 단양 Part.1",
+      "releaseDate": "",
+      "isTitle": false,
       "platformIds": {
-        "melon": "602793545",
-        "genie": "116376883",
-        "bugs": "133584374",
+        "melon": "31438776",
+        "genie": "88398289",
+        "bugs": "31324714",
         "vibe": "",
         "flo": ""
       },
       "tags": [
         "auto-synced"
       ],
-      "duration": 207,
+      "duration": 148,
       "userEdited": true,
-      "uniqueKey": "auto-group-602793545-7tciuy499"
+      "uniqueKey": "auto-jomingyu-31438776-s6vvig5hl"
     },
     {
-      "id": "auto-group-31814744",
-      "title": "달하 노피곰 도다샤",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "Mystique",
-      "releaseDate": "2019-05-22",
-      "duration": 257,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "31814744",
-        "genie": "88953589",
-        "bugs": "31594795"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-group-31814744-gve1jufep"
-    },
-    {
-      "id": "auto-group-33421782",
-      "title": "연(緣)",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "The Forestella",
-      "releaseDate": "2021-04-19",
-      "duration": 259,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "33421782",
-        "genie": "93042977",
-        "bugs": "32211278"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-group-33421782-b1u4e718y"
-    },
-    {
-      "id": "fore-023",
-      "title": "야상곡",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "Mystique",
-      "releaseDate": "2019-05-22",
-      "duration": 247,
-      "isTitle": false,
-      "platformIds": {
-        "melon": "31814752",
-        "genie": "88953597",
-        "bugs": "31594803"
-      },
-      "tags": [
-        "regular2"
-      ],
-      "userEdited": false,
-      "uniqueKey": "fore-023-ebghbo8sz"
-    },
-    {
-      "id": "auto-group-602793545",
-      "title": "창귀",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "창귀",
-      "releaseDate": "2026-08-25",
-      "isTitle": true,
-      "platformIds": {
-        "melon": "602793545",
-        "genie": "116376883",
-        "bugs": "133584374",
-        "vibe": "",
-        "flo": ""
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "duration": 207,
-      "userEdited": true,
-      "uniqueKey": "auto-group-602793545-g92gv85an"
-    },
-    {
-      "id": "auto-group-36944763",
-      "title": "White Night (백야) (Remaster ver.)",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "Unfinished",
-      "releaseDate": "2023-11-08",
+      "id": "auto-jomingyu-37256114",
+      "title": "Recuerdos de Buenos Aires",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Recuerdos de Buenos Aires",
+      "releaseDate": "2024-02-28",
       "duration": 217,
       "isTitle": false,
       "userEdited": false,
       "platformIds": {
-        "melon": "36944763",
-        "genie": "104244849",
-        "bugs": "6221645"
+        "melon": "37256114",
+        "genie": "105630486",
+        "bugs": "33110010"
       },
       "tags": [
         "auto-synced"
       ],
-      "uniqueKey": "auto-group-36944763-g5kbgu9eh"
+      "uniqueKey": "auto-jomingyu-37256114-8jwig2se7"
     },
     {
-      "id": "auto-group-601812678",
-      "title": "Snow Globe",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "THE LEGACY",
-      "releaseDate": "2026-04-23",
-      "duration": 321,
+      "id": "cho-005",
+      "title": "Will",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : PARANA",
+      "releaseDate": "2021-12-03",
+      "duration": 237,
+      "isTitle": false,
+      "platformIds": {
+        "melon": "34360564",
+        "genie": "95210024",
+        "bugs": "32402238"
+      },
+      "tags": [
+        "solo",
+        "parana"
+      ],
+      "userEdited": false,
+      "uniqueKey": "cho-005-bp73nxklc"
+    },
+    {
+      "id": "cho-006",
+      "title": "푸른 꿈을 꾸는 새",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : PARANA",
+      "releaseDate": "2021-12-03",
+      "duration": 190,
+      "isTitle": false,
+      "platformIds": {
+        "melon": "34360566",
+        "genie": "95210026",
+        "bugs": "32402240"
+      },
+      "tags": [
+        "solo",
+        "parana"
+      ],
+      "userEdited": false,
+      "uniqueKey": "cho-006-gt6rxkz36"
+    },
+    {
+      "id": "auto-jomingyu-34360562",
+      "title": "라야",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : PARANA",
+      "releaseDate": "2021-12-03",
+      "duration": 252,
       "isTitle": false,
       "userEdited": false,
       "platformIds": {
-        "melon": "601812678",
-        "genie": "114676439",
-        "bugs": "6221644"
+        "melon": "34360562",
+        "genie": "95210022",
+        "bugs": "32402236"
       },
       "tags": [
         "auto-synced"
       ],
-      "uniqueKey": "auto-group-601812678-cb9bmmeru"
+      "uniqueKey": "auto-jomingyu-34360562-79wril0v5"
     },
     {
-      "id": "auto-group-601812679",
-      "title": "Armageddon",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "THE LEGACY",
-      "releaseDate": "2026-04-23",
-      "isTitle": true,
+      "id": "auto-jomingyu-38258139",
+      "title": "A Christmas Symphony",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "A Christmas Symphony",
+      "releaseDate": "2024-11-27",
+      "duration": 194,
+      "isTitle": false,
+      "userEdited": false,
       "platformIds": {
-        "melon": "601812679",
-        "genie": "114676440",
-        "bugs": "131827359",
+        "melon": "38258139",
+        "genie": "108466128",
+        "bugs": "33368201"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-jomingyu-38258139-svo516708"
+    },
+    {
+      "id": "auto-jomingyu-32911822",
+      "title": "친구",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "친구",
+      "releaseDate": "",
+      "isTitle": false,
+      "platformIds": {
+        "melon": "32911822",
+        "genie": "90802294",
+        "bugs": "32013519",
         "vibe": "",
         "flo": ""
       },
       "tags": [
         "auto-synced"
       ],
-      "duration": 335,
-      "userEdited": false,
-      "uniqueKey": "auto-group-601812679-1a132c4ig"
-    },
-    {
-      "id": "auto-group-36892290",
-      "title": "Chosen One",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "아라문의 검 OST",
-      "releaseDate": "2023-10-23",
-      "isTitle": false,
-      "platformIds": {
-        "melon": "36892290",
-        "genie": "103994875",
-        "bugs": "32966067",
-        "vibe": "",
-        "flo": ""
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "duration": 250,
+      "duration": 225,
       "userEdited": true,
-      "uniqueKey": "auto-group-36892290-6hidqgp5m"
+      "uniqueKey": "auto-jomingyu-32911822-7zov93mi1"
     },
     {
-      "id": "auto-group-602793545",
-      "title": "창귀",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "창귀",
-      "releaseDate": "2026-08-25",
-      "isTitle": true,
+      "id": "auto-jomingyu-31438775",
+      "title": "기차와 소나무",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "동네앨범 단양 Part.1",
+      "releaseDate": "",
+      "isTitle": false,
       "platformIds": {
-        "melon": "602793545",
-        "genie": "116376883",
-        "bugs": "133584374",
+        "melon": "31438775",
+        "genie": "88398288",
+        "bugs": "31324713",
         "vibe": "",
         "flo": ""
       },
       "tags": [
         "auto-synced"
       ],
-      "duration": 207,
+      "duration": 240,
       "userEdited": true,
-      "uniqueKey": "auto-group-602793545-v3mk7ercl"
+      "uniqueKey": "auto-jomingyu-31438775-15sdk9r9e"
     },
     {
-      "id": "auto-group-601812677",
-      "title": "Now We Are Free",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "THE LEGACY",
-      "releaseDate": "2026-04-23",
-      "duration": 360,
+      "id": "auto-jomingyu-34360565",
+      "title": "바람",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : PARANA",
+      "releaseDate": "2021-12-03",
+      "duration": 170,
       "isTitle": false,
       "userEdited": false,
       "platformIds": {
-        "melon": "601812677",
-        "genie": "114676438",
-        "bugs": "131827329"
+        "melon": "34360565",
+        "genie": "95210025",
+        "bugs": "32402239"
       },
       "tags": [
         "auto-synced"
       ],
-      "uniqueKey": "auto-group-601812677-neybmzlv7"
+      "uniqueKey": "auto-jomingyu-34360565-70hn2fe8b"
     },
     {
-      "id": "auto-group-39273787",
-      "title": "Everything",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "Everything",
-      "releaseDate": "2025-07-09",
-      "duration": 264,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "39273787",
-        "genie": "110884243",
-        "bugs": "6322558"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-group-39273787-phtjodkr5"
-    },
-    {
-      "id": "fore-003",
-      "title": "Chagall's Dream (샤갈의 꿈)",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "Unfinished",
-      "releaseDate": "2023-11-08",
+      "id": "auto-jomingyu-37174625",
+      "title": "휠릴리",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "내 귀에 띵곡 Part.12",
+      "releaseDate": "2024-02-03",
       "isTitle": false,
       "platformIds": {
-        "melon": "36944764",
-        "genie": "104244850",
-        "bugs": "6221646",
+        "melon": "37174625",
+        "genie": "105403608",
+        "bugs": "33089751",
         "vibe": "",
         "flo": ""
       },
       "tags": [
-        "bside",
-        "mini2"
+        "auto-synced"
       ],
-      "duration": 256,
+      "duration": 259,
       "userEdited": true,
-      "uniqueKey": "fore-003-ei9m8k85v"
+      "uniqueKey": "auto-jomingyu-37174625-iz4uh6lzc"
     },
     {
-      "id": "fore-004",
-      "title": "KOOL",
-      "artist": "포레스텔라",
-      "artistType": "group",
-      "album": "KOOL",
-      "releaseDate": "2023-09-06",
-      "duration": 195,
-      "isTitle": true,
+      "id": "auto-jomingyu-33290829",
+      "title": "Balada De La Trompeta",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "팬텀싱어 올스타전 Episode.4",
+      "releaseDate": "2021-02-17",
+      "duration": 357,
+      "isTitle": false,
+      "userEdited": false,
       "platformIds": {
-        "melon": "36760232",
-        "genie": "103366847",
-        "bugs": "6214774"
+        "melon": "33290829",
+        "genie": "92339643",
+        "bugs": "6074792"
       },
       "tags": [
-        "title",
-        "single",
-        "pop"
+        "auto-synced"
       ],
+      "uniqueKey": "auto-jomingyu-33290829-k2d3k70hm"
+    },
+    {
+      "id": "auto-jomingyu-33310705",
+      "title": "Rosalina",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "팬텀싱어 올스타전 Episode.5",
+      "releaseDate": "2021-02-24",
+      "isTitle": false,
+      "platformIds": {
+        "melon": "33310705",
+        "genie": "92412122",
+        "bugs": "32161253",
+        "vibe": "",
+        "flo": ""
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "duration": 225,
+      "userEdited": true,
+      "uniqueKey": "auto-jomingyu-33310705-kh2f8ufui"
+    },
+    {
+      "id": "auto-jomingyu-34360565",
+      "title": "바람",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : PARANA",
+      "releaseDate": "2021-12-03",
+      "duration": 170,
+      "isTitle": false,
       "userEdited": false,
-      "uniqueKey": "fore-004-2n7obigab"
+      "platformIds": {
+        "melon": "34360565",
+        "genie": "95210025",
+        "bugs": "32402239"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-jomingyu-34360565-trd00adc6"
+    },
+    {
+      "id": "auto-jomingyu-34360567",
+      "title": "희망도 절망도 아닌 하루",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : PARANA",
+      "releaseDate": "2021-12-03",
+      "duration": 320,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "34360567",
+        "genie": "95210027",
+        "bugs": "32402241"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-jomingyu-34360567-m1yxpg9f7"
+    },
+    {
+      "id": "auto-jomingyu-34360563",
+      "title": "Be my love",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : PARANA",
+      "releaseDate": "2021-12-03",
+      "duration": 169,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "34360563",
+        "genie": "95210023",
+        "bugs": "32402237"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-jomingyu-34360563-wa6orjq5c"
+    },
+    {
+      "id": "auto-jomingyu-38258139",
+      "title": "A Christmas Symphony",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "A Christmas Symphony",
+      "releaseDate": "2024-11-27",
+      "duration": 194,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "38258139",
+        "genie": "108466128",
+        "bugs": "33368201"
+      },
+      "tags": [
+        "auto-synced"
+      ],
+      "uniqueKey": "auto-jomingyu-38258139-3tlfrz5hh"
     }
   ]
 }
