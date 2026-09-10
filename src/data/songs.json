@@ -2747,6 +2747,154 @@
     ]
   },
   {
+    "id": "auto-jomingyu-603049484",
+    "title": "Komorebi",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Sweet Escape",
+    "releaseDate": "2026-09-10",
+    "duration": 232,
+    "isTitle": false,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "603049484",
+      "genie": "116755125",
+      "bugs": "34063297"
+    },
+    "tags": [
+      "solo",
+      "recent",
+      "Sweet Escape"
+    ]
+  },
+  {
+    "id": "auto-jomingyu-603049485",
+    "title": "Stay Here",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Sweet Escape",
+    "releaseDate": "2026-09-10",
+    "duration": 184,
+    "isTitle": false,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "603049485",
+      "genie": "116755126",
+      "bugs": "34063298"
+    },
+    "tags": [
+      "solo",
+      "recent",
+      "Sweet Escape"
+    ]
+  },
+  {
+    "id": "auto-jomingyu-603049486",
+    "title": "Next to You",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Sweet Escape",
+    "releaseDate": "2026-09-10",
+    "duration": 181,
+    "isTitle": true,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "603049486",
+      "genie": "116755127",
+      "bugs": "34063299"
+    },
+    "tags": [
+      "title",
+      "solo",
+      "recent",
+      "Sweet Escape"
+    ]
+  },
+  {
+    "id": "auto-jomingyu-603049487",
+    "title": "Sweet Escape",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Sweet Escape",
+    "releaseDate": "2026-09-10",
+    "duration": 200,
+    "isTitle": false,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "603049487",
+      "genie": "116755128",
+      "bugs": "34063300"
+    },
+    "tags": [
+      "solo",
+      "recent",
+      "Sweet Escape"
+    ]
+  },
+  {
+    "id": "auto-jomingyu-603049488",
+    "title": "Sunny Sunday",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Sweet Escape",
+    "releaseDate": "2026-09-10",
+    "duration": 188,
+    "isTitle": false,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "603049488",
+      "genie": "116755129",
+      "bugs": "34063301"
+    },
+    "tags": [
+      "solo",
+      "recent",
+      "Sweet Escape"
+    ]
+  },
+  {
+    "id": "auto-jomingyu-603049489",
+    "title": "Ternura Antiga",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Sweet Escape",
+    "releaseDate": "2026-09-10",
+    "duration": 160,
+    "isTitle": false,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "603049489",
+      "genie": "116755130",
+      "bugs": "34063302"
+    },
+    "tags": [
+      "solo",
+      "recent",
+      "Sweet Escape"
+    ]
+  },
+  {
+    "id": "auto-jomingyu-603049490",
+    "title": "리스본행 야간열차",
+    "artist": "조민규",
+    "artistType": "jomingyu",
+    "album": "Sweet Escape",
+    "releaseDate": "2026-09-10",
+    "duration": 273,
+    "isTitle": false,
+    "userEdited": false,
+    "platformIds": {
+      "melon": "603049490",
+      "genie": "116755131",
+      "bugs": "34063303"
+    },
+    "tags": [
+      "solo",
+      "recent",
+      "Sweet Escape"
+    ]
+  },
+  {
     "id": "auto-jomingyu-38258139",
     "title": "A Christmas Symphony",
     "artist": "조민규",

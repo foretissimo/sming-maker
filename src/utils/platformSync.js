@@ -25,23 +25,45 @@ async function fetchHtml(targetUrl, proxyPrefix) {
     try {
       const urlObj = new URL(targetUrl);
       const localProxyUrl = `${proxyPrefix}${urlObj.pathname}${urlObj.search}`;
-      const res = await fetch(localProxyUrl);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch(localProxyUrl, { signal: controller.signal });
+      clearTimeout(timeoutId);
       if (res.ok) {
-        return await res.text();
+        const text = await res.text();
+        if (text && text.length > 200) return text;
       }
     } catch (e) {
       // Ignore and try CORS proxy
     }
+  }
 
-    // 2. Try AllOrigins CORS Proxy in browser
-    try {
-      const corsUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-      const res = await fetch(corsUrl);
-      if (res.ok) {
-        return await res.text();
+  // 2. In browser (or if local proxy failed), try CORS proxies with cache-buster
+  if (isBrowser) {
+    const cb = `_cb=${Date.now()}`;
+    const targetWithCb = targetUrl.includes('?') ? `${targetUrl}&${cb}` : `${targetUrl}?${cb}`;
+
+    const proxyUrls = [
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(targetWithCb)}`,
+      `https://corsproxy.io/?${encodeURIComponent(targetWithCb)}`,
+      `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetWithCb)}`
+    ];
+
+    for (const pUrl of proxyUrls) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 7000);
+        const res = await fetch(pUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const text = await res.text();
+          if (text && text.length > 200) {
+            return text;
+          }
+        }
+      } catch (e) {
+        // Try next proxy
       }
-    } catch (e) {
-      // Ignore and try direct
     }
   }
 
@@ -295,6 +317,7 @@ export async function fetchGenieTracks(genieArtistId) {
         const title = titleMatch ? cleanText(titleMatch[1]) : '';
         const artist = artistMatch ? cleanText(artistMatch[1]) : '';
         const album = albumMatch ? cleanText(albumMatch[1]) : '';
+        const isTitle = tr.includes('icon-title') || tr.includes('TITLE');
 
         if (songId && title && !tracks.some(t => t.id === songId)) {
           tracks.push({
@@ -302,7 +325,8 @@ export async function fetchGenieTracks(genieArtistId) {
             id: songId,
             title,
             artist,
-            album
+            album,
+            isTitle
           });
         }
       });
@@ -542,6 +566,12 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
       if (song.platformIds.genie !== bestGenieTrack.id) {
         song.platformIds.genie = bestGenieTrack.id;
         usedGenieIds.add(bestGenieTrack.id);
+        updatedCount++;
+      }
+      if (bestGenieTrack.isTitle && !song.isTitle && (!isSmart || !song.userEdited)) {
+        song.isTitle = true;
+        if (!song.tags) song.tags = [];
+        if (!song.tags.includes('title')) song.tags.push('title');
         updatedCount++;
       }
       artistVerifiedCount++;
