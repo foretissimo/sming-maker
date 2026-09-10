@@ -54,6 +54,38 @@ export default function NoticeModal({
         {/* Modal Body */}
         <div className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar text-xs sm:text-sm leading-relaxed text-slate-300">
           
+          {/* New Release Announcement: Cho Mingyu <Sweet Escape> */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-rose-950/30 border border-rose-500/40 space-y-3 shadow-lg shadow-rose-950/20">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 text-rose-300 font-black text-xs sm:text-sm">
+                <Music className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                <span>조민규 솔로 앨범 &lt;Sweet Escape&gt; 음원 반영 안내</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0">
+                2026.09.10 발매
+              </span>
+            </div>
+
+            <p className="text-xs text-slate-200 leading-relaxed">
+              2026년 9월 10일 발매된 조민규의 솔로 미니 앨범 <strong>&lt;Sweet Escape&gt;</strong> 전곡(총 7곡) 데이터가 스밍 메이커에 정식 반영되었습니다.
+            </p>
+
+            <div className="p-3 rounded-xl bg-slate-950/60 border border-rose-500/20 space-y-1.5 text-xs text-slate-300">
+              <div className="flex items-center gap-1.5 font-bold text-rose-200">
+                <span className="px-1.5 py-0.5 rounded text-[10px] bg-rose-500/30 text-rose-300 border border-rose-500/40">TITLE</span>
+                <span>Next to You</span>
+                <span className="text-[11px] text-slate-400 font-normal">(03:01)</span>
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                <strong>수록곡</strong>: Komorebi, Stay Here, Sweet Escape, Sunny Sunday, Ternura Antiga, 리스본행 야간열차
+              </p>
+            </div>
+
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              💡 상단 아티스트 탭에서 <strong className="text-rose-300">조민규</strong>를 선택하시면 신곡을 포함한 60분 스밍리스트 구성 및 멜론·지니·벅스 원클릭 스트리밍을 바로 이용하실 수 있습니다.
+            </p>
+          </div>
+
           {/* 1. Open & Update Info */}
           <div className="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/30 space-y-2">
             <div className="flex items-center gap-2 text-emerald-300 font-bold text-xs sm:text-sm">
