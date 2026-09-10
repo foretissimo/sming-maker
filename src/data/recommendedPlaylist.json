@@ -1,8 +1,8 @@
 {
   "id": "official-recommended-1",
-  "title": "🌲 포레스텔라 조민규 1시간 스밍리스트",
-  "creator": "맆 / 관리자",
-  "desc": "포레스텔라 조민규 1시간 스밍리스트입니다. (2집 앨범 발매전)",
+  "title": "<Sweet Escape> 스트리밍 리스트",
+  "creator": "음원총공팀",
+  "desc": "음원총공팀 추천 <Sweet Escape> 스트리밍 리스트입니다.",
   "youtubeUrl": "https://www.youtube.com/watch?v=b7zdyFDfu7M",
   "selectedArtists": [
     "jomingyu"
@@ -10,67 +10,182 @@
   "updatedAt": "2026-09-10",
   "songs": [
     {
-      "id": "auto-jomingyu-31438776",
-      "title": "Funiculi Funicula",
+      "id": "auto-jomingyu-603049486",
+      "title": "Next to You",
       "artist": "조민규",
       "artistType": "jomingyu",
-      "album": "동네앨범 단양 Part.1",
-      "releaseDate": "",
-      "isTitle": false,
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 181,
+      "isTitle": true,
+      "userEdited": false,
       "platformIds": {
-        "melon": "31438776",
-        "genie": "88398289",
-        "bugs": "31324714",
-        "vibe": "",
-        "flo": ""
+        "melon": "603049486",
+        "genie": "116755127",
+        "bugs": "34063299"
       },
       "tags": [
-        "auto-synced"
+        "title",
+        "solo",
+        "recent",
+        "Sweet Escape"
       ],
-      "duration": 148,
-      "userEdited": true,
-      "uniqueKey": "auto-jomingyu-31438776-s6vvig5hl"
+      "uniqueKey": "auto-jomingyu-603049486-2l91oqcot"
     },
     {
-      "id": "auto-jomingyu-37256114",
-      "title": "Recuerdos de Buenos Aires",
+      "id": "auto-jomingyu-603049484",
+      "title": "Komorebi",
       "artist": "조민규",
       "artistType": "jomingyu",
-      "album": "Recuerdos de Buenos Aires",
-      "releaseDate": "2024-02-28",
-      "duration": 217,
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 232,
       "isTitle": false,
       "userEdited": false,
       "platformIds": {
-        "melon": "37256114",
-        "genie": "105630486",
-        "bugs": "33110010"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-jomingyu-37256114-8jwig2se7"
-    },
-    {
-      "id": "cho-005",
-      "title": "Will",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "신세계 : PARANA",
-      "releaseDate": "2021-12-03",
-      "duration": 237,
-      "isTitle": false,
-      "platformIds": {
-        "melon": "34360564",
-        "genie": "95210024",
-        "bugs": "32402238"
+        "melon": "603049484",
+        "genie": "116755125",
+        "bugs": "34063297"
       },
       "tags": [
         "solo",
-        "parana"
+        "recent",
+        "Sweet Escape"
       ],
+      "uniqueKey": "auto-jomingyu-603049484-k4e4sgqc1"
+    },
+    {
+      "id": "auto-jomingyu-603049485",
+      "title": "Stay Here",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 184,
+      "isTitle": false,
       "userEdited": false,
-      "uniqueKey": "cho-005-bp73nxklc"
+      "platformIds": {
+        "melon": "603049485",
+        "genie": "116755126",
+        "bugs": "34063298"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049485-lm5ir2u5n"
+    },
+    {
+      "id": "auto-jomingyu-603049487",
+      "title": "Sweet Escape",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 200,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049487",
+        "genie": "116755128",
+        "bugs": "34063300"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049487-5sqec18g3"
+    },
+    {
+      "id": "auto-jomingyu-603049488",
+      "title": "Sunny Sunday",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 188,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049488",
+        "genie": "116755129",
+        "bugs": "34063301"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049488-3woj7i0q9"
+    },
+    {
+      "id": "auto-jomingyu-603049489",
+      "title": "Ternura Antiga",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 160,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049489",
+        "genie": "116755130",
+        "bugs": "34063302"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049489-2x4xi4365"
+    },
+    {
+      "id": "auto-jomingyu-603049486",
+      "title": "Next to You",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 181,
+      "isTitle": true,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049486",
+        "genie": "116755127",
+        "bugs": "34063299"
+      },
+      "tags": [
+        "title",
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049486-0xde3swef"
+    },
+    {
+      "id": "auto-jomingyu-603049490",
+      "title": "리스본행 야간열차",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 273,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049490",
+        "genie": "116755131",
+        "bugs": "34063303"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049490-v9l91lzao"
     },
     {
       "id": "cho-006",
@@ -91,47 +206,161 @@
         "parana"
       ],
       "userEdited": false,
-      "uniqueKey": "cho-006-gt6rxkz36"
+      "uniqueKey": "cho-006-gtz7sxfy7"
     },
     {
-      "id": "auto-jomingyu-34360562",
-      "title": "라야",
+      "id": "auto-jomingyu-603049484",
+      "title": "Komorebi",
       "artist": "조민규",
       "artistType": "jomingyu",
-      "album": "신세계 : PARANA",
-      "releaseDate": "2021-12-03",
-      "duration": 252,
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 232,
       "isTitle": false,
       "userEdited": false,
       "platformIds": {
-        "melon": "34360562",
-        "genie": "95210022",
-        "bugs": "32402236"
+        "melon": "603049484",
+        "genie": "116755125",
+        "bugs": "34063297"
       },
       "tags": [
-        "auto-synced"
+        "solo",
+        "recent",
+        "Sweet Escape"
       ],
-      "uniqueKey": "auto-jomingyu-34360562-79wril0v5"
+      "uniqueKey": "auto-jomingyu-603049484-wshtqrju5"
     },
     {
-      "id": "auto-jomingyu-38258139",
-      "title": "A Christmas Symphony",
+      "id": "auto-jomingyu-603049488",
+      "title": "Sunny Sunday",
       "artist": "조민규",
       "artistType": "jomingyu",
-      "album": "A Christmas Symphony",
-      "releaseDate": "2024-11-27",
-      "duration": 194,
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 188,
       "isTitle": false,
       "userEdited": false,
       "platformIds": {
-        "melon": "38258139",
-        "genie": "108466128",
-        "bugs": "33368201"
+        "melon": "603049488",
+        "genie": "116755129",
+        "bugs": "34063301"
       },
       "tags": [
-        "auto-synced"
+        "solo",
+        "recent",
+        "Sweet Escape"
       ],
-      "uniqueKey": "auto-jomingyu-38258139-svo516708"
+      "uniqueKey": "auto-jomingyu-603049488-c4v4gsvr2"
+    },
+    {
+      "id": "auto-jomingyu-603049485",
+      "title": "Stay Here",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 184,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049485",
+        "genie": "116755126",
+        "bugs": "34063298"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049485-blsmi1ho0"
+    },
+    {
+      "id": "auto-jomingyu-603049486",
+      "title": "Next to You",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 181,
+      "isTitle": true,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049486",
+        "genie": "116755127",
+        "bugs": "34063299"
+      },
+      "tags": [
+        "title",
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049486-hjr7ztd22"
+    },
+    {
+      "id": "auto-jomingyu-603049487",
+      "title": "Sweet Escape",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 200,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049487",
+        "genie": "116755128",
+        "bugs": "34063300"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049487-5s6tby81o"
+    },
+    {
+      "id": "cho-004",
+      "title": "Be my love",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "신세계 : NEW AGE",
+      "releaseDate": "2020-02-16",
+      "duration": 169,
+      "isTitle": false,
+      "platformIds": {
+        "melon": "32376827",
+        "genie": "89854765",
+        "bugs": "31832331"
+      },
+      "tags": [
+        "solo",
+        "parana"
+      ],
+      "userEdited": false,
+      "uniqueKey": "cho-004-v91vl0hgu"
+    },
+    {
+      "id": "auto-jomingyu-603049489",
+      "title": "Ternura Antiga",
+      "artist": "조민규",
+      "artistType": "jomingyu",
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 160,
+      "isTitle": false,
+      "userEdited": false,
+      "platformIds": {
+        "melon": "603049489",
+        "genie": "116755130",
+        "bugs": "34063302"
+      },
+      "tags": [
+        "solo",
+        "recent",
+        "Sweet Escape"
+      ],
+      "uniqueKey": "auto-jomingyu-603049489-vk8srfwbh"
     },
     {
       "id": "auto-jomingyu-32911822",
@@ -153,193 +382,29 @@
       ],
       "duration": 225,
       "userEdited": true,
-      "uniqueKey": "auto-jomingyu-32911822-7zov93mi1"
+      "uniqueKey": "auto-jomingyu-32911822-fnyha8zfx"
     },
     {
-      "id": "auto-jomingyu-31438775",
-      "title": "기차와 소나무",
+      "id": "auto-jomingyu-603049490",
+      "title": "리스본행 야간열차",
       "artist": "조민규",
       "artistType": "jomingyu",
-      "album": "동네앨범 단양 Part.1",
-      "releaseDate": "",
-      "isTitle": false,
-      "platformIds": {
-        "melon": "31438775",
-        "genie": "88398288",
-        "bugs": "31324713",
-        "vibe": "",
-        "flo": ""
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "duration": 240,
-      "userEdited": true,
-      "uniqueKey": "auto-jomingyu-31438775-15sdk9r9e"
-    },
-    {
-      "id": "auto-jomingyu-34360565",
-      "title": "바람",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "신세계 : PARANA",
-      "releaseDate": "2021-12-03",
-      "duration": 170,
+      "album": "Sweet Escape",
+      "releaseDate": "2026-09-10",
+      "duration": 273,
       "isTitle": false,
       "userEdited": false,
       "platformIds": {
-        "melon": "34360565",
-        "genie": "95210025",
-        "bugs": "32402239"
+        "melon": "603049490",
+        "genie": "116755131",
+        "bugs": "34063303"
       },
       "tags": [
-        "auto-synced"
+        "solo",
+        "recent",
+        "Sweet Escape"
       ],
-      "uniqueKey": "auto-jomingyu-34360565-70hn2fe8b"
-    },
-    {
-      "id": "auto-jomingyu-37174625",
-      "title": "휠릴리",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "내 귀에 띵곡 Part.12",
-      "releaseDate": "2024-02-03",
-      "isTitle": false,
-      "platformIds": {
-        "melon": "37174625",
-        "genie": "105403608",
-        "bugs": "33089751",
-        "vibe": "",
-        "flo": ""
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "duration": 259,
-      "userEdited": true,
-      "uniqueKey": "auto-jomingyu-37174625-iz4uh6lzc"
-    },
-    {
-      "id": "auto-jomingyu-33290829",
-      "title": "Balada De La Trompeta",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "팬텀싱어 올스타전 Episode.4",
-      "releaseDate": "2021-02-17",
-      "duration": 357,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "33290829",
-        "genie": "92339643",
-        "bugs": "6074792"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-jomingyu-33290829-k2d3k70hm"
-    },
-    {
-      "id": "auto-jomingyu-33310705",
-      "title": "Rosalina",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "팬텀싱어 올스타전 Episode.5",
-      "releaseDate": "2021-02-24",
-      "isTitle": false,
-      "platformIds": {
-        "melon": "33310705",
-        "genie": "92412122",
-        "bugs": "32161253",
-        "vibe": "",
-        "flo": ""
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "duration": 225,
-      "userEdited": true,
-      "uniqueKey": "auto-jomingyu-33310705-kh2f8ufui"
-    },
-    {
-      "id": "auto-jomingyu-34360565",
-      "title": "바람",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "신세계 : PARANA",
-      "releaseDate": "2021-12-03",
-      "duration": 170,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "34360565",
-        "genie": "95210025",
-        "bugs": "32402239"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-jomingyu-34360565-trd00adc6"
-    },
-    {
-      "id": "auto-jomingyu-34360567",
-      "title": "희망도 절망도 아닌 하루",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "신세계 : PARANA",
-      "releaseDate": "2021-12-03",
-      "duration": 320,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "34360567",
-        "genie": "95210027",
-        "bugs": "32402241"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-jomingyu-34360567-m1yxpg9f7"
-    },
-    {
-      "id": "auto-jomingyu-34360563",
-      "title": "Be my love",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "신세계 : PARANA",
-      "releaseDate": "2021-12-03",
-      "duration": 169,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "34360563",
-        "genie": "95210023",
-        "bugs": "32402237"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-jomingyu-34360563-wa6orjq5c"
-    },
-    {
-      "id": "auto-jomingyu-38258139",
-      "title": "A Christmas Symphony",
-      "artist": "조민규",
-      "artistType": "jomingyu",
-      "album": "A Christmas Symphony",
-      "releaseDate": "2024-11-27",
-      "duration": 194,
-      "isTitle": false,
-      "userEdited": false,
-      "platformIds": {
-        "melon": "38258139",
-        "genie": "108466128",
-        "bugs": "33368201"
-      },
-      "tags": [
-        "auto-synced"
-      ],
-      "uniqueKey": "auto-jomingyu-38258139-3tlfrz5hh"
+      "uniqueKey": "auto-jomingyu-603049490-0qzlvm8rq"
     }
   ]
 }
