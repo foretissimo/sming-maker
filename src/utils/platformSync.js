@@ -127,6 +127,92 @@ export function normalize(str, stripInst = false) {
 }
 
 /**
+ * Normalize album name for comparison
+ */
+export function normalizeAlbum(str) {
+  if (!str) return '';
+  return cleanText(str)
+    .toLowerCase()
+    .replace(/[\(\)\[\]\-_,\.\s\x27\"&]/g, '')
+    .trim();
+}
+
+/**
+ * Compare album compatibility between target album and candidate album
+ * Returns:
+ * {
+ *   isMatch: boolean,      // True if exact, sub-album, or either is unknown/generic
+ *   isExact: boolean,      // True if exact normalized match
+ *   isSub: boolean,        // True if one includes the other (e.g. Special Edition, Repackage, OST)
+ *   isUnknown: boolean,    // True if either album is empty or generic default (e.g. '포레스텔라 앨범')
+ *   isConflict: boolean    // True if BOTH have specific albums and they are DIFFERENT
+ * }
+ */
+export function compareAlbums(targetAlbum, candAlbum, artistName = '') {
+  const normA = normalizeAlbum(targetAlbum);
+  const normB = normalizeAlbum(candAlbum);
+
+  const genericA = artistName ? normalizeAlbum(`${artistName} 앨범`) : '';
+  const genericB = artistName ? normalizeAlbum(`${artistName}앨범`) : '';
+
+  const isUnknownA = !normA || normA === genericA || normA === genericB || normA === 'variousartists';
+  const isUnknownB = !normB || normB === genericA || normB === genericB || normB === 'variousartists';
+
+  if (isUnknownA || isUnknownB) {
+    return {
+      isMatch: true,
+      isExact: false,
+      isSub: false,
+      isUnknown: true,
+      isConflict: false
+    };
+  }
+
+  if (normA === normB) {
+    return {
+      isMatch: true,
+      isExact: true,
+      isSub: false,
+      isUnknown: false,
+      isConflict: false
+    };
+  }
+
+  // Check for distinct part numbers/discs/editions (e.g. part1 vs part2, episode1 vs episode2)
+  const partA = normA.match(/part\d+|episode\d+|vol\d+|\d집|ep\d+/);
+  const partB = normB.match(/part\d+|episode\d+|vol\d+|\d집|ep\d+/);
+  if (partA && partB && partA[0] !== partB[0]) {
+    return {
+      isMatch: false,
+      isExact: false,
+      isSub: false,
+      isUnknown: false,
+      isConflict: true
+    };
+  }
+
+  // Sub-album containment check (e.g. "The Forestella" in "The Forestella Special Edition")
+  if (normA.includes(normB) || normB.includes(normA)) {
+    return {
+      isMatch: true,
+      isExact: false,
+      isSub: true,
+      isUnknown: false,
+      isConflict: false
+    };
+  }
+
+  // Distinct albums (e.g. "신세계 : NEW AGE" vs "신세계 : PARANA", "바람" vs "신세계 : PARANA", "THE LEGACY" vs "Unfinished")
+  return {
+    isMatch: false,
+    isExact: false,
+    isSub: false,
+    isUnknown: false,
+    isConflict: true
+  };
+}
+
+/**
  * Verify whether a platform track's artist matches the target artist / group
  */
 export function isArtistMatch(artistObjOrType, platformArtist) {
@@ -167,18 +253,28 @@ export function computeTrackMatchScore(targetSong, candidateTrack, artistObj) {
   const targetTitleNorm = normalize(targetSong.title, false);
   const candTitleNorm = normalize(candidateTrack.title, false);
 
-  const targetAlbumNorm = normalize(targetSong.album || '');
-  const candAlbumNorm = normalize(candidateTrack.album || '');
+  const artistName = typeof artistObj === 'string' ? '' : artistObj?.name || '';
+  const albumCmp = compareAlbums(targetSong.album, candidateTrack.album, artistName);
+
+  // 3. Strict Album Conflict Check:
+  // If both songs have explicit album names and they CONFLICT (different albums),
+  // REJECT immediately so that tracks with identical titles in different albums are NEVER linked to the wrong album!
+  if (albumCmp.isConflict) {
+    return -1; // REJECT: Album mismatch
+  }
 
   // Exact Title Match
   if (targetTitleNorm === candTitleNorm) {
-    if (targetAlbumNorm && candAlbumNorm && targetAlbumNorm === candAlbumNorm) {
-      return 100; // Perfect Title + Album Match
+    if (albumCmp.isExact) {
+      return 100; // Perfect Title + Exact Album Match
     }
-    if (targetAlbumNorm && candAlbumNorm && (targetAlbumNorm.includes(candAlbumNorm) || candAlbumNorm.includes(targetAlbumNorm))) {
+    if (albumCmp.isSub) {
       return 92; // High-Confidence Title + Sub-Album Match
     }
-    return 80; // Exact Title Match (Album differing or unknown)
+    if (albumCmp.isUnknown) {
+      return 80; // Exact Title Match (Album generic or unknown)
+    }
+    return 0;
   }
 
   // Core Title Match (ignoring OST sub-labels or special version tags)
@@ -186,10 +282,16 @@ export function computeTrackMatchScore(targetSong, candidateTrack, artistObj) {
   const candCore = normalize(candidateTrack.title, true);
 
   if (targetCore && candCore && targetCore === candCore) {
-    if (targetAlbumNorm && candAlbumNorm && targetAlbumNorm === candAlbumNorm) {
-      return 78;
+    if (albumCmp.isExact) {
+      return 78; // Core Title + Exact Album Match
     }
-    return 65;
+    if (albumCmp.isSub) {
+      return 72; // Core Title + Sub-Album Match
+    }
+    if (albumCmp.isUnknown) {
+      return 65; // Core Title + Unknown/generic album
+    }
+    return 0;
   }
 
   return 0; // No match
@@ -477,13 +579,14 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
 
     // If not matched by Melon ID, check for a song without Melon ID that matches Title AND Album
     if (!existing) {
-      existing = updatedSongs.find(
-        s => s.artistType === artist.id &&
-             !s.platformIds?.melon &&
-             isInstMatch(s.title, mt.title) &&
-             normalize(s.title, false) === normTitle &&
-             (normalize(s.album || '', false) === normAlbum || !s.album || s.album === `${artist.name} 앨범`)
-      );
+      existing = updatedSongs.find(s => {
+        if (s.artistType !== artist.id) return false;
+        if (s.platformIds?.melon) return false;
+        if (!isInstMatch(s.title, mt.title)) return false;
+        if (normalize(s.title, false) !== normTitle) return false;
+        const albumCmp = compareAlbums(s.album, mt.album, artist.name);
+        return albumCmp.isMatch;
+      });
     }
 
     if (existing) {
@@ -575,12 +678,17 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
         updatedCount++;
       }
       artistVerifiedCount++;
-    } else if (!isSmart && song.platformIds?.genie) {
-      // In overwrite mode, if no valid artist-verified track found on Genie, clear wrong link
+    } else if (song.platformIds?.genie) {
+      // If current linked Genie track has a conflicting album or artist, unlink it
       const existingMatch = genieTracks.find(gt => gt.id === song.platformIds.genie);
-      if (existingMatch && !isArtistMatch(artist, existingMatch.artist)) {
-        song.platformIds.genie = '';
-        updatedCount++;
+      if (existingMatch) {
+        const albumCmp = compareAlbums(song.album, existingMatch.album, artist.name);
+        if (!isArtistMatch(artist, existingMatch.artist) || albumCmp.isConflict) {
+          if (!isSmart || !song.userEdited) {
+            song.platformIds.genie = '';
+            updatedCount++;
+          }
+        }
       }
     }
   });
@@ -614,11 +722,17 @@ export async function syncArtistTracks(artist, currentSongs, progressCallback, o
         usedBugsIds.add(bestBugsTrack.id);
         updatedCount++;
       }
-    } else if (!isSmart && song.platformIds?.bugs) {
+    } else if (song.platformIds?.bugs) {
+      // If current linked Bugs track has a conflicting album or artist, unlink it
       const existingMatch = bugsTracks.find(bt => bt.id === song.platformIds.bugs);
-      if (existingMatch && !isArtistMatch(artist, existingMatch.artist)) {
-        song.platformIds.bugs = '';
-        updatedCount++;
+      if (existingMatch) {
+        const albumCmp = compareAlbums(song.album, existingMatch.album, artist.name);
+        if (!isArtistMatch(artist, existingMatch.artist) || albumCmp.isConflict) {
+          if (!isSmart || !song.userEdited) {
+            song.platformIds.bugs = '';
+            updatedCount++;
+          }
+        }
       }
     }
   });
